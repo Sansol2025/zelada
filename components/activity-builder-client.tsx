@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus, Trash2, HelpCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { FileUploader } from "@/components/file-uploader";
 
 const ACTIVITY_TYPE_LABELS: Record<string, string> = {
   multiple_choice_visual: "🔵 Opción Múltiple (Recomendado)",
@@ -147,12 +148,16 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual" }
                     />
                     
                     {activityType === "image_select" && (
-                      <input 
-                        value={opt.imageUrl || ""} 
-                        onChange={(e) => updateOption(opt.id, 'imageUrl', e.target.value)}
-                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 focus:border-brand-500 focus:outline-none" 
-                        placeholder="🔗 Enlace/URL de la imagen (Ej: https://.../gato.jpg)"
-                      />
+                      <div className="mt-2 text-sm w-full">
+                        <FileUploader 
+                          name={`img_opt_${opt.id}`} 
+                          accept="image/*" 
+                          label={`Imagen de la Opción ${index + 1}`}
+                          initialUrl={opt.imageUrl}
+                          onUploadSuccess={(url) => updateOption(opt.id, 'imageUrl', url)}
+                          onClear={() => updateOption(opt.id, 'imageUrl', '')}
+                        />
+                      </div>
                     )}
                   </div>
 

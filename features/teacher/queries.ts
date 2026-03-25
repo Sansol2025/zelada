@@ -118,7 +118,7 @@ export async function getTeacherSubjectById(subjectId: string, teacherId: string
   const { data, error } = await supabase
     .from("subjects")
     .select(
-      "id, title, description, color, icon, is_active, created_at, modules ( id, title, description, position, is_locked_by_default )"
+      "id, title, description, color, icon, is_active, created_at, modules ( id, title, description, position, is_locked_by_default, intro_video_url )"
     )
     .eq("id", subjectId)
     .eq("teacher_id", teacherId)
@@ -133,7 +133,7 @@ export async function getTeacherModulesBySubject(subjectId: string, teacherId: s
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("modules")
-    .select("id, subject_id, title, description, position, is_locked_by_default, created_at")
+    .select("id, subject_id, title, description, position, is_locked_by_default, intro_video_url, created_at")
     .eq("subject_id", subjectId)
     .order("position", { ascending: true });
 
@@ -146,7 +146,7 @@ export async function getTeacherModuleById(moduleId: string, teacherId: string) 
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("modules")
-    .select("id, subject_id, title, description, position, is_locked_by_default, created_at")
+    .select("id, subject_id, title, description, position, is_locked_by_default, intro_video_url, created_at")
     .eq("id", moduleId)
     .single();
 

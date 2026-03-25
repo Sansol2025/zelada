@@ -17,7 +17,8 @@ const moduleSchema = z.object({
   title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
   description: z.string().optional(),
   position: z.coerce.number().int().min(1),
-  is_locked_by_default: z.boolean().default(false)
+  is_locked_by_default: z.boolean().default(false),
+  intro_video_url: z.string().url().optional().or(z.literal("")),
 });
 
 const activitySchema = z.object({
@@ -160,7 +161,8 @@ export async function createModule(input: unknown, teacherId: string) {
     .from("modules")
     .insert({
       ...parsed,
-      description: parsed.description || null
+      description: parsed.description || null,
+      intro_video_url: parsed.intro_video_url || null
     })
     .select()
     .single();
@@ -179,7 +181,8 @@ export async function updateModule(moduleId: string, input: unknown, teacherId: 
     .from("modules")
     .update({
       ...parsed,
-      description: parsed.description ?? undefined
+      description: parsed.description ?? undefined,
+      intro_video_url: parsed.intro_video_url ?? undefined
     })
     .eq("id", moduleId)
     .select()

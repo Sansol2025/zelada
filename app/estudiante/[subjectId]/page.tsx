@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { ArrowLeft, FolderKanban, LockKeyhole, Sparkles } from "lucide-react";
+import { ArrowLeft, Map, Sparkles, BookOpen } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { EmptyState } from "@/components/empty-state";
 import { LockedModuleCard } from "@/components/locked-module-card";
 import { ProgressCard } from "@/components/progress-card";
+import { StudentShell } from "@/components/layout/student-shell";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { getStudentContextOrRedirect } from "@/features/student/access";
 import { getStudentAssignedSubjects, getSubjectLearningPath } from "@/features/student/queries";
 import { percent } from "@/lib/utils";
@@ -41,86 +41,93 @@ export default async function StudentSubjectPage({ params }: SubjectPageProps) {
 
   const modules = await getSubjectLearningPath(subjectId, student.studentId);
   const progressPercent = Number(assignment.progress?.progress_percent ?? 0);
-  const status = String(assignment.progress?.status ?? "pending");
+  const isCompleted = assignment.progress?.status === "completed";
 
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-4 py-6">
-      <header className="rounded-2xl border border-brand-100 bg-white p-5 shadow-card">
-        <div className="mb-3">
-          <Link className="inline-flex items-center gap-2 text-sm font-semibold text-brand-700" href="/estudiante">
-            <ArrowLeft className="h-4 w-4" />
-            Volver a materias
-          </Link>
-        </div>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">Recorrido asignado</p>
-            <h1 className="font-display text-3xl font-extrabold text-brand-950">{subject.title}</h1>
-            {subject.description ? <p className="text-sm text-brand-700">{subject.description}</p> : null}
+    <StudentShell
+      title={subject.title}
+      description={subject.description || "¡Bienvenido a esta gran aventura! Completa todos los niveles para ganar la medalla."}
+      currentPath={`/estudiante/${subjectId}`}
+    >
+      <div className="mb-6">
+        <Link 
+          href="/estudiante" 
+          className="inline-flex items-center gap-2 rounded-full bg-white border-2 border-brand-100 px-5 py-2 text-sm font-black text-brand-700 shadow-sm transition-all hover:bg-brand-50 hover:shadow-md"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Volver a mis Aventuras
+        </Link>
+      </div>
+
+      <header className="relative overflow-hidden rounded-[2.5rem] bg-white p-8 mb-8 border-4 border-brand-100 shadow-xl">
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{ backgroundColor: subject.color }}
+        />
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-4 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-brand-700 font-black uppercase tracking-widest text-xs">
+              <Map className="h-4 w-4" /> Tu Mapa de Progreso
+            </div>
+            <h1 className="font-display text-4xl font-black text-brand-950 leading-tight">
+              Aventura en {subject.title}
+            </h1>
           </div>
-          <div className="space-y-2">
-            <Badge variant={status === "completed" ? "success" : "default"}>{status.replace("_", " ")}</Badge>
-            <p className="text-right text-sm font-semibold text-brand-700">Avance: {percent(progressPercent)}</p>
+          <div className="flex flex-col items-center gap-3">
+            <div 
+              className="flex h-20 w-20 items-center justify-center rounded-[2.5rem] shadow-xl"
+              style={{ backgroundColor: subject.color }}
+            >
+              <BookOpen className="h-10 w-10 text-white" />
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-black text-brand-950">{percent(progressPercent)}</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Completado</p>
+            </div>
           </div>
         </div>
       </header>
 
-      <section className="mt-5 grid gap-4 md:grid-cols-2">
-        <Card className="space-y-2">
-          <div className="flex items-center gap-2 text-brand-900">
-            <FolderKanban className="h-4 w-4" />
-            <CardTitle className="text-lg">Módulos del recorrido</CardTitle>
-          </div>
-          <CardText>
-            Completa los módulos en orden. Algunos se desbloquean automáticamente al finalizar el anterior.
-          </CardText>
-        </Card>
-        <Card className="space-y-2">
-          <div className="flex items-center gap-2 text-brand-900">
-            <Sparkles className="h-4 w-4" />
-            <CardTitle className="text-lg">Recomendación</CardTitle>
-          </div>
-          <CardText>
-            Si encuentras un módulo bloqueado, vuelve al anterior y completa las actividades pendientes.
-          </CardText>
-        </Card>
-      </section>
+      <section className="mt-8 space-y-4">
+        <div className="flex items-center justify-between mb-2">
+           <h2 className="font-display text-2xl font-black text-brand-900 flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-brand-500" />
+              Tus Próximos Retos
+           </h2>
+           <Badge className="rounded-full px-4 py-1.5 font-black uppercase tracking-widest text-[10px]" variant={isCompleted ? "success" : "default"}>
+              {assignedSubjects.length > 0 ? `${modules.length} NIVELES` : "SIN NIVELES"}
+           </Badge>
+        </div>
 
-      {modules.length === 0 ? (
-        <section className="mt-5">
+        {modules.length === 0 ? (
           <EmptyState
-            title="Sin módulos disponibles"
-            description="Tu docente todavía no cargó módulos en esta materia."
+            title="Aún no hay retos aquí"
+            description="Tu docente está preparando los niveles más divertidos. ¡Vuelve pronto!"
           />
-        </section>
-      ) : (
-        <section className="mt-5 grid gap-4 md:grid-cols-2">
-          {modules.map((module) =>
-            module.is_locked ? (
-              <LockedModuleCard
-                key={module.id}
-                title={module.title}
-                description={module.description}
-                reason="Debes completar el módulo previo para desbloquear este contenido."
-              />
-            ) : (
-              <ProgressCard
-                key={module.id}
-                title={module.title}
-                description={module.description}
-                progress={module.progress_percent}
-                href={`/estudiante/${subjectId}/modulo/${module.id}` as Route}
-                accent={subject.color ?? "#43b8f4"}
-              />
-            )
-          )}
-        </section>
-      )}
-
-      <section className="mt-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-600">
-        <LockKeyhole className="h-4 w-4" />
-        Flujo secuencial activo
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2">
+            {modules.map((module) =>
+              module.is_locked ? (
+                <LockedModuleCard
+                  key={module.id}
+                  title={module.title}
+                  description={module.description}
+                  reason="🔒 Desbloquea este nivel completando el anterior"
+                />
+              ) : (
+                <ProgressCard
+                  key={module.id}
+                  title={module.title}
+                  description={module.description}
+                  progress={module.progress_percent}
+                  href={`/estudiante/${subjectId}/modulo/${module.id}` as Route}
+                  accent={subject.color ?? "#43b8f4"}
+                />
+              )
+            )}
+          </div>
+        )}
       </section>
-    </main>
+    </StudentShell>
   );
 }

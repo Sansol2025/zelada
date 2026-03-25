@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { Save, Trash2 } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
+import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
@@ -54,34 +55,61 @@ export default async function EditSubjectPage({ params }: EditSubjectPageProps) 
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <Card className="space-y-4">
-        <CardTitle className="text-lg">Configuración de materia</CardTitle>
-        <form action={updateSubjectAction} className="grid gap-3 md:grid-cols-2">
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={subject.title} name="title" required />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={subject.icon || ""} name="icon" />
-          <textarea
-            className="min-h-24 rounded-xl border border-brand-200 px-4 py-3 text-sm md:col-span-2"
-            defaultValue={subject.description || ""}
-            name="description"
-          />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={subject.color || "#43b8f4"} name="color" type="color" />
-          <label className="inline-flex items-center gap-2 text-sm">
-            <input defaultChecked={subject.is_active} name="is_active" type="checkbox" />
-            Activa
-          </label>
-          <div className="md:col-span-2">
-            <Button className="gap-2" type="submit">
-              <Save className="h-4 w-4" />
-              Guardar cambios
-            </Button>
-          </div>
-        </form>
+      <Card className="border-none shadow-card rounded-[2rem] p-8 max-w-4xl mx-auto">
+        <div className="mb-6 flex items-center gap-3 border-b border-brand-50 pb-4">
+          <CardTitle className="text-2xl font-black text-brand-950">Configuración de Materia</CardTitle>
+        </div>
+        
+        <form action={updateSubjectAction} className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div>
+              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Nombre de la materia</label>
+              <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-bold text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none text-left" defaultValue={subject.title} name="title" required />
+            </div>
 
-        <form action={deleteSubjectAction}>
-          <Button className="gap-2 text-rose-700" type="submit" variant="ghost">
-            <Trash2 className="h-4 w-4" />
-            Eliminar materia
-          </Button>
+            <div>
+              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Color de identidad</label>
+              <input className="h-14 w-full cursor-pointer rounded-2xl border border-brand-200 bg-white px-2 py-1 transition-colors focus:border-brand-500 focus:outline-none" defaultValue={subject.color || "#43b8f4"} name="color" type="color" />
+            </div>
+
+            <label className="flex cursor-pointer items-center gap-3 rounded-2xl bg-emerald-50 px-5 py-4 transition-colors hover:bg-emerald-100 border border-emerald-100">
+              <input defaultChecked={subject.is_active} name="is_active" type="checkbox" className="h-5 w-5 accent-emerald-500" />
+              <span className="font-bold text-emerald-900 text-sm">Materia Activa (Visible para alumnos)</span>
+            </label>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Misión o descripción</label>
+              <textarea
+                className="min-h-32 w-full resize-none rounded-2xl border border-brand-200 bg-soft-sky p-5 text-base text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none text-left leading-relaxed"
+                defaultValue={subject.description || ""}
+                name="description"
+                placeholder="Describe la aventura..."
+              />
+            </div>
+            
+            <FileUploader 
+              name="icon" 
+              accept="image/*" 
+              label="Cambiar Icono o Imagen"
+              initialUrl={subject.icon || ""}
+            />
+          </div>
+
+          <div className="md:col-span-2 pt-6 border-t border-brand-50 flex flex-wrap gap-4 justify-between items-center">
+            <Button className="h-14 px-10 rounded-2xl bg-brand-600 text-lg font-bold tracking-wide hover:bg-brand-500 shadow-xl shadow-brand-500/30 transition-all hover:-translate-y-1" type="submit">
+              <Save className="mr-2 h-6 w-6" />
+              Guardar Cambios
+            </Button>
+            
+            <form action={deleteSubjectAction}>
+              <Button className="h-12 px-6 rounded-xl font-bold text-rose-600 hover:bg-rose-50 border-none bg-transparent" type="submit">
+                <Trash2 className="mr-2 h-4 w-4" />
+                Eliminar Materia
+              </Button>
+            </form>
+          </div>
         </form>
       </Card>
     </RoleLayout>

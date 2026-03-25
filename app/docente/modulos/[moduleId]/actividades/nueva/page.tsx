@@ -4,6 +4,7 @@ import { Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-re
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { ActivityBuilderClient } from "@/components/activity-builder-client";
+import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { teacherNavItems } from "@/lib/navigation";
@@ -112,18 +113,20 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
 
               <div className="space-y-5 relative z-10">
                 <div className="rounded-2xl bg-white p-5 shadow-sm border border-brand-100">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-bold text-rose-600">
-                    <Volume2 className="h-4 w-4" /> Enlace del Audio (Clave para autoguiados)
-                  </label>
-                  <p className="mb-3 text-xs text-brand-700 font-medium">Fundamental para niños que no pueden leer. Pega aquí el enlace de la consigna hablada.</p>
-                  <input className="h-12 w-full rounded-xl border border-brand-200 bg-soft-sky px-4 text-sm focus:border-brand-500 focus:bg-white focus:outline-none" name="audio_url" placeholder="https://ejemplo.com/audio.mp3" />
+                  <p className="mb-3 text-xs text-brand-700 font-medium">Fundamental para niños que no pueden leer. Sube aquí tu archivo de voz.</p>
+                  <FileUploader 
+                    name="audio_url" 
+                    accept="audio/*" 
+                    label="Audio de la consigna (MP3/WAV)"
+                  />
                 </div>
 
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-bold text-brand-900">
-                    <ImageIcon className="h-4 w-4 text-brand-500" /> URL de Imagen decorativa (Opcional)
-                  </label>
-                  <input className="h-12 w-full rounded-xl border border-brand-200 bg-white px-4 text-sm focus:border-brand-500 focus:outline-none" name="image_url" placeholder="https://..." />
+                  <FileUploader 
+                    name="image_url" 
+                    accept="image/*" 
+                    label="Imagen o dibujo de ayuda visual (Opcional)"
+                  />
                 </div>
                 
                 <div>

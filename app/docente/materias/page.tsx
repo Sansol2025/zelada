@@ -5,6 +5,7 @@ import { BarChart3, BookOpen, Layers3, Pencil, Trash2, Users, Sparkles, Wand2 } 
 
 import { EmptyState } from "@/components/empty-state";
 import { RoleLayout } from "@/components/layout/role-layout";
+import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardText, CardTitle } from "@/components/ui/card";
@@ -222,12 +223,12 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900">4. Icono o Emoji (Opcional)</label>
-              <input
-                className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-xl transition-colors focus:border-brand-500 focus:bg-white focus:outline-none"
-                name="icon"
-                placeholder="🚀 🎨 🎸 🎈"
+              <FileUploader 
+                name="icon" 
+                accept="image/*" 
+                label="4. Icono o Imagen representativa (Opcional)"
               />
+              <p className="mt-2 text-xs text-brand-600 font-medium">Sube una imagen local que represente esta materia en el mapa.</p>
             </div>
 
             <div className="pt-4">

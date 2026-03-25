@@ -35,7 +35,8 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
         title: String(formData.get("title") ?? ""),
         description: String(formData.get("description") ?? ""),
         position: Number(formData.get("position") ?? modules.length + 1),
-        is_locked_by_default: formData.get("is_locked_by_default") === "on"
+        is_locked_by_default: formData.get("is_locked_by_default") === "on",
+        intro_video_url: String(formData.get("intro_video_url") ?? "")
       },
       activeSession.userId as string
     );
@@ -170,6 +171,12 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
                   <div>
                     <label className="mb-2 block text-sm font-bold text-brand-900">¿Qué aprenderán aquí?</label>
                     <textarea className="min-h-24 w-full resize-none rounded-2xl border border-brand-200 bg-soft-sky p-5 text-sm text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none" name="description" placeholder="Aprenderán a reconocer los números del 1 al 5." />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-rose-600">Video Introductorio de Youtube (Inicio del nivel)</label>
+                    <input className="h-12 w-full rounded-xl border border-rose-200 bg-rose-50 px-4 text-sm focus:border-rose-500 focus:bg-white focus:outline-none" name="intro_video_url" placeholder="Ej: https://youtube.com/watch?v=..." />
+                    <p className="mt-2 text-xs text-brand-600 font-medium">Este video se mostrará a pantalla completa antes de que el alumno empiece las actividades.</p>
                   </div>
 
                   <label className="mt-2 flex cursor-pointer items-center gap-3 rounded-xl bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100 border border-amber-100">

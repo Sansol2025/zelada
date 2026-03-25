@@ -10,6 +10,7 @@ type SubjectPathModule = {
   status: string;
   is_locked: boolean;
   activities_count: number;
+  intro_video_url: string | null;
 };
 
 export async function getStudentAssignedSubjects(studentId: string) {
@@ -46,7 +47,7 @@ export async function getSubjectLearningPath(subjectId: string, studentId: strin
 
   const { data: modules, error: modulesError } = await supabase
     .from("modules")
-    .select("id, title, description, position, is_locked_by_default")
+    .select("id, title, description, position, is_locked_by_default, intro_video_url")
     .eq("subject_id", subjectId)
     .order("position", { ascending: true });
 
@@ -96,7 +97,8 @@ export async function getSubjectLearningPath(subjectId: string, studentId: strin
       progress_percent: Number(progress?.progress_percent ?? 0),
       status: progress?.status ?? "pending",
       is_locked: isLocked,
-      activities_count: activitiesCountMap.get(module.id) ?? 0
+      activities_count: activitiesCountMap.get(module.id) ?? 0,
+      intro_video_url: module.intro_video_url
     });
   });
 

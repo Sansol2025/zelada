@@ -19,6 +19,7 @@ type AssignedSubject = {
   color: string;
   status: string;
   progressPercent: number;
+  icon: string | null;
 };
 
 export default async function StudentHomePage() {
@@ -40,7 +41,8 @@ export default async function StudentHomePage() {
         description: subject.description ? String(subject.description) : null,
         color: subject.color ? String(subject.color) : "#43b8f4",
         status: String(entry.progress?.status ?? "pending"),
-        progressPercent: Number(entry.progress?.progress_percent ?? 0)
+        progressPercent: Number(entry.progress?.progress_percent ?? 0),
+        icon: subject.icon ? String(subject.icon) : null
       };
     })
     .filter((subject): subject is AssignedSubject => subject !== null);
@@ -103,6 +105,7 @@ export default async function StudentHomePage() {
               color={subject.color}
               progressPercent={subject.progressPercent}
               status={subject.status}
+              icon={subject.icon}
               href={`/estudiante/${subject.id}` as Route}
             />
           ))}

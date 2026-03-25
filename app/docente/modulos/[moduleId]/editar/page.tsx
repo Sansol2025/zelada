@@ -31,7 +31,8 @@ export default async function EditModulePage({ params }: EditModulePageProps) {
         title: String(formData.get("title") ?? ""),
         description: String(formData.get("description") ?? ""),
         position: Number(formData.get("position") ?? currentModule.position),
-        is_locked_by_default: formData.get("is_locked_by_default") === "on"
+        is_locked_by_default: formData.get("is_locked_by_default") === "on",
+        intro_video_url: String(formData.get("intro_video_url") ?? "")
       },
       activeSession.userId as string
     );
@@ -70,6 +71,16 @@ export default async function EditModulePage({ params }: EditModulePageProps) {
             defaultValue={currentModule.description || ""}
             name="description"
           />
+          <div className="md:col-span-2">
+            <label className="mb-2 block text-sm font-bold text-rose-600">Video Introductorio de Youtube (Inicio del nivel)</label>
+            <input 
+              className="h-12 w-full rounded-xl border border-rose-200 bg-rose-50 px-4 text-sm focus:border-rose-500 focus:bg-white focus:outline-none" 
+              defaultValue={currentModule.intro_video_url || ""} 
+              name="intro_video_url" 
+              placeholder="Ej: https://youtube.com/watch?v=..." 
+            />
+            <p className="mt-2 text-xs text-brand-600 font-medium">Este video se mostrará a pantalla completa antes de que el alumno empiece las actividades.</p>
+          </div>
           <label className="inline-flex items-center gap-2 text-sm">
             <input defaultChecked={currentModule.is_locked_by_default} name="is_locked_by_default" type="checkbox" />
             Bloqueado por defecto

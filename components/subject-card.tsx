@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { BookOpen, Sparkles, Star } from "lucide-react";
@@ -12,6 +13,7 @@ type SubjectCardProps = {
   progressPercent?: number;
   href?: Route;
   status?: string;
+  icon?: string | null;
 };
 
 export function SubjectCard({
@@ -20,7 +22,8 @@ export function SubjectCard({
   color = "#43b8f4",
   progressPercent = 0,
   href,
-  status = "pending"
+  status = "pending",
+  icon
 }: SubjectCardProps) {
   const isCompleted = status === "completed";
 
@@ -57,10 +60,12 @@ export function SubjectCard({
           </div>
           
           <div 
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.5rem] shadow-lg shadow-black/5 rotate-3 group-hover:rotate-12 transition-transform duration-500"
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.5rem] shadow-lg shadow-black/5 rotate-3 group-hover:rotate-12 transition-transform duration-500 overflow-hidden"
             style={{ backgroundColor: color }}
           >
-            {isCompleted ? (
+            {icon && icon.startsWith("http") ? (
+              <Image src={icon} alt={title} width={64} height={64} className="h-full w-full object-cover" />
+            ) : isCompleted ? (
               <Star className="h-8 w-8 text-white fill-white" />
             ) : (
               <BookOpen className="h-8 w-8 text-white" />
