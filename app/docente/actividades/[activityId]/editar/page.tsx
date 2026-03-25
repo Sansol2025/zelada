@@ -1,11 +1,14 @@
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { Save, Trash2 } from "lucide-react";
+import { Save, Trash2, ArrowLeft, Target, Volume2, Sparkles, WandSparkles } from "lucide-react";
+import Link from "next/link";
+import type { Route } from "next";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
-import { ACTIVITY_TYPES } from "@/lib/constants";
+import { FileUploader } from "@/components/file-uploader";
+import { ActivityBuilderClient } from "@/components/activity-builder-client";
 import { teacherNavItems } from "@/lib/navigation";
 import { deleteActivityForTeacher, updateActivity } from "@/features/teacher/actions";
 import { requireRole } from "@/features/auth/session";
@@ -22,6 +25,7 @@ export default async function EditActivityPage({ params }: EditActivityPageProps
 
   if (!activity) notFound();
   const currentActivity = activity;
+  const backHref = `/docente/modulos/${currentActivity.module_id}/actividades` as Route;
 
   async function updateActivityAction(formData: FormData) {
     "use server";
@@ -51,6 +55,7 @@ export default async function EditActivityPage({ params }: EditActivityPageProps
     );
 
     revalidatePath(`/docente/modulos/${currentActivity.module_id}/actividades`);
+    redirect(`/docente/modulos/${currentActivity.module_id}/actividades`);
   }
 
   async function deleteActivityAction() {
@@ -63,57 +68,139 @@ export default async function EditActivityPage({ params }: EditActivityPageProps
 
   return (
     <RoleLayout
-      title="Editar actividad"
-      description="Ajusta contenido, tipo de interacción y configuración accesible."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <Card className="space-y-4">
-        <CardTitle className="text-lg">Configuración de actividad</CardTitle>
-        <form action={updateActivityAction} className="grid gap-3 md:grid-cols-2">
-          <select className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={currentActivity.type} name="type">
-            {ACTIVITY_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={currentActivity.title} name="title" required />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm md:col-span-2" defaultValue={currentActivity.prompt} name="prompt" required />
-          <textarea
-            className="min-h-20 rounded-xl border border-brand-200 px-4 py-3 text-sm md:col-span-2"
-            defaultValue={currentActivity.instructions || ""}
-            name="instructions"
-          />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={currentActivity.audio_url || ""} name="audio_url" />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={currentActivity.image_url || ""} name="image_url" />
-          <input
-            className="h-11 rounded-xl border border-brand-200 px-4 text-sm"
-            defaultValue={String(currentActivity.position)}
-            min={1}
-            name="position"
-            type="number"
-          />
-          <textarea
-            className="min-h-24 rounded-xl border border-brand-200 px-4 py-3 text-sm md:col-span-2"
-            defaultValue={JSON.stringify(currentActivity.settings_json || {}, null, 2)}
-            name="settings_json"
-          />
-          <div className="md:col-span-2">
-            <Button className="gap-2">
-              <Save className="h-4 w-4" />
-              Guardar cambios
-            </Button>
-          </div>
-        </form>
+      <div className="flex flex-col gap-6">
+        <div className="mb-2">
+           <Link href={backHref} className="inline-flex items-center gap-2 text-sm font-bold text-brand-700 hover:text-brand-950 transition-colors">
+              <ArrowLeft className="h-4 w-4" /> Volver al listado
+           </Link>
+        </div>
 
-        <form action={deleteActivityAction}>
-          <Button className="gap-2 text-rose-700" variant="ghost">
-            <Trash2 className="h-4 w-4" />
-            Eliminar actividad
-          </Button>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-indigo-500 to-purple-400 p-8 text-white shadow-xl sm:p-12">
+          <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl flex items-center gap-4">
+              <Save className="h-12 w-12" /> Ajustar Actividad
+            </h1>
+            <p className="mt-4 text-lg font-medium text-indigo-50 sm:text-xl">
+              Modifica los detalles de &quot;{currentActivity.title}&quot; para que sea perfecta para tus alumnos.
+            </p>
+          </div>
+        </div>
+
+        <form action={updateActivityAction} className="grid gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            
+            {/* COLUMNA 1: CONTENIDO */}
+            <Card className="border-none shadow-card rounded-[2rem] p-8">
+              <div className="mb-6 flex items-center gap-3 border-b border-brand-50 pb-4 text-brand-900">
+                <Target className="h-6 w-6 text-brand-500" />
+                <CardTitle className="text-xl font-bold">Contenido del juego</CardTitle>
+              </div>
+              
+              <div className="space-y-5">
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Título</label>
+                  <input 
+                    className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" 
+                    name="title" 
+                    defaultValue={currentActivity.title} 
+                    required 
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Consigna para el alumno</label>
+                  <input 
+                    className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" 
+                    name="prompt" 
+                    defaultValue={currentActivity.prompt} 
+                    required 
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Orden de aparición</label>
+                  <input 
+                    className="h-12 w-full rounded-xl border border-brand-200 bg-white px-4 font-bold focus:border-brand-500 focus:outline-none" 
+                    name="position" 
+                    type="number" 
+                    defaultValue={currentActivity.position} 
+                  />
+                </div>
+              </div>
+            </Card>
+
+            {/* COLUMNA 2: APOYOS */}
+            <Card className="border-none shadow-card rounded-[2rem] p-8 bg-brand-50">
+              <div className="mb-6 flex items-center gap-3 border-b border-brand-200 pb-4 text-brand-900">
+                <Volume2 className="h-6 w-6 text-brand-600" />
+                <CardTitle className="text-xl font-bold">Apoyos Visuales y Auditivos</CardTitle>
+              </div>
+
+              <div className="space-y-5">
+                <div className="rounded-2xl bg-white p-5 border border-brand-100 shadow-sm">
+                  <FileUploader 
+                    name="audio_url" 
+                    accept="audio/*" 
+                    label="Audio de la consigna"
+                    initialUrl={currentActivity.audio_url || ""}
+                  />
+                </div>
+
+                <div className="rounded-2xl bg-white p-5 border border-brand-100 shadow-sm">
+                  <FileUploader 
+                    name="image_url" 
+                    accept="image/*" 
+                    label="Imagen de apoyo"
+                    initialUrl={currentActivity.image_url || ""}
+                  />
+                </div>
+                
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Pistas o instrucciones extra</label>
+                  <textarea 
+                    className="min-h-24 w-full resize-none rounded-2xl border border-brand-200 bg-white p-5 text-sm focus:border-brand-500 focus:outline-none" 
+                    name="instructions" 
+                    defaultValue={currentActivity.instructions || ""} 
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* BUILDER VISUAL */}
+          <Card className="border-none shadow-card rounded-[2.5rem] p-8">
+            <div className="mb-6 border-b border-brand-50 pb-4 flex items-center gap-3">
+              <WandSparkles className="h-6 w-6 text-brand-500" />
+              <CardTitle className="text-xl font-bold text-brand-900">Dinámica Interactiva</CardTitle>
+            </div>
+            
+            <ActivityBuilderClient 
+              initialType={currentActivity.type} 
+              initialSettings={currentActivity.settings_json as any}
+            />
+
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-brand-50 pt-8">
+              <form action={deleteActivityAction}>
+                <Button type="submit" variant="ghost" className="h-14 rounded-2xl font-black text-rose-500 hover:bg-rose-50">
+                   <Trash2 className="mr-2 h-5 w-5" /> Eliminar permanentemente
+                </Button>
+              </form>
+
+              <Button type="submit" className="h-16 rounded-[2rem] bg-brand-600 px-12 text-xl font-black tracking-tight hover:bg-brand-500 shadow-2xl shadow-brand-500/30 transition-all hover:-translate-y-2 text-white border-none">
+                <Sparkles className="mr-3 h-6 w-6" />
+                Guardar Cambios Mágicos
+              </Button>
+            </div>
+          </Card>
         </form>
-      </Card>
+      </div>
     </RoleLayout>
   );
 }
+

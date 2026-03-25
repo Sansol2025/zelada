@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, X, Loader2, Image as ImageIcon, Music } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
@@ -18,6 +18,13 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
   const [url, setUrl] = useState(initialUrl || "");
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
+
+  // Sincronizar estado interno si initialUrl cambia externamente
+  useEffect(() => {
+    if (initialUrl !== undefined && initialUrl !== url && !isUploading) {
+      setUrl(initialUrl);
+    }
+  }, [initialUrl, url, isUploading]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,9 +99,9 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
               <Icon className="h-5 w-5 text-emerald-600" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-emerald-800">Archivo subido correctamente</p>
+              <p className="truncate text-sm font-bold text-emerald-800">Archivo listo</p>
               <a href={url} target="_blank" rel="noopener noreferrer" className="truncate text-xs text-emerald-600 hover:underline">
-                Ver archivo actual
+                Ver actual
               </a>
             </div>
             <button
@@ -112,7 +119,7 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
             {isUploading ? (
               <div className="flex flex-col items-center justify-center gap-2">
                 <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
-                <span className="text-sm font-bold text-brand-700">Subiendo a la nube mágica...</span>
+                <span className="text-sm font-bold text-brand-700">Subiendo...</span>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2">
@@ -120,10 +127,7 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
                   <Upload className="h-6 w-6" />
                 </div>
                 <div className="text-center">
-                  <span className="text-sm font-bold text-brand-900">Haz clic para buscar en tu PC</span>
-                  <p className="mt-1 text-xs text-brand-500">
-                    O arrastra el archivo aquí ({isAudio ? "Audio" : "Imagen"})
-                  </p>
+                  <span className="text-sm font-bold text-brand-900">Buscar en PC</span>
                 </div>
               </div>
             )}
@@ -141,3 +145,4 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
     </div>
   );
 }
+
