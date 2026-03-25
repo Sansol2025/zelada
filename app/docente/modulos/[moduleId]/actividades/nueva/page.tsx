@@ -1,10 +1,10 @@
 import { revalidatePath } from "next/cache";
-import { notFound } from "next/navigation";
-import { Plus } from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import { Plus, Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle, CardText } from "@/components/ui/card";
 import { ACTIVITY_TYPES } from "@/lib/constants";
 import { teacherNavItems } from "@/lib/navigation";
 import { createActivity } from "@/features/teacher/actions";
@@ -52,45 +52,123 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
     );
 
     revalidatePath(`/docente/modulos/${moduleId}/actividades`);
+    redirect(`/docente/modulos/${moduleId}/actividades`);
   }
 
   return (
     <RoleLayout
-      title="Constructor de actividades"
-      description="Configura consignas, recursos audiovisuales y opciones accesibles."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <Card className="space-y-4">
-        <CardTitle className="text-lg">Nueva actividad</CardTitle>
-        <form action={createActivityAction} className="grid gap-3 md:grid-cols-2">
-          <select className="h-11 rounded-xl border border-brand-200 px-4 text-sm" name="type" defaultValue="multiple_choice_visual">
-            {ACTIVITY_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" name="title" placeholder="Título" required />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm md:col-span-2" name="prompt" placeholder="Consigna" required />
-          <textarea className="min-h-20 rounded-xl border border-brand-200 px-4 py-3 text-sm md:col-span-2" name="instructions" placeholder="Instrucciones de apoyo" />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" name="audio_url" placeholder="URL de audio (opcional)" />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" name="image_url" placeholder="URL de imagen (opcional)" />
-          <input className="h-11 rounded-xl border border-brand-200 px-4 text-sm" defaultValue={String(activities.length + 1)} min={1} name="position" type="number" />
-          <textarea
-            className="min-h-24 rounded-xl border border-brand-200 px-4 py-3 text-sm md:col-span-2"
-            defaultValue='{"options":[]}'
-            name="settings_json"
-            placeholder='JSON de configuración, ej: {"options":[...]}'
-          />
-          <div className="md:col-span-2">
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Guardar actividad
-            </Button>
+      <div className="flex flex-col gap-6">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-500 to-orange-400 p-8 text-white shadow-xl sm:p-12">
+          {/* Decoraciones */}
+          <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl flex items-center gap-4">
+              <Puzzle className="h-12 w-12" /> Taller de Magia
+            </h1>
+            <p className="mt-4 text-lg font-medium text-amber-50 sm:text-xl">
+              Crea una nueva actividad interactiva autoguiada para tus estudiantes. Ellos solo necesitarán usar el ratón.
+            </p>
           </div>
+        </div>
+
+        <form action={createActivityAction} className="grid gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            
+            {/* COLUMNA 1: LO BÁSICO */}
+            <Card className="border-none shadow-card rounded-[2rem] p-8">
+              <div className="mb-6 flex items-center gap-3 border-b border-brand-50 pb-4 text-brand-900">
+                <Target className="h-6 w-6 text-brand-500" />
+                <CardTitle className="text-xl font-bold">1. Datos principales</CardTitle>
+              </div>
+              
+              <div className="space-y-5">
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">¿Qué tipo de juego será?</label>
+                  <select className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-base font-semibold text-brand-900 focus:border-brand-500 focus:bg-white focus:outline-none" name="type" defaultValue="multiple_choice_visual">
+                    {ACTIVITY_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type.replace(/_/g, " ").toUpperCase()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Nombre de la actividad</label>
+                  <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" name="title" placeholder="Ej: Encuentra la vocal oculta" required />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">¿Qué debe hacer el alumno? (Consigna visual)</label>
+                  <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" name="prompt" placeholder="Ej: Haz clic en el animal más grande" required />
+                </div>
+                
+                <input type="hidden" name="position" value={activities.length + 1} />
+              </div>
+            </Card>
+
+            {/* COLUMNA 2: ACCESIBILIDAD Y MEDIOS */}
+            <Card className="border-none shadow-card rounded-[2rem] p-8 bg-brand-50 overflow-hidden relative">
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-brand-100 opacity-50"></div>
+              
+              <div className="mb-6 relative z-10 flex items-center gap-3 border-b border-brand-200 pb-4 text-brand-900">
+                <Volume2 className="h-6 w-6 text-brand-600" />
+                <CardTitle className="text-xl font-bold">2. Accesibilidad y Elementos</CardTitle>
+              </div>
+
+              <div className="space-y-5 relative z-10">
+                <div className="rounded-2xl bg-white p-5 shadow-sm border border-brand-100">
+                  <label className="mb-2 flex items-center gap-2 text-sm font-bold text-rose-600">
+                    <Volume2 className="h-4 w-4" /> Enlace del Audio (Clave para autoguiados)
+                  </label>
+                  <p className="mb-3 text-xs text-brand-700 font-medium">Fundamental para niños que no pueden leer. Pega aquí el enlace de la consigna hablada.</p>
+                  <input className="h-12 w-full rounded-xl border border-brand-200 bg-soft-sky px-4 text-sm focus:border-brand-500 focus:bg-white focus:outline-none" name="audio_url" placeholder="https://ejemplo.com/audio.mp3" />
+                </div>
+
+                <div>
+                  <label className="mb-2 flex items-center gap-2 text-sm font-bold text-brand-900">
+                    <ImageIcon className="h-4 w-4 text-brand-500" /> URL de Imagen decorativa (Opcional)
+                  </label>
+                  <input className="h-12 w-full rounded-xl border border-brand-200 bg-white px-4 text-sm focus:border-brand-500 focus:outline-none" name="image_url" placeholder="https://..." />
+                </div>
+                
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-brand-900">Instrucciones de apoyo visual</label>
+                  <textarea className="min-h-24 w-full resize-none rounded-xl border border-brand-200 bg-white p-4 text-sm focus:border-brand-500 focus:outline-none" name="instructions" placeholder="Información extra para el alumno (si apllica)..." />
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* CONFIGURACIÓN AVANZADA LOGICA JUEGO */}
+          <Card className="border-none shadow-card rounded-[2rem] p-8">
+            <div className="mb-6 border-b border-brand-50 pb-4">
+              <CardTitle className="text-xl font-bold text-brand-900">3. Variables Interactivas</CardTitle>
+              <CardText className="mt-1 font-medium">Define las opciones que se mostrarán en pantalla. El niño interactuará solo con clics.</CardText>
+            </div>
+            
+            <textarea
+              className="min-h-40 w-full resize-y rounded-2xl border-2 border-dashed border-brand-200 bg-soft-sky p-6 font-mono text-sm text-brand-800 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none"
+              defaultValue={JSON.stringify({ options: [{ text: "Opcion 1", isCorrect: true, imageUrl: "" }, { text: "Opcion 2", isCorrect: false, imageUrl: "" }] }, null, 2)}
+              name="settings_json"
+              placeholder="Estructura JSON de las opciones..."
+            />
+            <p className="mt-3 text-xs text-brand-600 font-bold bg-brand-50 inline-block px-3 py-1 rounded-full">Nota temporal: Utiliza el formato JSON para las opciones. Esto habilitará los botones en pantalla gigante.</p>
+
+            <div className="mt-8 flex justify-end">
+              <Button type="submit" className="h-14 rounded-2xl bg-amber-500 px-10 text-lg font-bold tracking-wide hover:bg-amber-400 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 text-white">
+                <Sparkles className="mr-2 h-6 w-6" />
+                Crear Actividad Interactiva
+              </Button>
+            </div>
+          </Card>
         </form>
-      </Card>
+      </div>
     </RoleLayout>
   );
 }

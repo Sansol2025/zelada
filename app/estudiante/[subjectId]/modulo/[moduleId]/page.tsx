@@ -105,6 +105,7 @@ export default async function StudentModulePage({ params }: ModulePageProps) {
                   prompt: activity.prompt,
                   instructions: activity.instructions,
                   image_url: activity.image_url,
+                  audio_url: activity.audio_url,
                   settings_json: (activity.settings_json as Record<string, unknown> | null) ?? null
                 }}
               />

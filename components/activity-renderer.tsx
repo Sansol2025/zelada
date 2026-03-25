@@ -18,6 +18,7 @@ type ActivityRendererProps = {
     prompt: string;
     instructions?: string | null;
     image_url?: string | null;
+    audio_url?: string | null;
     settings_json?: Record<string, unknown> | null;
   };
   studentId?: string;
@@ -99,21 +100,36 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
   };
 
   const baseCard = (
-    <Card className="space-y-5">
-      <div className="space-y-2">
-        <CardTitle>{activity.title}</CardTitle>
-        <CardText>{activity.prompt}</CardText>
-        <div className="flex flex-wrap gap-2">
-          <AccessibleAudioButton text={`${activity.title}. ${activity.prompt}`} />
-          {activity.instructions ? (
-            <span className="rounded-xl bg-soft-sun px-3 py-2 text-xs font-semibold text-amber-900">
-              {activity.instructions}
-            </span>
-          ) : null}
+    <Card className="border-none bg-white p-6 shadow-card sm:p-10 rounded-[2rem] space-y-8">
+      <div className="flex flex-col items-center justify-center space-y-6 text-center">
+        <div className="space-y-4 max-w-3xl">
+          <h2 className="font-display text-4xl font-extrabold uppercase tracking-tight text-brand-950 sm:text-5xl">
+            {activity.title}
+          </h2>
+          <p className="text-2xl font-semibold text-brand-700 sm:text-3xl leading-snug">
+            {activity.prompt}
+          </p>
         </div>
+        
+        <div className="flex justify-center w-full">
+          <AccessibleAudioButton 
+            text={`${activity.title}. ${activity.prompt}`} 
+            audioUrl={activity.audio_url}
+            autoPlay={true}
+          />
+        </div>
+
+        {activity.instructions ? (
+          <div className="mt-4 rounded-2xl bg-amber-50 px-6 py-4 border-2 border-amber-200">
+            <span className="text-xl font-bold text-amber-900">
+              💡 {activity.instructions}
+            </span>
+          </div>
+        ) : null}
       </div>
+
       {activity.image_url ? (
-        <div className="overflow-hidden rounded-2xl">
+        <div className="mx-auto max-w-2xl overflow-hidden rounded-[2rem] border-4 border-brand-100 shadow-lg">
           <Image src={activity.image_url} alt={activity.title} width={900} height={400} className="w-full object-cover" />
         </div>
       ) : null}
@@ -122,15 +138,17 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
 
   if (activity.type === "multiple_choice_visual" || activity.type === "image_select") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-8">
         {baseCard}
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {options.map((option) => (
             <button
               key={option.id}
               className={cn(
-                "rounded-2xl border-2 border-brand-100 bg-white p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400",
-                selected === option.id && "border-brand-400 bg-brand-50"
+                "group relative flex min-h-48 flex-col items-center justify-center overflow-hidden rounded-[2rem] border-4 p-6 transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-400 hover:-translate-y-2 hover:shadow-xl",
+                selected === option.id 
+                  ? "border-emerald-500 bg-emerald-50 shadow-emerald-500/30 shadow-xl scale-105" 
+                  : "border-brand-100 bg-white hover:border-brand-300"
               )}
               onClick={() => setSelected(option.id)}
               type="button"
@@ -140,35 +158,57 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
                   src={option.imageUrl}
                   alt={option.label}
                   width={280}
-                  height={160}
-                  className="mb-3 h-32 w-full rounded-xl object-cover"
+                  height={280}
+                  className="mb-6 h-48 w-full rounded-2xl object-cover transition-transform group-hover:scale-105"
                 />
               ) : null}
-              <div className="flex items-center gap-2 font-semibold text-brand-900">
-                {selected === option.id ? (
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                ) : (
-                  <Circle className="h-4 w-4 text-brand-400" />
-                )}
-                {option.label}
+              <div className="flex w-full items-center justify-center gap-3">
+                <div className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-full border-4 transition-colors",
+                  selected === option.id ? "border-emerald-500 bg-emerald-500 text-white" : "border-brand-200"
+                )}>
+                  {selected === option.id && <CheckCircle2 className="h-5 w-5" />}
+                </div>
+                <span className={cn(
+                  "text-2xl font-black text-center leading-tight",
+                  selected === option.id ? "text-emerald-900" : "text-brand-900"
+                )}>
+                  {option.label}
+                </span>
               </div>
             </button>
           ))}
         </div>
-        <Button
-          size="lg"
-          disabled={!selected || pending || completed}
-          onClick={() => {
-            const chosen = options.find((option) => option.id === selected);
-            const hasCorrect = options.some((option) => option.isCorrect);
-            const isCorrect = hasCorrect ? Boolean(chosen?.isCorrect) : true;
-            setFeedback(isCorrect ? "Respuesta correcta. ¡Muy bien!" : "Intento registrado. Sigue practicando.");
-            void completeActivity(isCorrect ? 100 : 50, { selected, isCorrect });
-          }}
-        >
-          {completed ? "Actividad completada" : "Confirmar respuesta"}
-        </Button>
-        {feedback ? <p className="text-sm font-semibold text-brand-700">{feedback}</p> : null}
+
+        <div className="flex flex-col items-center justify-center pt-8">
+          <Button
+            className={cn(
+              "h-20 rounded-[2rem] px-16 text-2xl font-black uppercase tracking-wider transition-all duration-300 shadow-xl",
+              selected
+                ? "bg-amber-500 hover:bg-amber-400 text-white shadow-amber-500/40 hover:-translate-y-2 hover:scale-105"
+                : "bg-slate-200 text-slate-400 opacity-50 cursor-not-allowed"
+            )}
+            disabled={!selected || pending || completed}
+            onClick={() => {
+              const chosen = options.find((option) => option.id === selected);
+              const hasCorrect = options.some((option) => option.isCorrect);
+              const isCorrect = hasCorrect ? Boolean(chosen?.isCorrect) : true;
+              setFeedback(isCorrect ? "¡Excelente! Lo hiciste de maravilla 🌟" : "¡Casi! Sigue intentándolo 💪");
+              void completeActivity(isCorrect ? 100 : 50, { selected, isCorrect });
+            }}
+          >
+            {completed ? "🌟 Actividad Completada" : "Confirmar Respuesta"}
+          </Button>
+          
+          {feedback ? (
+            <div className={cn(
+              "mt-8 animate-in slide-in-from-bottom-4 rounded-[2rem] px-8 py-6 text-center text-2xl font-black shadow-lg",
+              feedback.includes("Excelente") ? "bg-emerald-100 text-emerald-800 border-4 border-emerald-300" : "bg-amber-100 text-amber-800 border-4 border-amber-300"
+            )}>
+              {feedback}
+            </div>
+          ) : null}
+        </div>
       </div>
     );
   }

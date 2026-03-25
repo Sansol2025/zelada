@@ -1,4 +1,4 @@
-import { BarChart3, BookOpenCheck, Layers3, Sparkles, Users } from "lucide-react";
+import { BarChart3, BookOpenCheck, Layers3, Sparkles, Users, PlusCircle, UserPlus, QrCode, Activity } from "lucide-react";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/empty-state";
@@ -47,128 +47,187 @@ export default async function TeacherDashboardPage() {
 
   const studentRows = normalizeStudentRows(rawRows);
 
-  const cards = [
+  const stats = [
     {
       title: "Materias",
       value: metrics.subjectsCount,
-      description: "Recorridos creados por el docente",
-      icon: BookOpenCheck
+      description: "Rutas de aprendizaje",
+      icon: BookOpenCheck,
+      colorClass: "text-brand-600",
+      bgClass: "bg-brand-50"
     },
     {
       title: "Módulos",
       value: metrics.modulesCount,
-      description: "Bloques pedagógicos activos",
-      icon: Layers3
+      description: "Bloques pedagógicos",
+      icon: Layers3,
+      colorClass: "text-emerald-600",
+      bgClass: "bg-emerald-50"
     },
     {
       title: "Actividades",
       value: metrics.activitiesCount,
-      description: "Ejercicios totales configurados",
-      icon: Sparkles
+      description: "Ejercicios interactivos",
+      icon: Sparkles,
+      colorClass: "text-amber-600",
+      bgClass: "bg-amber-50"
     },
     {
-      title: "Asignaciones",
+      title: "Familia/Alumnos",
       value: metrics.assignedStudents,
-      description: "Vínculos estudiante-materia",
-      icon: Users
+      description: "Estudiantes en ruta",
+      icon: Users,
+      colorClass: "text-rose-600",
+      bgClass: "bg-rose-50"
     }
   ];
 
   return (
     <RoleLayout
-      title="Panel docente"
-      description="Monitoreo rápido de contenidos, avance estudiantil y señales de bloqueo."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente"
     >
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {cards.map((card) => (
-          <Card key={card.title} className="space-y-2">
-            <div className="flex items-center justify-between">
-              <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">
-                {card.title}
-              </CardText>
-              <card.icon className="h-4 w-4 text-brand-700" />
+      <div className="flex flex-col gap-8 pb-10">
+        
+        {/* WELCOME BANNER */}
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-600 to-brand-400 p-8 text-white shadow-xl sm:p-12">
+          {/* Decoraciones de fondo */}
+          <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-10 blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-brand-200 opacity-20 blur-3xl"></div>
+          
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+              ¡Hola, Docente! 👋
+            </h1>
+            <p className="mt-4 text-lg font-medium text-brand-50 sm:text-xl">
+              Aquí puedes crear recorridos mágicos, monitorear el progreso de tus estudiantes y gestionar sus perfiles de forma rápida y sencilla.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/docente/materias/nueva">
+                <Button className="h-12 rounded-2xl bg-white px-6 font-bold text-brand-700 hover:bg-brand-50 hover:text-brand-800 shadow-md transition-all hover:-translate-y-1">
+                  <PlusCircle className="mr-2 h-5 w-5" /> Nueva materia
+                </Button>
+              </Link>
+              <Link href="/docente/asignaciones">
+                <Button className="h-12 rounded-2xl border-none bg-brand-700/30 px-6 font-bold text-white hover:bg-brand-700/50 shadow-sm transition-all hover:-translate-y-1 backdrop-blur-md">
+                  <UserPlus className="mr-2 h-5 w-5" /> Asignar estudiantes
+                </Button>
+              </Link>
             </div>
-            <CardTitle className="text-3xl">{card.value}</CardTitle>
-            <CardText>{card.description}</CardText>
+          </div>
+        </div>
+
+        {/* METRICS GRID */}
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => (
+            <Card 
+              key={stat.title} 
+              className="group cursor-default overflow-hidden border-none shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg rounded-[1.5rem]"
+            >
+              <div className="flex items-center gap-4">
+                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${stat.bgClass}`}>
+                  <stat.icon className={`h-7 w-7 ${stat.colorClass} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`} />
+                </div>
+                <div>
+                  <CardText className="text-sm font-bold uppercase tracking-wide text-brand-500">
+                    {stat.title}
+                  </CardText>
+                  <p className="font-display text-3xl font-extrabold text-brand-950">
+                    {stat.value}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </section>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          
+          {/* QUICK INSIGHTS */}
+          <Card className="col-span-1 border-none bg-white shadow-card rounded-[2rem] lg:col-span-2">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3 text-brand-900">
+                <Activity className="h-6 w-6 text-brand-500" />
+                <CardTitle className="text-2xl font-bold">Panorama de avance</CardTitle>
+              </div>
+              <Badge className="rounded-xl px-4 py-1.5 text-sm font-bold shadow-sm" variant="default">
+                Media: {percent(metrics.progressAverage)}
+              </Badge>
+            </div>
+            
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="group flex flex-col justify-center rounded-3xl bg-amber-50 p-6 transition-colors hover:bg-amber-100">
+                <p className="text-sm font-extrabold uppercase tracking-wider text-amber-700">Estudiantes Atascados</p>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <p className="text-5xl font-black text-amber-900">{metrics.blockedStudents}</p>
+                  <span className="text-sm font-medium text-amber-800">requieren ayuda</span>
+                </div>
+              </div>
+              
+              <div className="group flex flex-col justify-center rounded-3xl bg-emerald-50 p-6 transition-colors hover:bg-emerald-100">
+                <p className="text-sm font-extrabold uppercase tracking-wider text-emerald-700">Completaron todo</p>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <p className="text-5xl font-black text-emerald-900">{metrics.completedStudents}</p>
+                  <span className="text-sm font-medium text-emerald-800">alumnos listos</span>
+                </div>
+              </div>
+            </div>
           </Card>
-        ))}
-      </section>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <Card className="space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <CardTitle className="text-lg">Panorama pedagógico</CardTitle>
-            <Badge variant="default">Promedio: {percent(metrics.progressAverage)}</Badge>
-          </div>
-          <CardText>
-            Este indicador resume el progreso actual de quienes tienen materias asignadas.
-          </CardText>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl bg-amber-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-amber-800">Estudiantes bloqueados</p>
-              <p className="mt-1 text-2xl font-bold text-amber-900">{metrics.blockedStudents}</p>
+          {/* ACTION CENTER */}
+          <Card className="col-span-1 flex flex-col justify-between border-none bg-white shadow-card rounded-[2rem]">
+            <div>
+              <CardTitle className="mb-2 text-xl font-bold text-brand-900">Panel de accesos</CardTitle>
+              <CardText className="text-base text-brand-700">
+                Genera credenciales mágicas para que tus estudiantes puedan jugar y aprender.
+              </CardText>
             </div>
-            <div className="rounded-xl bg-emerald-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-800">Estudiantes completados</p>
-              <p className="mt-1 text-2xl font-bold text-emerald-900">{metrics.completedStudents}</p>
+            
+            <div className="mt-6 flex flex-col gap-3">
+              <Link href="/docente/accesos" className="w-full">
+                <Button className="h-14 w-full justify-between rounded-2xl bg-brand-50 text-left font-bold text-brand-700 hover:bg-brand-100 shadow-none border border-brand-200">
+                  <span className="flex items-center gap-3">
+                    <QrCode className="h-5 w-5 text-brand-500" /> Tarjetas QR
+                  </span>
+                  <BarChart3 className="h-4 w-4 opacity-50" />
+                </Button>
+              </Link>
+              <Link href="/docente/seguimiento" className="w-full">
+                <Button className="h-14 w-full justify-between rounded-2xl bg-soft-sky text-left font-bold text-brand-700 hover:bg-blue-50 shadow-none border border-brand-100">
+                  <span className="flex items-center gap-3">
+                    <BarChart3 className="h-5 w-5 text-brand-500" /> Analítica detallada
+                  </span>
+                  <Activity className="h-4 w-4 opacity-50" />
+                </Button>
+              </Link>
             </div>
-          </div>
-        </Card>
-
-        <Card className="space-y-2">
-          <div className="flex items-center gap-2 text-brand-900">
-            <BarChart3 className="h-5 w-5" />
-            <CardTitle className="text-lg">Lectura rápida del tablero</CardTitle>
-          </div>
-          <CardText>
-            Si hay bloqueos altos y avance bajo, conviene revisar secuencia de módulos y nivel de dificultad de actividades.
-          </CardText>
-          <CardText>
-            Cuando el avance promedio supera 70%, suele ser buen momento para agregar nuevas actividades de práctica guiada.
-          </CardText>
-        </Card>
-      </section>
-
-      <Card className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <CardTitle className="text-lg">Acciones rápidas</CardTitle>
-            <CardText>Accede directo a creación de contenidos, asignaciones y accesos.</CardText>
-          </div>
-          <div className="w-full md:w-72">
-            <input
-              className="h-11 w-full rounded-xl border border-brand-200 px-4 text-sm"
-              placeholder="Buscar estudiante o materia"
-              type="search"
-            />
-          </div>
+          </Card>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/docente/materias/nueva">
-            <Button size="sm">Nueva materia</Button>
-          </Link>
-          <Link href="/docente/asignaciones">
-            <Button size="sm" variant="secondary">Asignar materias</Button>
-          </Link>
-          <Link href="/docente/accesos">
-            <Button size="sm" variant="secondary">Generar QR/enlace</Button>
-          </Link>
-          <Link href="/docente/seguimiento">
-            <Button size="sm" variant="secondary">Ver seguimiento</Button>
-          </Link>
-        </div>
-      </Card>
 
-      {metrics.subjectsCount === 0 ? (
-        <EmptyState
-          title="Aún no hay materias creadas"
-          description="El siguiente paso es crear la primera materia y asignarla para comenzar a medir progreso."
-        />
-      ) : (
-        <StudentProgressTable rows={studentRows} />
-      )}
+        {/* STUDENTS TABLE SECTION */}
+        <section className="mt-4">
+          <div className="mb-6 ml-2">
+            <h2 className="font-display text-2xl font-bold text-brand-900">Progreso Reciente</h2>
+            <p className="text-brand-600">Visualiza el estado de los alumnos que están interactuando con las actividades.</p>
+          </div>
+          
+          {metrics.subjectsCount === 0 ? (
+            <div className="rounded-[2rem] border-2 border-dashed border-brand-200 bg-brand-50 p-12 text-center">
+              <EmptyState
+                title="Aún no hay materias creadas"
+                description="El siguiente paso es crear la primera materia lúdica y asignarla para comenzar la magia."
+              />
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-[2rem] border border-brand-100 bg-white shadow-card">
+              <StudentProgressTable rows={studentRows} />
+            </div>
+          )}
+        </section>
+
+      </div>
     </RoleLayout>
   );
 }
