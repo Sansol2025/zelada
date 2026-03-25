@@ -1,19 +1,26 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
-import { BookOpen, Pencil, Plus, Trash2 } from "lucide-react";
+import { BarChart3, BookOpen, Layers3, Pencil, Plus, Trash2, Users } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { deleteSubject, createSubject } from "@/features/teacher/actions";
-import { getTeacherSubjects } from "@/features/teacher/queries";
+import { getTeacherSubjectsOverview } from "@/features/teacher/queries";
 import { requireRole } from "@/features/auth/session";
 import { teacherNavItems } from "@/lib/navigation";
+import { percent } from "@/lib/utils";
 
 export default async function TeacherSubjectsPage() {
   const session = await requireRole(["teacher", "admin"]);
-  const subjects = await getTeacherSubjects(session.userId as string);
+  const subjects = await getTeacherSubjectsOverview(session.userId as string);
+  const activeSubjectsCount = subjects.filter((subject) => subject.is_active).length;
+  const assignedStudentsCount = subjects.reduce((acc, subject) => acc + subject.assigned_students_count, 0);
+  const averageProgress = subjects.length
+    ? subjects.reduce((acc, subject) => acc + subject.progress_average, 0) / subjects.length
+    : 0;
 
   async function createSubjectAction(formData: FormData) {
     "use server";
@@ -46,10 +53,33 @@ export default async function TeacherSubjectsPage() {
   return (
     <RoleLayout
       title="Gestión de materias"
-      description="Crea y administra materias personalizadas con identidad visual propia."
+      description="Define materias, organiza módulos y visualiza su uso real en estudiantes."
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Card className="space-y-1">
+          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Materias</CardText>
+          <CardTitle className="text-3xl">{subjects.length}</CardTitle>
+          <CardText>Total creadas por el docente</CardText>
+        </Card>
+        <Card className="space-y-1">
+          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Activas</CardText>
+          <CardTitle className="text-3xl">{activeSubjectsCount}</CardTitle>
+          <CardText>Disponibles para asignación</CardText>
+        </Card>
+        <Card className="space-y-1">
+          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Asignaciones</CardText>
+          <CardTitle className="text-3xl">{assignedStudentsCount}</CardTitle>
+          <CardText>Vínculos estudiante-materia</CardText>
+        </Card>
+        <Card className="space-y-1">
+          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Progreso medio</CardText>
+          <CardTitle className="text-3xl">{percent(averageProgress)}</CardTitle>
+          <CardText>Promedio entre materias</CardText>
+        </Card>
+      </section>
+
       <Card className="space-y-4">
         <div className="flex items-center gap-2 text-brand-900">
           <Plus className="h-5 w-5" />
@@ -102,14 +132,43 @@ export default async function TeacherSubjectsPage() {
             <Card key={subject.id} className="space-y-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
-                  <CardTitle className="text-lg">{subject.title}</CardTitle>
-                  <CardText>{subject.description || "Sin descripción"}</CardText>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="text-lg">{subject.title}</CardTitle>
+                    <Badge variant={subject.is_active ? "success" : "warning"}>
+                      {subject.is_active ? "Activa" : "Inactiva"}
+                    </Badge>
+                  </div>
+                  <CardText>{subject.description || "Sin descripción pedagógica cargada."}</CardText>
                 </div>
                 <div
                   className="rounded-xl p-2 text-white"
                   style={{ backgroundColor: subject.color || "#43b8f4" }}
                 >
                   <BookOpen className="h-5 w-5" />
+                </div>
+              </div>
+
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded-xl bg-brand-50 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-brand-700">
+                    <Layers3 className="h-4 w-4" />
+                    <p className="text-xs font-semibold uppercase tracking-wider">Módulos</p>
+                  </div>
+                  <p className="text-xl font-bold text-brand-900">{subject.modules_count}</p>
+                </div>
+                <div className="rounded-xl bg-brand-50 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-brand-700">
+                    <Users className="h-4 w-4" />
+                    <p className="text-xs font-semibold uppercase tracking-wider">Estudiantes</p>
+                  </div>
+                  <p className="text-xl font-bold text-brand-900">{subject.assigned_students_count}</p>
+                </div>
+                <div className="rounded-xl bg-brand-50 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-brand-700">
+                    <BarChart3 className="h-4 w-4" />
+                    <p className="text-xs font-semibold uppercase tracking-wider">Avance</p>
+                  </div>
+                  <p className="text-xl font-bold text-brand-900">{percent(subject.progress_average)}</p>
                 </div>
               </div>
 
@@ -123,6 +182,11 @@ export default async function TeacherSubjectsPage() {
                 <Link href={`/docente/materias/${subject.id}/modulos`}>
                   <Button size="sm" className="gap-2">
                     Gestionar módulos
+                  </Button>
+                </Link>
+                <Link href="/docente/asignaciones">
+                  <Button size="sm" variant="secondary" className="gap-2">
+                    Asignar estudiantes
                   </Button>
                 </Link>
                 <form action={deleteSubjectAction}>

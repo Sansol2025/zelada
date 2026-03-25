@@ -49,6 +49,61 @@ export async function getTeacherSubjects(teacherId: string) {
   return data ?? [];
 }
 
+export async function getTeacherSubjectsOverview(teacherId: string) {
+  const supabase = await createClient();
+  const { data: subjects, error } = await supabase
+    .from("subjects")
+    .select("id, title, description, color, icon, is_active, created_at")
+    .eq("teacher_id", teacherId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  if (!subjects?.length) return [];
+
+  const subjectIds = subjects.map((subject) => subject.id);
+
+  const [{ data: modules }, { data: assignments }, { data: progressRows }] = await Promise.all([
+    supabase.from("modules").select("id, subject_id").in("subject_id", subjectIds),
+    supabase.from("student_subjects").select("subject_id, student_id").in("subject_id", subjectIds),
+    supabase
+      .from("student_subject_progress")
+      .select("subject_id, progress_percent")
+      .in("subject_id", subjectIds)
+  ]);
+
+  const modulesCountBySubject = new Map<string, number>();
+  const studentsBySubject = new Map<string, Set<string>>();
+  const progressBySubject = new Map<string, { sum: number; count: number }>();
+
+  for (const row of modules ?? []) {
+    modulesCountBySubject.set(row.subject_id, (modulesCountBySubject.get(row.subject_id) ?? 0) + 1);
+  }
+
+  for (const row of assignments ?? []) {
+    const current = studentsBySubject.get(row.subject_id) ?? new Set<string>();
+    current.add(row.student_id);
+    studentsBySubject.set(row.subject_id, current);
+  }
+
+  for (const row of progressRows ?? []) {
+    const current = progressBySubject.get(row.subject_id) ?? { sum: 0, count: 0 };
+    current.sum += Number(row.progress_percent ?? 0);
+    current.count += 1;
+    progressBySubject.set(row.subject_id, current);
+  }
+
+  return subjects.map((subject) => {
+    const progress = progressBySubject.get(subject.id);
+
+    return {
+      ...subject,
+      modules_count: modulesCountBySubject.get(subject.id) ?? 0,
+      assigned_students_count: studentsBySubject.get(subject.id)?.size ?? 0,
+      progress_average: progress && progress.count ? progress.sum / progress.count : 0
+    };
+  });
+}
+
 export async function getTeacherSubjectById(subjectId: string, teacherId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
