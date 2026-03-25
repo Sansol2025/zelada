@@ -57,12 +57,12 @@ export async function getTeacherSubjectsOverview(teacherId: string) {
     .eq("teacher_id", teacherId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
   if (!subjects?.length) return [];
 
   const subjectIds = subjects.map((subject) => subject.id);
 
-  const [{ data: modules }, { data: assignments }, { data: progressRows }] = await Promise.all([
+  const [{ data: modules, error: modulesError }, { data: assignments, error: assignmentsError }, { data: progressRows, error: progressError }] = await Promise.all([
     supabase.from("modules").select("id, subject_id").in("subject_id", subjectIds),
     supabase.from("student_subjects").select("subject_id, student_id").in("subject_id", subjectIds),
     supabase
@@ -70,6 +70,15 @@ export async function getTeacherSubjectsOverview(teacherId: string) {
       .select("subject_id, progress_percent")
       .in("subject_id", subjectIds)
   ]);
+
+  if (modulesError || assignmentsError || progressError) {
+    return subjects.map((subject) => ({
+      ...subject,
+      modules_count: 0,
+      assigned_students_count: 0,
+      progress_average: 0
+    }));
+  }
 
   const modulesCountBySubject = new Map<string, number>();
   const studentsBySubject = new Map<string, Set<string>>();

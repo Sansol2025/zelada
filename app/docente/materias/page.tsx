@@ -15,7 +15,7 @@ import { percent } from "@/lib/utils";
 
 export default async function TeacherSubjectsPage() {
   const session = await requireRole(["teacher", "admin"]);
-  const subjects = await getTeacherSubjectsOverview(session.userId as string);
+  const subjects = await getTeacherSubjectsOverview(session.userId as string).catch(() => []);
   const activeSubjectsCount = subjects.filter((subject) => subject.is_active).length;
   const assignedStudentsCount = subjects.reduce((acc, subject) => acc + subject.assigned_students_count, 0);
   const averageProgress = subjects.length
