@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
+import { ActivityBuilderClient } from "@/components/activity-builder-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardText } from "@/components/ui/card";
 import { ACTIVITY_TYPES } from "@/lib/constants";
@@ -88,17 +89,6 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
               
               <div className="space-y-5">
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-brand-900">¿Qué tipo de juego será?</label>
-                  <select className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-base font-semibold text-brand-900 focus:border-brand-500 focus:bg-white focus:outline-none" name="type" defaultValue="multiple_choice_visual">
-                    {ACTIVITY_TYPES.map((type) => (
-                      <option key={type} value={type}>
-                        {type.replace(/_/g, " ").toUpperCase()}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
                   <label className="mb-2 block text-sm font-bold text-brand-900">Nombre de la actividad</label>
                   <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" name="title" placeholder="Ej: Encuentra la vocal oculta" required />
                 </div>
@@ -145,20 +135,13 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
             </Card>
           </div>
 
-          {/* CONFIGURACIÓN AVANZADA LOGICA JUEGO */}
+          {/* CONFIGURACIÓN AVANZADA LOGICA JUEGO (REEMPLAZADA) */}
           <Card className="border-none shadow-card rounded-[2rem] p-8">
             <div className="mb-6 border-b border-brand-50 pb-4">
-              <CardTitle className="text-xl font-bold text-brand-900">3. Variables Interactivas</CardTitle>
-              <CardText className="mt-1 font-medium">Define las opciones que se mostrarán en pantalla. El niño interactuará solo con clics.</CardText>
+              <CardTitle className="text-xl font-bold text-brand-900">3. Arquitectura del Juego</CardTitle>
             </div>
             
-            <textarea
-              className="min-h-40 w-full resize-y rounded-2xl border-2 border-dashed border-brand-200 bg-soft-sky p-6 font-mono text-sm text-brand-800 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none"
-              defaultValue={JSON.stringify({ options: [{ text: "Opcion 1", isCorrect: true, imageUrl: "" }, { text: "Opcion 2", isCorrect: false, imageUrl: "" }] }, null, 2)}
-              name="settings_json"
-              placeholder="Estructura JSON de las opciones..."
-            />
-            <p className="mt-3 text-xs text-brand-600 font-bold bg-brand-50 inline-block px-3 py-1 rounded-full">Nota temporal: Utiliza el formato JSON para las opciones. Esto habilitará los botones en pantalla gigante.</p>
+            <ActivityBuilderClient />
 
             <div className="mt-8 flex justify-end">
               <Button type="submit" className="h-14 rounded-2xl bg-amber-500 px-10 text-lg font-bold tracking-wide hover:bg-amber-400 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 text-white">
