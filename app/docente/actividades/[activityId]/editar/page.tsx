@@ -182,7 +182,7 @@ export default async function EditActivityPage({ params }: EditActivityPageProps
             
             <ActivityBuilderClient 
               initialType={currentActivity.type} 
-              initialSettings={currentActivity.settings_json as any}
+              initialSettings={currentActivity.settings_json as Record<string, unknown>}
             />
 
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-brand-50 pt-8">

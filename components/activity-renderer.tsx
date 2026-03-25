@@ -1,14 +1,12 @@
 "use client";
 
-import Image from "react-image"; // For robust image loading if possible, otherwise Next Image
 import NextImage from "next/image";
 import { useMemo, useState, useEffect } from "react";
-import { CheckCircle2, CircleSlash2, MoveRight, Sparkles, WandSparkles, X, ChevronUp, ChevronDown, Trophy, Star, Lightbulb, Mic } from "lucide-react";
+import { CheckCircle2, MoveRight, Sparkles, WandSparkles, X, ChevronUp, ChevronDown, Trophy, Star, Lightbulb, Mic } from "lucide-react";
 
 import { AccessibleAudioButton } from "@/components/accessible-audio-button";
-import { BigActionButton } from "@/components/big-action-button";
 import { Button } from "@/components/ui/button";
-import { Card, CardText } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type ActivityRendererProps = {
@@ -67,7 +65,6 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
   const [pending, setPending] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [feedback, setFeedback] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
-  const [showCelebration, setShowCelebration] = useState(false);
 
   // Sync options if settings change
   useEffect(() => {
@@ -101,7 +98,6 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
   };
 
   const celebrate = () => {
-     setShowCelebration(true);
      // Aquí se podría disparar confeti o sonido de victoria
   };
 

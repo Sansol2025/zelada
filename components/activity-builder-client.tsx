@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, Trash2, HelpCircle, Check, X, MoveHorizontal, ListOrdered, GripVertical, Image as ImageIcon, Volume2, Target, ChevronUp, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Plus, Trash2, HelpCircle, Check, X, ImageIcon, Volume2, Target, ChevronUp, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FileUploader } from "@/components/file-uploader";
@@ -36,7 +36,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
   // Inicialización de opciones desde settings o default
   const [options, setOptions] = useState<OptionItem[]>(() => {
     if (initialSettings?.options && Array.isArray(initialSettings.options)) {
-      return initialSettings.options.map((o: any, idx: number) => ({
+      return (initialSettings.options as Record<string, any>[]).map((o: Record<string, any>, idx: number) => ({
         id: o.id || `opt-${idx}-${Date.now()}`,
         label: o.label || "",
         imageUrl: o.imageUrl || "",
