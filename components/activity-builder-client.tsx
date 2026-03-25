@@ -276,7 +276,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
 
             <Button 
               type="button" 
-              variant="outline" 
+              variant="ghost" 
               onClick={addOption} 
               className="mt-6 border-4 border-dashed border-brand-100 bg-brand-50/30 text-brand-600 hover:bg-brand-50 hover:border-brand-200 rounded-2xl h-16 w-full font-black text-lg transition-all"
             >
