@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { BarChart3, BookOpen, Layers3, Pencil, Plus, Trash2, Users } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
@@ -13,9 +14,38 @@ import { requireRole } from "@/features/auth/session";
 import { teacherNavItems } from "@/lib/navigation";
 import { percent } from "@/lib/utils";
 
-export default async function TeacherSubjectsPage() {
+type TeacherSubjectsPageProps = {
+  searchParams?: Promise<{
+    error?: string | string[];
+    success?: string | string[];
+  }>;
+};
+
+function readQueryValue(value?: string | string[]) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw) return "";
+  try {
+    return decodeURIComponent(raw).replace(/\+/g, " ");
+  } catch {
+    return raw;
+  }
+}
+
+function formatActionError(error: unknown) {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = String((error as { message?: unknown }).message ?? "");
+    if (message) return message;
+  }
+  return "No se pudo completar la operación. Intenta nuevamente.";
+}
+
+export default async function TeacherSubjectsPage({ searchParams }: TeacherSubjectsPageProps) {
   const session = await requireRole(["teacher", "admin"]);
   const subjects = await getTeacherSubjectsOverview(session.userId as string).catch(() => []);
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const errorMessage = readQueryValue(resolvedSearchParams?.error);
+  const successValue = readQueryValue(resolvedSearchParams?.success);
+  const successMessage = successValue === "materia_creada" ? "Materia creada correctamente." : successValue;
   const activeSubjectsCount = subjects.filter((subject) => subject.is_active).length;
   const assignedStudentsCount = subjects.reduce((acc, subject) => acc + subject.assigned_students_count, 0);
   const averageProgress = subjects.length
@@ -25,19 +55,24 @@ export default async function TeacherSubjectsPage() {
   async function createSubjectAction(formData: FormData) {
     "use server";
     const activeSession = await requireRole(["teacher", "admin"]);
+    try {
+      await createSubject(
+        {
+          title: String(formData.get("title") ?? ""),
+          description: String(formData.get("description") ?? ""),
+          color: String(formData.get("color") ?? "#43b8f4"),
+          icon: String(formData.get("icon") ?? ""),
+          is_active: formData.get("is_active") === "on"
+        },
+        activeSession.userId as string
+      );
 
-    await createSubject(
-      {
-        title: String(formData.get("title") ?? ""),
-        description: String(formData.get("description") ?? ""),
-        color: String(formData.get("color") ?? "#43b8f4"),
-        icon: String(formData.get("icon") ?? ""),
-        is_active: formData.get("is_active") === "on"
-      },
-      activeSession.userId as string
-    );
-
-    revalidatePath("/docente/materias");
+      revalidatePath("/docente/materias");
+      redirect("/docente/materias?success=materia_creada");
+    } catch (error) {
+      const message = formatActionError(error);
+      redirect(`/docente/materias?error=${encodeURIComponent(message)}`);
+    }
   }
 
   async function deleteSubjectAction(formData: FormData) {
@@ -45,9 +80,13 @@ export default async function TeacherSubjectsPage() {
     const activeSession = await requireRole(["teacher", "admin"]);
     const subjectId = String(formData.get("subject_id") ?? "");
     if (!subjectId) return;
-
-    await deleteSubject(subjectId, activeSession.userId as string);
-    revalidatePath("/docente/materias");
+    try {
+      await deleteSubject(subjectId, activeSession.userId as string);
+      revalidatePath("/docente/materias");
+    } catch (error) {
+      const message = formatActionError(error);
+      redirect(`/docente/materias?error=${encodeURIComponent(message)}`);
+    }
   }
 
   return (
@@ -57,6 +96,18 @@ export default async function TeacherSubjectsPage() {
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
+      {errorMessage ? (
+        <section className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {errorMessage}
+        </section>
+      ) : null}
+
+      {successMessage ? (
+        <section className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {successMessage}
+        </section>
+      ) : null}
+
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card className="space-y-1">
           <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Materias</CardText>
