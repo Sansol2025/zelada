@@ -36,11 +36,11 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
   // Inicialización de opciones desde settings o default
   const [options, setOptions] = useState<OptionItem[]>(() => {
     if (initialSettings?.options && Array.isArray(initialSettings.options)) {
-      return (initialSettings.options as Record<string, any>[]).map((o: Record<string, any>, idx: number) => ({
-        id: o.id || `opt-${idx}-${Date.now()}`,
-        label: o.label || "",
-        imageUrl: o.imageUrl || "",
-        isCorrect: !!o.isCorrect
+      return (initialSettings.options as Record<string, unknown>[]).map((o: Record<string, unknown>, idx: number) => ({
+        id: String(o.id || `opt-${idx}-${Date.now()}`),
+        label: String(o.label || ""),
+        imageUrl: String(o.imageUrl || ""),
+        isCorrect: Boolean(o.isCorrect)
       }));
     }
     return [
