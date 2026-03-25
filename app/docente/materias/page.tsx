@@ -278,7 +278,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                   
                   <Badge 
                     className="rounded-full px-3 py-1 font-bold shadow-sm"
-                    variant={subject.is_active ? "success" : "secondary"}
+                    variant={subject.is_active ? "success" : "default"}
                     style={{ 
                       backgroundColor: subject.is_active ? hexToRgba(subjectColor, 0.2) : undefined, 
                       color: subject.is_active ? subjectColor : undefined,
