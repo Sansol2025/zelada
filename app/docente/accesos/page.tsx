@@ -206,7 +206,11 @@ export default async function TeacherAccessLinksPage() {
                   <form action={toggleLinkAction} className="absolute top-4 right-4 z-20">
                     <input name="link_id" type="hidden" value={link.id} />
                     <input name="is_active" type="hidden" value={String(link.is_active)} />
-                    <Button size="sm" variant={link.is_active ? "destructive" : "default"} className="rounded-full shadow-lg h-8 px-3 text-xs font-bold">
+                    <Button 
+                      size="sm" 
+                      variant={link.is_active ? "ghost" : "primary"} 
+                      className={`rounded-full shadow-lg h-8 px-3 text-xs font-bold ${link.is_active ? "bg-rose-100 text-rose-700 hover:bg-rose-200" : ""}`}
+                    >
                       {link.is_active ? "Desactivar" : "Reactivar"}
                     </Button>
                   </form>
