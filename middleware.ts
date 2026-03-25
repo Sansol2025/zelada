@@ -11,6 +11,14 @@ type SupabaseCookie = {
   options?: CookieOptions;
 };
 
+function redirectToAccess(request: NextRequest) {
+  const destination = new URL("/acceso", request.url);
+  if (request.method === "GET" || request.method === "HEAD") {
+    return NextResponse.redirect(destination);
+  }
+  return NextResponse.redirect(destination, { status: 303 });
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isPublicApi = PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -58,7 +66,7 @@ export async function middleware(request: NextRequest) {
   if (!user) {
     if (studentToken && (isStudentRoute || isStudentApiRoute)) return response;
     if (pathname.startsWith("/api")) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-    return NextResponse.redirect(new URL("/acceso", request.url));
+    return redirectToAccess(request);
   }
 
   const { data: profile } = await supabase
@@ -70,15 +78,15 @@ export async function middleware(request: NextRequest) {
   const role = profile?.role;
 
   if (isTeacherRoute && !["teacher", "admin"].includes(role)) {
-    return NextResponse.redirect(new URL("/acceso", request.url));
+    return redirectToAccess(request);
   }
 
   if (isFamilyRoute && role !== "family") {
-    return NextResponse.redirect(new URL("/acceso", request.url));
+    return redirectToAccess(request);
   }
 
   if (isStudentRoute && role !== "student" && !studentToken) {
-    return NextResponse.redirect(new URL("/acceso", request.url));
+    return redirectToAccess(request);
   }
 
   return response;

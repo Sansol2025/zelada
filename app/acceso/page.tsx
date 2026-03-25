@@ -3,7 +3,29 @@ import { KeyRound, QrCode, Users } from "lucide-react";
 
 import { Card, CardText, CardTitle } from "@/components/ui/card";
 
-export default function AccessPage() {
+type AccessPageProps = {
+  searchParams?: Promise<{
+    error?: string | string[];
+    success?: string | string[];
+  }>;
+};
+
+function readQueryValue(value?: string | string[]) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw) return "";
+  try {
+    return decodeURIComponent(raw).replace(/\+/g, " ");
+  } catch {
+    return raw;
+  }
+}
+
+export default async function AccessPage({ searchParams }: AccessPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const errorMessage = readQueryValue(resolvedSearchParams?.error);
+  const successValue = readQueryValue(resolvedSearchParams?.success);
+  const successMessage = successValue === "link_enviado" ? "Enlace enviado. Revisa tu correo." : successValue;
+
   return (
     <main className="mx-auto min-h-screen max-w-6xl px-4 py-10">
       <section className="mb-8 text-center">
@@ -12,6 +34,18 @@ export default function AccessPage() {
           Acceso simple para docentes, familias y estudiantes con distintos niveles de autonomía digital.
         </p>
       </section>
+
+      {errorMessage ? (
+        <section className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {errorMessage}
+        </section>
+      ) : null}
+
+      {successMessage ? (
+        <section className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {successMessage}
+        </section>
+      ) : null}
 
       <section className="grid gap-4 lg:grid-cols-3">
         <Card className="space-y-4">

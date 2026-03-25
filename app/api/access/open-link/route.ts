@@ -20,8 +20,10 @@ export async function POST(request: Request) {
   const token = parseToken(raw);
 
   if (!token) {
-    return NextResponse.redirect(new URL("/acceso?error=token_invalido", request.url));
+    return NextResponse.redirect(new URL("/acceso?error=token_invalido", request.url), { status: 303 });
   }
 
-  return NextResponse.redirect(new URL(`/api/access/activate?token=${encodeURIComponent(token)}`, request.url));
+  return NextResponse.redirect(new URL(`/api/access/activate?token=${encodeURIComponent(token)}`, request.url), {
+    status: 303
+  });
 }

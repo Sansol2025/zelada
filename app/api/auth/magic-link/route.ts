@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 
+function redirectAfterPost(url: URL) {
+  return NextResponse.redirect(url, { status: 303 });
+}
+
 export async function POST(request: Request) {
   const supabase = await createClient();
   const formData = await request.formData();
@@ -19,8 +23,8 @@ export async function POST(request: Request) {
   });
 
   if (error) {
-    return NextResponse.redirect(new URL(`/acceso?error=${encodeURIComponent(error.message)}`, request.url));
+    return redirectAfterPost(new URL(`/acceso?error=${encodeURIComponent(error.message)}`, request.url));
   }
 
-  return NextResponse.redirect(new URL("/acceso?success=link_enviado", request.url));
+  return redirectAfterPost(new URL("/acceso?success=link_enviado", request.url));
 }

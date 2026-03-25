@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 
+function redirectAfterPost(url: URL) {
+  return NextResponse.redirect(url, { status: 303 });
+}
+
 export async function GET(request: Request) {
   return NextResponse.redirect(
     new URL("/acceso?error=Usa%20el%20formulario%20de%20ingreso", request.url)
@@ -14,7 +18,7 @@ export async function POST(request: Request) {
   );
 
   if (missingEnv.length > 0) {
-    return NextResponse.redirect(
+    return redirectAfterPost(
       new URL(
         `/acceso?error=${encodeURIComponent(
           `Falta configurar variables en Vercel: ${missingEnv.join(", ")}`
@@ -32,7 +36,7 @@ export async function POST(request: Request) {
     const redirectTo = String(formData.get("redirectTo") ?? "/acceso");
 
     if (!email || !password) {
-      return NextResponse.redirect(
+      return redirectAfterPost(
         new URL("/acceso?error=Debes%20completar%20correo%20y%20contrasena", request.url)
       );
     }
@@ -43,14 +47,14 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      return NextResponse.redirect(
+      return redirectAfterPost(
         new URL(`/acceso?error=${encodeURIComponent(error.message)}`, request.url)
       );
     }
 
-    return NextResponse.redirect(new URL(redirectTo, request.url));
+    return redirectAfterPost(new URL(redirectTo, request.url));
   } catch {
-    return NextResponse.redirect(
+    return redirectAfterPost(
       new URL(
         "/acceso?error=No%20se%20pudo%20iniciar%20sesion.%20Revisa%20variables%20de%20Supabase%20en%20Vercel.",
         request.url

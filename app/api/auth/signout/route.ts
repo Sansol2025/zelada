@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  const response = NextResponse.redirect(new URL("/acceso", request.url));
+  const response = NextResponse.redirect(new URL("/acceso", request.url), { status: 303 });
   response.cookies.delete(ACCESS_TOKEN_COOKIE);
   return response;
 }
