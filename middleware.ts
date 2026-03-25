@@ -11,8 +11,11 @@ type SupabaseCookie = {
   options?: CookieOptions;
 };
 
-function redirectToAccess(request: NextRequest) {
+function redirectToAccess(request: NextRequest, errorMessage?: string) {
   const destination = new URL("/acceso", request.url);
+  if (errorMessage) {
+    destination.searchParams.set("error", errorMessage);
+  }
   if (request.method === "GET" || request.method === "HEAD") {
     return NextResponse.redirect(destination);
   }
@@ -66,7 +69,7 @@ export async function middleware(request: NextRequest) {
   if (!user) {
     if (studentToken && (isStudentRoute || isStudentApiRoute)) return response;
     if (pathname.startsWith("/api")) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-    return redirectToAccess(request);
+    return redirectToAccess(request, "Debes iniciar sesion");
   }
 
   const { data: profile } = await supabase
@@ -78,15 +81,15 @@ export async function middleware(request: NextRequest) {
   const role = profile?.role;
 
   if (isTeacherRoute && !["teacher", "admin"].includes(role)) {
-    return redirectToAccess(request);
+    return redirectToAccess(request, "Tu usuario no tiene permisos de docente");
   }
 
   if (isFamilyRoute && role !== "family") {
-    return redirectToAccess(request);
+    return redirectToAccess(request, "Tu usuario no tiene permisos de familia");
   }
 
   if (isStudentRoute && role !== "student" && !studentToken) {
-    return redirectToAccess(request);
+    return redirectToAccess(request, "Tu usuario no tiene permisos de estudiante");
   }
 
   return response;

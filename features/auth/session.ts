@@ -38,7 +38,7 @@ export async function requireRole(roles: Role[]) {
   const session = await getCurrentSession();
 
   if (!session.userId || !session.role || !roles.includes(session.role)) {
-    redirect("/acceso");
+    redirect("/acceso?error=No%20tienes%20permiso%20para%20esa%20seccion");
   }
 
   return session;

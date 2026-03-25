@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Role } from "@/types/domain";
 
 function redirectAfterPost(url: URL) {
   return NextResponse.redirect(url, { status: 303 });
+}
+
+const roleHome: Record<Role, string> = {
+  teacher: "/docente",
+  admin: "/docente",
+  family: "/familia",
+  student: "/estudiante"
+};
+
+function normalizeInternalPath(value: string) {
+  return value.startsWith("/") ? value : "/acceso";
 }
 
 export async function GET(request: Request) {
@@ -33,7 +45,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
-    const redirectTo = String(formData.get("redirectTo") ?? "/acceso");
+    const redirectTo = normalizeInternalPath(String(formData.get("redirectTo") ?? "/acceso"));
 
     if (!email || !password) {
       return redirectAfterPost(
@@ -52,7 +64,30 @@ export async function POST(request: Request) {
       );
     }
 
-    return redirectAfterPost(new URL(redirectTo, request.url));
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return redirectAfterPost(
+        new URL("/acceso?error=No%20se%20pudo%20leer%20la%20sesion%20del%20usuario", request.url)
+      );
+    }
+
+    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    const role = profile?.role as Role | undefined;
+
+    if (!role || !roleHome[role]) {
+      return redirectAfterPost(
+        new URL(
+          "/acceso?error=Tu%20usuario%20no%20tiene%20rol%20configurado%20en%20la%20tabla%20profiles",
+          request.url
+        )
+      );
+    }
+
+    const destination = redirectTo === "/acceso" ? roleHome[role] : redirectTo;
+    return redirectAfterPost(new URL(destination, request.url));
   } catch {
     return redirectAfterPost(
       new URL(
