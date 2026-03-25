@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
-import { Pencil, Plus, Sparkles, Trash2, Wand2, Volume2, Gamepad2 } from "lucide-react";
+import { Pencil, Trash2, Wand2, Volume2, Gamepad2 } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
 import { RoleLayout } from "@/components/layout/role-layout";
@@ -100,7 +100,7 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <CardTitle className="text-2xl font-black text-brand-950 mb-2">{activity.title}</CardTitle>
-                    <CardText className="text-base text-slate-600 font-medium">"{activity.prompt}"</CardText>
+                    <CardText className="text-base text-slate-600 font-medium">&quot;{activity.prompt}&quot;</CardText>
                     
                     {activity.audio_url && (
                       <div className="mt-4 flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg inline-flex text-sm font-bold border border-emerald-100">

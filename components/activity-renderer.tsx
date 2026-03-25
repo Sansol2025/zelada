@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { CheckCircle2, Circle, CircleSlash2, MoveRight, Sparkles, WandSparkles } from "lucide-react";
+import { CheckCircle2, CircleSlash2, MoveRight, Sparkles, WandSparkles } from "lucide-react";
 
 import { AccessibleAudioButton } from "@/components/accessible-audio-button";
 import { BigActionButton } from "@/components/big-action-button";
 import { Button } from "@/components/ui/button";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card, CardText } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type ActivityRendererProps = {

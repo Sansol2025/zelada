@@ -4,7 +4,7 @@ import { KeyRound, QrCode, Sparkles, Wand2 } from "lucide-react";
 import { QRAccessCard } from "@/components/qr-access-card";
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { createAccessLinkForStudent } from "@/features/teacher/actions";
 import { getTeacherAccessLinks, getTeacherStudents } from "@/features/teacher/queries";

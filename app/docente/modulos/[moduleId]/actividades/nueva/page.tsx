@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { Plus, Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-react";
+import { Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";

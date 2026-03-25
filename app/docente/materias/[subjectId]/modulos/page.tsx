@@ -74,7 +74,7 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
                 Módulos de {subject.title}
               </h1>
               <p className="mt-4 text-lg font-medium text-emerald-50">
-                Organiza el recorrido paso a paso. Agrega módulos como "Niveles" que tus estudiantes deberán superar.
+                Organiza el recorrido paso a paso. Agrega módulos como &quot;Niveles&quot; que tus estudiantes deberán superar.
               </p>
             </div>
           </div>

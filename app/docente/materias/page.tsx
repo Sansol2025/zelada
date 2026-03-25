@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { BarChart3, BookOpen, Layers3, Pencil, Plus, Trash2, Users, Palette, Sparkles, Wand2 } from "lucide-react";
+import { BarChart3, BookOpen, Layers3, Pencil, Trash2, Users, Sparkles, Wand2 } from "lucide-react";
 
 import { EmptyState } from "@/components/empty-state";
 import { RoleLayout } from "@/components/layout/role-layout";
@@ -162,7 +162,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
           </div>
           <div>
             <CardTitle className="text-2xl font-black text-brand-950">Crear Reíno de Aprendizaje</CardTitle>
-            <CardText>Diseña una materia lúdica nueva (ej. "Matelógica", "Super Lectores").</CardText>
+            <CardText>Diseña una materia lúdica nueva (ej. &quot;Matelógica&quot;, &quot;Super Lectores&quot;).</CardText>
           </div>
         </div>
         
