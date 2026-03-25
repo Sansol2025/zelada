@@ -118,7 +118,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual" }
         
         {(activityType === "multiple_choice_visual" || activityType === "image_select" || activityType === "sequence" || activityType === "drag_drop") && (
           <div className="space-y-4">
-            <p className="text-sm font-medium text-slate-500">Agrega las "cartas" u opciones que verá el alumno. Marca la correcta.</p>
+            <p className="text-sm font-medium text-slate-500">Agrega las &quot;cartas&quot; u opciones que verá el alumno. Marca la correcta.</p>
             
             <div className="space-y-3">
               {options.map((opt, index) => (

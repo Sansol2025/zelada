@@ -5,8 +5,7 @@ import { Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-re
 import { RoleLayout } from "@/components/layout/role-layout";
 import { ActivityBuilderClient } from "@/components/activity-builder-client";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle, CardText } from "@/components/ui/card";
-import { ACTIVITY_TYPES } from "@/lib/constants";
+import { Card, CardTitle } from "@/components/ui/card";
 import { teacherNavItems } from "@/lib/navigation";
 import { createActivity } from "@/features/teacher/actions";
 import { requireRole } from "@/features/auth/session";
