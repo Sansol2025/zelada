@@ -10,6 +10,7 @@ import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { deleteActivityForTeacher } from "@/features/teacher/actions";
 import { requireRole } from "@/features/auth/session";
 import { getTeacherModuleActivities, getTeacherModuleById } from "@/features/teacher/queries";
+import { teacherNavItems } from "@/lib/navigation";
 
 type ModuleActivitiesPageProps = {
   params: Promise<{ moduleId: string }>;
