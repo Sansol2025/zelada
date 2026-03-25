@@ -1,10 +1,9 @@
-import { Award, Smile, Sparkles, Trophy, Star, PartyPopper } from "lucide-react";
+import { Award, Smile, Trophy, Star, PartyPopper, CheckCircle2 } from "lucide-react";
 
 import { StudentShell } from "@/components/layout/student-shell";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { getStudentContextOrRedirect } from "@/features/student/access";
 import { getStudentAssignedSubjects, getStudentGlobalProgress } from "@/features/student/queries";
-import { cn } from "@/lib/utils";
 
 export default async function StudentAchievementsPage() {
   const student = await getStudentContextOrRedirect();

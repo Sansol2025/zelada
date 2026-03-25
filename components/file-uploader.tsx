@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Upload, X, Loader2, Image as ImageIcon, Music } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
 
 type FileUploaderProps = {
   name: string;
@@ -58,8 +57,8 @@ export function FileUploader({ name, accept = "image/*", initialUrl, label, onUp
       if (typeof onUploadSuccess === 'function') {
         onUploadSuccess(publicUrl);
       }
-    } catch (err: any) {
-      setError(err.message || "Ocurrió un error inesperado al subir el archivo.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Ocurrió un error inesperado al subir el archivo.");
     } finally {
       setIsUploading(false);
     }

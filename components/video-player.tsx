@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Fullscreen } from "lucide-react";
+import { Play } from "lucide-react";
 
 type VideoPlayerProps = {
   url: string;

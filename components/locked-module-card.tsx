@@ -1,5 +1,4 @@
 import { Lock } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type LockedModuleCardProps = {
   title: string;

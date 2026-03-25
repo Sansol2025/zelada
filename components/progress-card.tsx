@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 import { ArrowRight, CheckCircle2, PlayCircle } from "lucide-react";
 
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { percent } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 

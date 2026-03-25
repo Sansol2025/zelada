@@ -1,9 +1,9 @@
-import { CheckCircle2, Gauge, Layers, Sparkles, TrendingUp, Trophy } from "lucide-react";
+import { Layers, Sparkles, TrendingUp, Trophy } from "lucide-react";
 import type { Route } from "next";
 
 import { ProgressCard } from "@/components/progress-card";
 import { StudentShell } from "@/components/layout/student-shell";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card, CardText } from "@/components/ui/card";
 import { getStudentContextOrRedirect } from "@/features/student/access";
 import { getStudentAssignedSubjects, getStudentGlobalProgress } from "@/features/student/queries";
 import { percent } from "@/lib/utils";

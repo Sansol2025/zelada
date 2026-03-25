@@ -1,6 +1,12 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { ArrowLeft, CircleCheckBig, LockKeyhole } from "lucide-react";
+import { 
+  ArrowLeft, 
+  CircleCheckBig, 
+  LockKeyhole, 
+  Sparkles, 
+  Gamepad2 
+} from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { ActivityRenderer } from "@/components/activity-renderer";
@@ -8,8 +14,6 @@ import { VideoPlayer } from "@/components/video-player";
 import { EmptyState } from "@/components/empty-state";
 import { LockedModuleCard } from "@/components/locked-module-card";
 import { Badge } from "@/components/ui/badge";
-import { CardText, CardTitle } from "@/components/ui/card";
-import { Sparkles, Gamepad2 } from "lucide-react";
 import { getStudentContextOrRedirect } from "@/features/student/access";
 import { getStudentModuleActivities, getSubjectLearningPath } from "@/features/student/queries";
 import { percent } from "@/lib/utils";

@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { Sparkles, Volume2, Puzzle, Target, Image as ImageIcon } from "lucide-react";
+import { Sparkles, Volume2, Puzzle, Target } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { ActivityBuilderClient } from "@/components/activity-builder-client";
