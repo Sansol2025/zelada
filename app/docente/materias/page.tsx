@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NextImage from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { BarChart3, BookOpen, Layers3, Pencil, Trash2, Users, Sparkles, Wand2 } from "lucide-react";
@@ -265,12 +266,26 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-3">
                       <div 
-                        className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl text-2xl shadow-inner"
                         style={{ backgroundColor: subjectColor, color: "white" }}
                       >
-                        {subject.icon || <BookOpen className="h-6 w-6" />}
+                        {subject.icon ? (
+                          subject.icon.startsWith("http") || subject.icon.startsWith("/") ? (
+                            <NextImage 
+                              src={subject.icon} 
+                              alt={subject.title} 
+                              width={48} 
+                              height={48} 
+                              className="h-full w-full object-cover" 
+                            />
+                          ) : (
+                            subject.icon
+                          )
+                        ) : (
+                          <BookOpen className="h-6 w-6" />
+                        )}
                       </div>
-                      <CardTitle className="text-2xl font-black text-brand-950">{subject.title}</CardTitle>
+                      <CardTitle className="text-2xl font-black text-brand-950 truncate">{subject.title}</CardTitle>
                     </div>
                     {subject.description ? (
                       <CardText className="line-clamp-2 mt-2 font-medium leading-relaxed">{subject.description}</CardText>
