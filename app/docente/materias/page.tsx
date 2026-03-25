@@ -39,6 +39,29 @@ function formatActionError(error: unknown) {
   return "No se pudo completar la operación. Intenta nuevamente.";
 }
 
+function hexToRgba(hexColor: string, alpha: number) {
+  const sanitized = hexColor.trim().replace("#", "");
+  const isShortHex = /^[0-9a-fA-F]{3}$/.test(sanitized);
+  const isLongHex = /^[0-9a-fA-F]{6}$/.test(sanitized);
+
+  if (!isShortHex && !isLongHex) {
+    return hexColor;
+  }
+
+  const normalized = isShortHex
+    ? sanitized
+        .split("")
+        .map((char) => `${char}${char}`)
+        .join("")
+    : sanitized;
+
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
 export default async function TeacherSubjectsPage({ searchParams }: TeacherSubjectsPageProps) {
   const session = await requireRole(["teacher", "admin"]);
   const subjects = await getTeacherSubjectsOverview(session.userId as string).catch(() => []);
@@ -179,8 +202,17 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         />
       ) : (
         <section className="grid gap-4 md:grid-cols-2">
-          {subjects.map((subject) => (
-            <Card key={subject.id} className="space-y-4">
+          {subjects.map((subject) => {
+            const subjectColor = subject.color || "#43b8f4";
+            return (
+            <Card
+              key={subject.id}
+              className="space-y-4"
+              style={{
+                backgroundColor: hexToRgba(subjectColor, 0.22),
+                borderColor: hexToRgba(subjectColor, 0.5)
+              }}
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -193,28 +225,28 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                 </div>
                 <div
                   className="rounded-xl p-2 text-white"
-                  style={{ backgroundColor: subject.color || "#43b8f4" }}
+                  style={{ backgroundColor: subjectColor }}
                 >
                   <BookOpen className="h-5 w-5" />
                 </div>
               </div>
 
               <div className="grid gap-2 sm:grid-cols-3">
-                <div className="rounded-xl bg-brand-50 p-3">
+                <div className="rounded-xl p-3" style={{ backgroundColor: "rgba(255,255,255,0.55)" }}>
                   <div className="mb-1 flex items-center gap-2 text-brand-700">
                     <Layers3 className="h-4 w-4" />
                     <p className="text-xs font-semibold uppercase tracking-wider">Módulos</p>
                   </div>
                   <p className="text-xl font-bold text-brand-900">{subject.modules_count}</p>
                 </div>
-                <div className="rounded-xl bg-brand-50 p-3">
+                <div className="rounded-xl p-3" style={{ backgroundColor: "rgba(255,255,255,0.55)" }}>
                   <div className="mb-1 flex items-center gap-2 text-brand-700">
                     <Users className="h-4 w-4" />
                     <p className="text-xs font-semibold uppercase tracking-wider">Estudiantes</p>
                   </div>
                   <p className="text-xl font-bold text-brand-900">{subject.assigned_students_count}</p>
                 </div>
-                <div className="rounded-xl bg-brand-50 p-3">
+                <div className="rounded-xl p-3" style={{ backgroundColor: "rgba(255,255,255,0.55)" }}>
                   <div className="mb-1 flex items-center gap-2 text-brand-700">
                     <BarChart3 className="h-4 w-4" />
                     <p className="text-xs font-semibold uppercase tracking-wider">Avance</p>
@@ -249,7 +281,8 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                 </form>
               </div>
             </Card>
-          ))}
+          );
+          })}
         </section>
       )}
     </RoleLayout>
