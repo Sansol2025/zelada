@@ -66,13 +66,13 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         },
         activeSession.userId as string
       );
-
-      revalidatePath("/docente/materias");
-      redirect("/docente/materias?success=materia_creada");
     } catch (error) {
       const message = formatActionError(error);
       redirect(`/docente/materias?error=${encodeURIComponent(message)}`);
     }
+
+    revalidatePath("/docente/materias");
+    redirect("/docente/materias?success=materia_creada");
   }
 
   async function deleteSubjectAction(formData: FormData) {
