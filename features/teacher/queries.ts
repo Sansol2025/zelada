@@ -303,6 +303,28 @@ export async function getTeacherStudents(teacherId: string) {
   }));
 }
 
+export async function getStudentsCatalogForTeacher() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("students")
+    .select("id, profile_id, grade, section, age, dni, active, created_at, profiles ( full_name )")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((student) => ({
+    id: student.id,
+    profile_id: student.profile_id,
+    full_name: getProfileFullName((student as { profiles?: unknown }).profiles, "Estudiante"),
+    grade: student.grade ?? "Sin grado",
+    section: student.section ?? "-",
+    age: student.age ?? null,
+    dni: student.dni ?? null,
+    active: student.active,
+    created_at: student.created_at
+  }));
+}
+
 export async function getTeacherFamilies(teacherId: string) {
   const supabase = await createClient();
   const { data: subjects } = await supabase

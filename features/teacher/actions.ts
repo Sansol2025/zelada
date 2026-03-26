@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { ACTIVITY_TYPES } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
+import { ACTIVITY_TYPES, SCHOOL_NAME } from "@/lib/constants";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { buildAccessUrl, generateAccessToken } from "@/services/access-links";
 
 const subjectSchema = z.object({
@@ -48,6 +48,332 @@ const familyLinkSchema = z.object({
   family_id: z.string().uuid("Familia inválida"),
   student_id: z.string().uuid("Estudiante inválido")
 });
+
+const studentSchema = z.object({
+  first_name: z.string().trim().min(1, "El primer nombre es obligatorio").max(80),
+  second_name: z.string().trim().max(80).optional(),
+  last_name: z.string().trim().min(1, "El apellido es obligatorio").max(80),
+  age: z.coerce.number().int().min(3, "Edad inválida").max(120, "Edad inválida"),
+  grade: z.string().trim().min(1, "El grado es obligatorio").max(40),
+  dni: z
+    .string()
+    .trim()
+    .regex(/^[0-9.\-\s]{6,20}$/, "DNI inválido")
+});
+
+type ParsedStudentInput = z.infer<typeof studentSchema>;
+type ServiceClient = ReturnType<typeof createServiceClient>;
+
+const csvHeaderAliases = {
+  primer_nombre: ["primer_nombre", "first_name", "nombre"],
+  segundo_nombre: ["segundo_nombre", "second_name", "segundo_nombre_opcional"],
+  apellido: ["apellido", "last_name", "apellidos"],
+  edad: ["edad", "age"],
+  grado: ["grado", "grade"],
+  dni: ["dni", "documento"]
+} as const;
+
+type CsvHeaderKey = keyof typeof csvHeaderAliases;
+type CsvImportResult = {
+  created: number;
+  updated: number;
+  failed: number;
+  errors: string[];
+};
+
+function normalizeHeaderValue(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "_");
+}
+
+function toTitleCase(value: string) {
+  return value
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1).toLowerCase()}`)
+    .join(" ");
+}
+
+function normalizeDni(value: string) {
+  return value.replace(/[.\-\s]/g, "");
+}
+
+function normalizeStudentInput(input: ParsedStudentInput) {
+  const firstName = toTitleCase(input.first_name);
+  const secondName = toTitleCase(input.second_name ?? "");
+  const lastName = toTitleCase(input.last_name);
+  const fullName = [firstName, secondName, lastName].filter(Boolean).join(" ");
+
+  return {
+    fullName,
+    age: input.age,
+    grade: input.grade.trim(),
+    dni: normalizeDni(input.dni)
+  };
+}
+
+function pickDelimiter(headerLine: string) {
+  const commas = (headerLine.match(/,/g) ?? []).length;
+  const semicolons = (headerLine.match(/;/g) ?? []).length;
+  return semicolons > commas ? ";" : ",";
+}
+
+function parseCsvLine(line: string, delimiter: "," | ";") {
+  const result: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+
+    if (char === "\"") {
+      const nextChar = line[index + 1];
+      if (inQuotes && nextChar === "\"") {
+        current += "\"";
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === delimiter && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current.trim());
+  return result;
+}
+
+function getCsvHeaderIndexes(headerCells: string[]) {
+  const normalizedHeaders = headerCells.map((value) => normalizeHeaderValue(value));
+
+  const indexes = {} as Record<CsvHeaderKey, number>;
+
+  (Object.keys(csvHeaderAliases) as CsvHeaderKey[]).forEach((key) => {
+    const aliases: readonly string[] = csvHeaderAliases[key];
+    const index = normalizedHeaders.findIndex((header) => aliases.includes(header));
+    if (index === -1) {
+      throw new Error(`Falta la columna obligatoria: ${key}`);
+    }
+    indexes[key] = index;
+  });
+
+  return indexes;
+}
+
+function parseCsvStudents(content: string) {
+  const lines = content
+    .replace(/\uFEFF/g, "")
+    .split(/\r?\n/)
+    .filter((line) => line.trim().length > 0);
+
+  if (lines.length < 2) {
+    throw new Error("El archivo debe incluir encabezado y al menos una fila.");
+  }
+
+  const delimiter = pickDelimiter(lines[0]) as "," | ";";
+  const headerCells = parseCsvLine(lines[0], delimiter);
+  const indexes = getCsvHeaderIndexes(headerCells);
+  const rows: ParsedStudentInput[] = [];
+
+  for (let rowIndex = 1; rowIndex < lines.length; rowIndex += 1) {
+    const line = lines[rowIndex];
+    const cells = parseCsvLine(line, delimiter);
+
+    if (cells.every((cell) => cell.trim() === "")) {
+      continue;
+    }
+
+    const rawStudent = {
+      first_name: cells[indexes.primer_nombre] ?? "",
+      second_name: cells[indexes.segundo_nombre] ?? "",
+      last_name: cells[indexes.apellido] ?? "",
+      age: cells[indexes.edad] ?? "",
+      grade: cells[indexes.grado] ?? "",
+      dni: cells[indexes.dni] ?? ""
+    };
+
+    try {
+      rows.push(studentSchema.parse(rawStudent));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const issue = error.issues[0];
+        throw new Error(`Fila ${rowIndex + 1}: ${issue?.message ?? "Datos inválidos"}`);
+      }
+      throw error;
+    }
+  }
+
+  if (!rows.length) {
+    throw new Error("No se encontraron alumnos válidos en la planilla.");
+  }
+
+  return rows;
+}
+
+async function assertTeacherCanManageStudents(teacherId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, role")
+    .eq("id", teacherId)
+    .single();
+
+  if (error || !data || !["teacher", "admin"].includes(data.role)) {
+    throw new Error("No autorizado para gestionar alumnos");
+  }
+}
+
+function getServiceClientOrThrow() {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Falta configurar SUPABASE_SERVICE_ROLE_KEY para crear alumnos.");
+  }
+
+  return createServiceClient();
+}
+
+async function createStudentAuthUser(serviceClient: ServiceClient, dni: string, fullName: string) {
+  const { data, error } = await serviceClient.auth.admin.createUser({
+    email: `alumno.${dni}.${crypto.randomUUID()}@asb.local`,
+    password: `${crypto.randomUUID()}Aa1!`,
+    email_confirm: true,
+    user_metadata: {
+      role: "student",
+      full_name: fullName
+    }
+  });
+
+  if (error || !data.user) {
+    throw new Error(error?.message ?? "No se pudo crear el usuario del alumno");
+  }
+
+  return data.user.id;
+}
+
+async function upsertStudentByDni(serviceClient: ServiceClient, input: ParsedStudentInput) {
+  const normalized = normalizeStudentInput(input);
+
+  const { data: existingStudent, error: existingError } = await serviceClient
+    .from("students")
+    .select("id, profile_id")
+    .eq("dni", normalized.dni)
+    .maybeSingle();
+
+  if (existingError) throw existingError;
+
+  if (existingStudent) {
+    const [{ error: profileError }, { error: studentError }] = await Promise.all([
+      serviceClient
+        .from("profiles")
+        .update({
+          full_name: normalized.fullName,
+          role: "student"
+        })
+        .eq("id", existingStudent.profile_id),
+      serviceClient
+        .from("students")
+        .update({
+          age: normalized.age,
+          grade: normalized.grade,
+          school_name: SCHOOL_NAME,
+          dni: normalized.dni,
+          active: true
+        })
+        .eq("id", existingStudent.id)
+    ]);
+
+    if (profileError) throw profileError;
+    if (studentError) throw studentError;
+    return "updated" as const;
+  }
+
+  const profileId = await createStudentAuthUser(serviceClient, normalized.dni, normalized.fullName);
+
+  const { error: profileInsertError } = await serviceClient.from("profiles").upsert(
+    {
+      id: profileId,
+      full_name: normalized.fullName,
+      role: "student"
+    },
+    { onConflict: "id" }
+  );
+
+  if (profileInsertError) {
+    await serviceClient.auth.admin.deleteUser(profileId);
+    throw profileInsertError;
+  }
+
+  const { error: studentInsertError } = await serviceClient.from("students").insert({
+    profile_id: profileId,
+    school_name: SCHOOL_NAME,
+    grade: normalized.grade,
+    age: normalized.age,
+    dni: normalized.dni,
+    active: true
+  });
+
+  if (studentInsertError) {
+    await serviceClient.auth.admin.deleteUser(profileId);
+    throw studentInsertError;
+  }
+
+  return "created" as const;
+}
+
+export async function createStudentForTeacher(input: unknown, teacherId: string) {
+  await assertTeacherCanManageStudents(teacherId);
+  const parsed = studentSchema.parse(input);
+  const serviceClient = getServiceClientOrThrow();
+  const status = await upsertStudentByDni(serviceClient, parsed);
+
+  return { status };
+}
+
+export async function importStudentsFromCsv(file: File, teacherId: string): Promise<CsvImportResult> {
+  await assertTeacherCanManageStudents(teacherId);
+
+  if (file.size > 2 * 1024 * 1024) {
+    throw new Error("El archivo supera el límite de 2MB.");
+  }
+
+  const content = await file.text();
+  const students = parseCsvStudents(content);
+  const serviceClient = getServiceClientOrThrow();
+  const result: CsvImportResult = {
+    created: 0,
+    updated: 0,
+    failed: 0,
+    errors: []
+  };
+
+  for (let index = 0; index < students.length; index += 1) {
+    try {
+      const status = await upsertStudentByDni(serviceClient, students[index]);
+      if (status === "created") {
+        result.created += 1;
+      } else {
+        result.updated += 1;
+      }
+    } catch (error) {
+      result.failed += 1;
+      const message = error instanceof Error ? error.message : "Error inesperado";
+      result.errors.push(`Fila ${index + 2}: ${message}`);
+    }
+  }
+
+  return result;
+}
 
 async function ensureTeacherOwnsSubject(subjectId: string, teacherId: string) {
   const supabase = await createClient();

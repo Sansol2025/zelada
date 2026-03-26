@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { type ReactNode } from "react";
 import { LogOut } from "lucide-react";
 
@@ -20,8 +21,20 @@ export function RoleLayout({ title, description, navItems, children, currentPath
       <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[270px,1fr]">
         <aside className="rounded-2xl border border-brand-100 bg-white p-4 shadow-card">
           <Link href="/" className="mb-6 block">
-            <p className="font-display text-lg font-bold text-brand-900">{APP_NAME}</p>
-            <p className="text-xs text-brand-700">Proyecto Educativo Digital Inclusivo</p>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo-escuela.png"
+                alt="Logo Escuela Zelada Dávila"
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-lg object-contain"
+                priority
+              />
+              <div>
+                <p className="font-display text-lg font-bold text-brand-900">{APP_NAME}</p>
+                <p className="text-xs text-brand-700">Proyecto Educativo Digital Inclusivo</p>
+              </div>
+            </div>
           </Link>
           <nav className="space-y-2">
             {navItems.map((item) => (

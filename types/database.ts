@@ -31,6 +31,8 @@ export type Database = {
           school_name: string | null;
           grade: string | null;
           section: string | null;
+          age: number | null;
+          dni: string | null;
           qr_code_value: string | null;
           magic_link_token: string | null;
           active: boolean;
@@ -41,6 +43,8 @@ export type Database = {
           school_name?: string | null;
           grade?: string | null;
           section?: string | null;
+          age?: number | null;
+          dni?: string | null;
           qr_code_value?: string | null;
           magic_link_token?: string | null;
           active?: boolean;
@@ -49,6 +53,8 @@ export type Database = {
           school_name?: string | null;
           grade?: string | null;
           section?: string | null;
+          age?: number | null;
+          dni?: string | null;
           qr_code_value?: string | null;
           magic_link_token?: string | null;
           active?: boolean;

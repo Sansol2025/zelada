@@ -9,7 +9,7 @@ export const teacherNavItems: NavItem[] = [
   { label: "Dashboard", href: "/docente" },
   { label: "Materias", href: "/docente/materias" },
   { label: "Asignaciones", href: "/docente/asignaciones" },
-  { label: "Familias", href: "/docente/familias" },
+  { label: "Alumnos", href: "/docente/alumnos" as Route },
   { label: "Seguimiento", href: "/docente/seguimiento" },
   { label: "Accesos QR", href: "/docente/accesos" },
   { label: "Perfil", href: "/docente/perfil" }
