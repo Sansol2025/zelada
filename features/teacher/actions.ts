@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { read, utils } from "xlsx";
 
 import { ACTIVITY_TYPES, SCHOOL_NAME } from "@/lib/constants";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
@@ -80,6 +81,11 @@ type CsvImportResult = {
   failed: number;
   errors: string[];
 };
+
+const excelMimeTypes = new Set([
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-excel"
+]);
 
 function normalizeHeaderValue(value: string) {
   return value
@@ -222,6 +228,79 @@ function parseCsvStudents(content: string) {
   return rows;
 }
 
+function parseExcelStudents(content: ArrayBuffer) {
+  const workbook = read(content, { type: "array" });
+  const firstSheetName = workbook.SheetNames[0];
+
+  if (!firstSheetName) {
+    throw new Error("El archivo Excel no contiene hojas.");
+  }
+
+  const sheet = workbook.Sheets[firstSheetName];
+  const rawRows = utils.sheet_to_json<unknown[]>(sheet, {
+    header: 1,
+    raw: false,
+    defval: ""
+  });
+
+  if (!rawRows.length || rawRows.length < 2) {
+    throw new Error("El archivo Excel debe incluir encabezado y al menos una fila.");
+  }
+
+  const headerCells = rawRows[0].map((cell) => String(cell ?? "").trim());
+  const indexes = getCsvHeaderIndexes(headerCells);
+  const rows: ParsedStudentInput[] = [];
+
+  for (let rowIndex = 1; rowIndex < rawRows.length; rowIndex += 1) {
+    const cells = rawRows[rowIndex].map((cell) => String(cell ?? "").trim());
+
+    if (cells.every((cell) => cell === "")) {
+      continue;
+    }
+
+    const rawStudent = {
+      first_name: cells[indexes.primer_nombre] ?? "",
+      second_name: cells[indexes.segundo_nombre] ?? "",
+      last_name: cells[indexes.apellido] ?? "",
+      age: cells[indexes.edad] ?? "",
+      grade: cells[indexes.grado] ?? "",
+      dni: cells[indexes.dni] ?? ""
+    };
+
+    try {
+      rows.push(studentSchema.parse(rawStudent));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const issue = error.issues[0];
+        throw new Error(`Fila ${rowIndex + 1}: ${issue?.message ?? "Datos inválidos"}`);
+      }
+      throw error;
+    }
+  }
+
+  if (!rows.length) {
+    throw new Error("No se encontraron alumnos válidos en la planilla.");
+  }
+
+  return rows;
+}
+
+async function parseStudentsFile(file: File) {
+  const filename = file.name.toLowerCase();
+  const isExcelFile =
+    filename.endsWith(".xlsx") ||
+    filename.endsWith(".xls") ||
+    excelMimeTypes.has(file.type);
+
+  if (isExcelFile) {
+    const content = await file.arrayBuffer();
+    return parseExcelStudents(content);
+  }
+
+  const content = await file.text();
+  return parseCsvStudents(content);
+}
+
 async function assertTeacherCanManageStudents(teacherId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -347,8 +426,7 @@ export async function importStudentsFromCsv(file: File, teacherId: string): Prom
     throw new Error("El archivo supera el límite de 2MB.");
   }
 
-  const content = await file.text();
-  const students = parseCsvStudents(content);
+  const students = await parseStudentsFile(file);
   const serviceClient = getServiceClientOrThrow();
   const result: CsvImportResult = {
     created: 0,

@@ -73,7 +73,7 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
     const file = formData.get("students_file");
 
     if (!(file instanceof File) || file.size === 0) {
-      redirect("/docente/alumnos?error=Debes%20seleccionar%20un%20archivo%20CSV");
+      redirect("/docente/alumnos?error=Debes%20seleccionar%20un%20archivo%20Excel%20o%20CSV");
     }
 
     try {
@@ -91,7 +91,7 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
   return (
     <RoleLayout
       title="Gestión de alumnos"
-      description="Registra alumnos de forma individual o masiva con plantilla Excel compatible (.csv)."
+      description="Registra alumnos de forma individual o masiva con plantilla Excel (.xlsx)."
       navItems={teacherNavItems}
       currentPath="/docente/alumnos"
     >
@@ -199,15 +199,15 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
           <a
             className="inline-flex h-11 items-center gap-2 rounded-xl border border-brand-200 px-4 text-sm font-semibold text-brand-800 hover:bg-brand-50"
             download
-            href="/plantilla-alumnos.csv"
+            href="/api/students/template"
           >
             <Download className="h-4 w-4" />
-            Descargar plantilla (.csv)
+            Descargar plantilla (.xlsx)
           </a>
 
           <form action={importStudentsAction} className="space-y-3">
             <input
-              accept=".csv,text/csv"
+              accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
               className="block w-full rounded-xl border border-brand-200 px-4 py-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-100 file:px-3 file:py-2 file:font-semibold"
               name="students_file"
               required
