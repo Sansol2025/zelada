@@ -42,7 +42,8 @@ export async function studentLoginAction(formData: FormData) {
 
   // Check if first name matches
   // The full_name could be "Juan Perez". We split it to get the first part.
-  const profileFullName = student.profiles?.full_name ?? "";
+  const profile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+  const profileFullName = profile?.full_name ?? "";
   const firstPartOfName = normalizeName(profileFullName.split(" ")[0] || "");
 
   if (cleanFirstName !== firstPartOfName) {
