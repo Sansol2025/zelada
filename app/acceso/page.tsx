@@ -1,12 +1,12 @@
-import { ArrowLeft, Lock, Mail, QrCode, School, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { Lock, Mail, QrCode, School, Sparkles, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import type { Metadata, Route } from "next";
+import type { Metadata } from "next";
 import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { APP_NAME, SCHOOL_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
