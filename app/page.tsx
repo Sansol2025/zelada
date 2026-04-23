@@ -47,7 +47,7 @@ export default function LandingPage() {
             <p className="text-sm font-medium text-academic-gold/80">{APP_SUBTITLE}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/acceso">
+            <Link href="/acceso/login">
               <Button className="rounded-full bg-academic-navy px-8 py-6 text-base font-bold shadow-md hover:translate-y-[-2px]" size="lg">
                 Ingresar
               </Button>
@@ -104,7 +104,7 @@ export default function LandingPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Link href="/acceso" className="group">
+              <Link href="/acceso/login" className="group">
                 <BigActionButton 
                   icon={<ArrowRight className="h-6 w-6" />} 
                   subtitle="Comenzar mi recorrido"
@@ -113,14 +113,14 @@ export default function LandingPage() {
                   Plataforma
                 </BigActionButton>
               </Link>
-              <Link href="/acceso?mode=qr" className="group">
+              <Link href="/acceso/login" className="group">
                 <BigActionButton
                   variant="secondary"
                   icon={<ShieldCheck className="h-6 w-6" />}
-                  subtitle="Acceso por código QR"
+                  subtitle="Ingreso para Docentes y Familias"
                   className="bg-academic-gold transition-all duration-300 group-hover:shadow-premium group-hover:scale-105"
                 >
-                  Ingreso Rápido
+                  Acceso Seguro
                 </BigActionButton>
               </Link>
             </div>

@@ -1,10 +1,12 @@
-import { ArrowRight, QrCode, School, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Lock, Mail, QrCode, School, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Metadata, Route } from "next";
+import fs from "node:fs";
+import path from "node:path";
+import Image from "next/image";
 
-import { BigActionButton } from "@/components/big-action-button";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { APP_NAME, SCHOOL_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -12,13 +14,31 @@ export const metadata: Metadata = {
   description: "Portal de ingreso seguro para estudiantes, docentes y familias."
 };
 
+const SCHOOL_LOGO_CANDIDATES = [
+  "/logo-escuela.png",
+  "/logo-escuela.jpg",
+  "/logo-escuela.jpeg",
+  "/logo-escuela.webp",
+  "/logo-escuela.svg"
+] as const;
+
+function getSchoolLogoSrc() {
+  for (const candidate of SCHOOL_LOGO_CANDIDATES) {
+    const filePath = path.join(process.cwd(), "public", candidate.slice(1));
+    if (fs.existsSync(filePath)) return candidate;
+  }
+  return null;
+}
+
 interface AccesoPageProps {
-  searchParams: Promise<{ error?: string; mode?: string }>;
+  searchParams: Promise<{ error?: string; success?: string; mode?: string }>;
 }
 
 export default async function AccesoPage({ searchParams }: AccesoPageProps) {
   const params = await searchParams;
   const errorMessage = params.error;
+  const successMessage = params.success === "link_enviado" ? "Enlace enviado. Revisa tu correo." : params.success;
+  const logoSrc = getSchoolLogoSrc();
 
   return (
     <main className="min-h-screen relative overflow-hidden flex flex-col justify-center py-12 md:py-20 px-4 bg-academic-ivory">
@@ -31,63 +51,110 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
 
       <div className="mx-auto w-full max-w-4xl relative z-10 flex flex-col justify-center">
       
-      {/* ERROR MESSAGE */}
-      {errorMessage && (
-        <section className="mx-auto mb-8 max-w-xl w-full animate-in rounded-2xl border-l-4 border-red-500 bg-red-50 px-6 py-4 text-sm font-bold text-red-900 shadow-sm">
-          {errorMessage === "CredentialsSignin" 
-            ? "El acceso falló. Por favor verifica tus datos."
-            : "Hubo un problema al intentar ingresar. Revisa tu conexión."}
-        </section>
-      )}
+      {/* ERROR & SUCCESS MESSAGES */}
+      <div className="mx-auto mb-8 max-w-md w-full gap-4 flex flex-col">
+        {errorMessage && (
+          <section className="animate-in rounded-2xl border-l-4 border-red-500 bg-red-50 px-6 py-4 text-sm font-bold text-red-900 shadow-sm">
+            {errorMessage === "CredentialsSignin" 
+              ? "El acceso falló. Por favor verifica tus datos."
+              : "Hubo un problema al intentar ingresar."}
+          </section>
+        )}
+        {successMessage && (
+          <section className="animate-in rounded-2xl border-l-4 border-academic-gold bg-academic-gold/10 px-6 py-4 text-sm font-bold text-academic-navy shadow-sm">
+            {successMessage}
+          </section>
+        )}
+      </div>
 
-      <Card className="animate-in mx-auto w-full max-w-xl overflow-hidden border-academic-gold/10 bg-white/80 p-8 shadow-premium backdrop-blur-md sm:p-12">
+      <Card className="animate-in mx-auto w-full max-w-md overflow-hidden border-academic-gold/10 bg-white/90 p-8 shadow-premium backdrop-blur-md sm:p-10">
         <div className="flex flex-col items-center text-center">
-          <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-academic-navy text-academic-gold shadow-lg rotate-3">
-            <School className="h-12 w-12" />
-          </div>
-          <h1 className="font-display text-4xl font-black tracking-tight text-academic-navy sm:text-5xl lg:text-[clamp(2.5rem,5vw,3.5rem)]">
-            ¡Hola de nuevo!
+          {logoSrc ? (
+            <div className="mb-6 w-32 sm:w-40">
+              <Image
+                src={logoSrc}
+                alt={SCHOOL_NAME}
+                width={300}
+                height={300}
+                className="h-auto w-full drop-shadow-xl"
+                priority
+              />
+            </div>
+          ) : (
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-academic-navy text-academic-gold shadow-lg rotate-3">
+              <School className="h-10 w-10" />
+            </div>
+          )}
+          
+          <h1 className="font-display text-3xl font-black tracking-tight text-academic-navy">
+            Portal Académico
           </h1>
-          <p className="mt-4 text-lg font-medium text-academic-slate leading-relaxed">
-            Selecciona cómo quieres ingresar hoy para comenzar tu recorrido escolar.
+          <p className="mt-2 text-sm font-medium text-academic-slate">
+            Docentes y Familias
           </p>
 
-          <div className="mt-6 flex items-center gap-2 rounded-full bg-academic-forest/10 px-4 py-1.5 border border-academic-forest/10">
-            <ShieldCheck className="h-4 w-4 text-academic-forest" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-academic-forest">Conexión Segura & Privada</span>
+          <div className="mt-4 flex items-center gap-2 rounded-full bg-academic-forest/10 px-3 py-1 border border-academic-forest/10">
+            <ShieldCheck className="h-3 w-3 text-academic-forest" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-academic-forest">Acceso Encriptado</span>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4">
-          <Link href="/acceso?mode=qr" className="group">
-            <BigActionButton 
-              icon={<QrCode className="h-7 w-7" />} 
-              subtitle="Escanear mi tarjeta escolar"
-              className="bg-academic-navy transition-all duration-300 group-hover:shadow-premium group-hover:scale-[1.02]"
-            >
-              Acceso por QR
-            </BigActionButton>
-          </Link>
-          
-          <Link href="/acceso?mode=link" className="group">
-            <BigActionButton 
-              variant="secondary"
-              icon={<Sparkles className="h-7 w-7" />} 
-              subtitle="Usar mi enlace mágico"
-              className="bg-academic-gold transition-all duration-300 group-hover:shadow-premium group-hover:scale-[1.02]"
-            >
-              Enlace Mágico
-            </BigActionButton>
-          </Link>
-
-          <div className="mt-8 flex flex-col gap-3">
-            <div className="relative h-px bg-academic-gold/10 w-full mb-4">
-               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-[10px] font-black uppercase tracking-widest text-academic-gold/40">O ACCESO PERSONAL</span>
+        <form action="/api/auth/signin" className="mt-8 space-y-5" method="POST">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-academic-navy/70 ml-2" htmlFor="email">
+              Correo Electrónico
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-academic-gold/50" />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="h-14 w-full rounded-2xl border border-academic-navy/10 bg-academic-ivory/30 pl-11 pr-5 text-sm font-medium transition-all focus:border-academic-gold focus:bg-white focus:outline-none focus:ring-4 focus:ring-academic-gold/10"
+                placeholder="nombre@correo.com"
+              />
             </div>
-            
-            <Link href={"/acceso/login" as Route}>
-              <Button variant="ghost" className="w-full text-academic-navy font-bold hover:bg-academic-ivory h-14 rounded-2xl group border border-transparent hover:border-academic-gold/10">
-                Panel Administrativo <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-academic-navy/70 ml-2" htmlFor="password">
+              Contraseña
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-academic-gold/50" />
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="h-14 w-full rounded-2xl border border-academic-navy/10 bg-academic-ivory/30 pl-11 pr-5 text-sm font-medium transition-all focus:border-academic-gold focus:bg-white focus:outline-none focus:ring-4 focus:ring-academic-gold/10"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <input name="redirectTo" type="hidden" value="/acceso" />
+          
+          <Button type="submit" className="h-16 w-full rounded-2xl bg-academic-navy text-white font-black text-lg shadow-lg hover:translate-y-[-2px] transition-all hover:bg-academic-navy/90 active:scale-[0.98] border-none">
+            Ingresar ahora
+          </Button>
+        </form>
+        
+        <div className="mt-8 flex flex-col gap-4">
+          <div className="relative h-px bg-academic-gold/10 w-full">
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-[9px] font-black uppercase tracking-widest text-academic-gold/40">O ACCESO ESTUDIANTE</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <Link href="/acceso?mode=qr" className="w-full">
+              <Button variant="ghost" className="w-full h-14 rounded-xl border border-academic-gold/10 bg-academic-ivory/50 text-academic-navy font-black text-[10px] uppercase tracking-widest hover:bg-white hover:border-academic-gold transition-all">
+                <QrCode className="mr-2 h-4 w-4 text-academic-gold" /> Por QR
+              </Button>
+            </Link>
+            <Link href="/acceso?mode=link" className="w-full">
+              <Button variant="ghost" className="w-full h-14 rounded-xl border border-academic-gold/10 bg-academic-ivory/50 text-academic-navy font-black text-[10px] uppercase tracking-widest hover:bg-white hover:border-academic-gold transition-all">
+                <Sparkles className="mr-2 h-4 w-4 text-academic-gold" /> Enlace
               </Button>
             </Link>
           </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Check, Copy, Link2 } from "lucide-react";
+import { Check, Copy, Link2, Printer } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardText, CardTitle } from "@/components/ui/card";
@@ -44,6 +44,16 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
           >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             Copiar enlace
+          </Button>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="sm" 
+            className="gap-2 text-academic-navy hover:bg-academic-ivory"
+            onClick={() => window.print()}
+          >
+            <Printer className="h-4 w-4" />
+            Imprimir
           </Button>
           <a className="inline-flex" href={accessUrl} target="_blank" rel="noreferrer">
             <Button type="button" variant="ghost" size="sm" className="gap-2">

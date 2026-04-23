@@ -93,7 +93,7 @@ export default function ProjectInfoPage() {
             Buscamos crear un estándar en educación primaria inclusiva, integrando lo mejor de la tecnología moderna con las necesidades reales de alumnos en La Rioja. Próximamente incorporaremos inteligencia artificial para soporte pedagógico personalizado.
           </p>
           <div className="mt-12 flex gap-6">
-            <Link href="/acceso">
+            <Link href="/acceso/login">
                <Button className="h-14 rounded-2xl bg-academic-gold text-academic-navy font-black shadow-lg hover:bg-white transition-all px-8">
                   Comenzar ahora
                </Button>
