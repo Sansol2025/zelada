@@ -92,10 +92,13 @@ export async function POST(request: Request) {
 
     const destination = redirectTo === "/acceso" ? roleHome[role] : redirectTo;
     return redirectAfterPost(new URL(destination, request.url));
-  } catch {
+  } catch (err) {
+    console.error("[DIAGNOSTIC] Critical SignIn Exception:", err);
     return redirectAfterPost(
       new URL(
-        "/acceso?error=No%20se%20pudo%20iniciar%20sesion.%20Revisa%20variables%20de%20Supabase%20en%20Vercel.",
+        `/acceso?error=${encodeURIComponent(
+          err instanceof Error ? err.message : "Error desconocido en el servidor"
+        )}`,
         request.url
       )
     );

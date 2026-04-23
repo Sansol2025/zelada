@@ -96,6 +96,7 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
                 height={300}
                 className="h-auto w-full drop-shadow-xl"
                 priority
+                unoptimized
               />
             </div>
           ) : (
