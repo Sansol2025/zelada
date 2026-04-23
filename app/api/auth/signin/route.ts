@@ -41,11 +41,14 @@ export async function POST(request: Request) {
   }
 
   try {
+    console.log("[DIAGNOSTIC] Auth SignIn Attempt starting...");
     const supabase = await createClient();
     const formData = await request.formData();
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
     const redirectTo = normalizeInternalPath(String(formData.get("redirectTo") ?? "/acceso"));
+
+    console.log("[DIAGNOSTIC] SignIn email:", email);
 
     if (!email || !password) {
       return redirectAfterPost(
@@ -59,6 +62,7 @@ export async function POST(request: Request) {
     });
 
     if (error) {
+      console.error("[DIAGNOSTIC] Supabase Auth Error:", error.message);
       return redirectAfterPost(
         new URL(`/acceso?error=${encodeURIComponent(error.message)}`, request.url)
       );

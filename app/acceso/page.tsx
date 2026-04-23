@@ -23,11 +23,22 @@ const SCHOOL_LOGO_CANDIDATES = [
 ] as const;
 
 function getSchoolLogoSrc() {
-  for (const candidate of SCHOOL_LOGO_CANDIDATES) {
-    const filePath = path.join(process.cwd(), "public", candidate.slice(1));
-    if (fs.existsSync(filePath)) return candidate;
+  // In production (Vercel), using fs.existsSync with process.cwd() can be unreliable
+  // for the public folder. We'll prioritize the known logo and fallback.
+  try {
+    for (const candidate of SCHOOL_LOGO_CANDIDATES) {
+      const filePath = path.join(process.cwd(), "public", candidate.slice(1));
+      if (fs.existsSync(filePath)) {
+        console.log(`[DIAGNOSTIC] Logo found at: ${filePath}`);
+        return candidate;
+      }
+    }
+  } catch (error) {
+    console.error("[DIAGNOSTIC] Error checking logo files:", error);
   }
-  return null;
+  
+  // Default fallback if we can't verify or none found
+  return "/logo-escuela.png";
 }
 
 interface AccesoPageProps {
@@ -38,6 +49,13 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
   const params = await searchParams;
   const errorMessage = params.error;
   const successMessage = params.success === "link_enviado" ? "Enlace enviado. Revisa tu correo." : params.success;
+
+  console.log("[DIAGNOSTIC] AccesoPage Load - Error:", errorMessage);
+  console.log("[DIAGNOSTIC] Supabase Config:", {
+    url: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  });
+
   const logoSrc = getSchoolLogoSrc();
 
   return (
@@ -57,7 +75,7 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
           <section className="animate-in rounded-2xl border-l-4 border-red-500 bg-red-50 px-6 py-4 text-sm font-bold text-red-900 shadow-sm">
             {errorMessage === "CredentialsSignin" 
               ? "El acceso falló. Por favor verifica tus datos."
-              : "Hubo un problema al intentar ingresar."}
+              : errorMessage}
           </section>
         )}
         {successMessage && (
