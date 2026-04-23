@@ -2,7 +2,8 @@ import Link from "next/link";
 import NextImage from "next/image";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { BarChart3, BookOpen, Layers3, Pencil, Trash2, Users, Sparkles, Wand2 } from "lucide-react";
+import { BarChart3, BookOpen, Layers3, Pencil, Trash2, Users, Sparkles, Wand2, Layout } from "lucide-react";
+import type { Route } from "next";
 
 import { EmptyState } from "@/components/empty-state";
 import { RoleLayout } from "@/components/layout/role-layout";
@@ -31,14 +32,6 @@ function readQueryValue(value?: string | string[]) {
   } catch {
     return raw;
   }
-}
-
-function formatActionError(error: unknown) {
-  if (error && typeof error === "object" && "message" in error) {
-    const message = String((error as { message?: unknown }).message ?? "");
-    if (message) return message;
-  }
-  return "No se pudo completar la operación. Intenta nuevamente.";
 }
 
 function hexToRgba(hexColor: string, alpha: number) {
@@ -71,6 +64,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
   const errorMessage = readQueryValue(resolvedSearchParams?.error);
   const successValue = readQueryValue(resolvedSearchParams?.success);
   const successMessage = successValue === "materia_creada" ? "Materia creada correctamente." : successValue;
+  
   const activeSubjectsCount = subjects.filter((subject) => subject.is_active).length;
   const assignedStudentsCount = subjects.reduce((acc, subject) => acc + subject.assigned_students_count, 0);
   const averageProgress = subjects.length
@@ -85,15 +79,14 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         {
           title: String(formData.get("title") ?? ""),
           description: String(formData.get("description") ?? ""),
-          color: String(formData.get("color") ?? "#43b8f4"),
+          color: String(formData.get("color") ?? "#C6A24E"), // Use gold as default
           icon: String(formData.get("icon") ?? ""),
           is_active: formData.get("is_active") === "on"
         },
         activeSession.userId as string
       );
-    } catch (error) {
-      const message = formatActionError(error);
-      redirect(`/docente/materias?error=${encodeURIComponent(message)}`);
+    } catch {
+      redirect(`/docente/materias?error=error_creacion`);
     }
 
     revalidatePath("/docente/materias");
@@ -108,258 +101,274 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
     try {
       await deleteSubject(subjectId, activeSession.userId as string);
       revalidatePath("/docente/materias");
-    } catch (error) {
-      const message = formatActionError(error);
-      redirect(`/docente/materias?error=${encodeURIComponent(message)}`);
+    } catch {
+      redirect(`/docente/materias?error=error_eliminacion`);
     }
   }
 
   return (
     <RoleLayout
-      title="Gestión de materias"
-      description="Define materias, organiza módulos y visualiza su uso real en estudiantes."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      {errorMessage ? (
-        <section className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {errorMessage}
-        </section>
-      ) : null}
+      <div className="flex flex-col gap-8 animate-in">
 
-      {successMessage ? (
-        <section className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          {successMessage}
-        </section>
-      ) : null}
-
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card className="space-y-1">
-          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Materias</CardText>
-          <CardTitle className="text-3xl">{subjects.length}</CardTitle>
-          <CardText>Total creadas por el docente</CardText>
-        </Card>
-        <Card className="space-y-1">
-          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Activas</CardText>
-          <CardTitle className="text-3xl">{activeSubjectsCount}</CardTitle>
-          <CardText>Disponibles para asignación</CardText>
-        </Card>
-        <Card className="space-y-1">
-          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Asignaciones</CardText>
-          <CardTitle className="text-3xl">{assignedStudentsCount}</CardTitle>
-          <CardText>Vínculos estudiante-materia</CardText>
-        </Card>
-        <Card className="space-y-1">
-          <CardText className="text-xs font-semibold uppercase tracking-wider text-brand-600">Progreso medio</CardText>
-          <CardTitle className="text-3xl">{percent(averageProgress)}</CardTitle>
-          <CardText>Promedio entre materias</CardText>
-        </Card>
-      </section>
-
-    <div className="flex flex-col gap-6">
-      <Card className="overflow-hidden border-none bg-white shadow-card rounded-[2rem]">
-        <div className="mb-6 flex items-center gap-3 text-brand-900 border-b border-brand-50 pb-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100">
-            <Wand2 className="h-6 w-6 text-brand-600" />
+        {/* MESSAGES */}
+        {errorMessage && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm font-black text-rose-800 uppercase tracking-widest text-center">
+            Error en la operación. Intenta nuevamente.
           </div>
-          <div>
-            <CardTitle className="text-2xl font-black text-brand-950">Crear Reíno de Aprendizaje</CardTitle>
-            <CardText>Diseña una materia lúdica nueva (ej. &quot;Matelógica&quot;, &quot;Super Lectores&quot;).</CardText>
+        )}
+        {successMessage && (
+          <div className="rounded-2xl border border-academic-gold/20 bg-academic-gold/10 p-6 text-sm font-black text-academic-navy uppercase tracking-widest text-center">
+            {successMessage}
+          </div>
+        )}
+
+        {/* HEADER PREMIUM */}
+        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
+              <Layout className="h-4 w-4" /> Centro de Ingeniería Educativa
+            </div>
+            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+              Gestión de Materias
+            </h1>
+            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
+              Define recorridos, organiza módulos y monitorea el alcance pedagógico de tus propios contenidos.
+            </p>
           </div>
         </div>
-        
-        <form action={createSubjectAction} className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-4">
-            <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900">1. Nombre mágico</label>
-              <input
-                className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-bold text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none"
-                name="title"
-                placeholder="Ej: Aventura Matemática"
-                required
-              />
+
+        {/* METRICS ROW */}
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Materias Totales</span>
+            <span className="text-4xl font-display font-black text-academic-navy my-4">{subjects.length}</span>
+            <span className="text-[10px] font-black text-academic-slate/40">Recorridos creados</span>
+          </Card>
+          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Visibilidad</span>
+            <span className="text-4xl font-display font-black text-academic-navy my-4">{activeSubjectsCount}</span>
+            <span className="text-[10px] font-black text-academic-slate/40">Materias Activas</span>
+          </Card>
+          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Alcance</span>
+            <span className="text-4xl font-display font-black text-academic-navy my-4">{assignedStudentsCount}</span>
+            <span className="text-[10px] font-black text-academic-slate/40">Estudiantes Vinculados</span>
+          </Card>
+          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Efectividad</span>
+            <span className="text-4xl font-display font-black text-academic-navy my-4">{percent(averageProgress)}</span>
+            <span className="text-[10px] font-black text-academic-slate/40">Progreso Promedio</span>
+          </Card>
+        </section>
+
+        {/* CREATION FORM */}
+        <Card className="overflow-hidden border border-academic-gold/5 bg-white shadow-premium rounded-[3rem] p-10">
+          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-navy text-white shadow-lg">
+              <Wand2 className="h-6 w-6 text-academic-gold" />
             </div>
-            
             <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900">2. Misión o descripción (Opcional)</label>
-              <textarea
-                className="min-h-32 w-full resize-none rounded-2xl border border-brand-200 bg-soft-sky p-5 text-base text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none"
-                name="description"
-                placeholder="En esta materia vamos a aprender sumas y restas divirtiéndonos con animalitos..."
-              />
+              <CardTitle className="text-2xl font-black uppercase tracking-tight">Crear Reino de Aprendizaje</CardTitle>
+              <CardText className="font-medium text-academic-slate italic opacity-60">Diseña una nueva materia lúdica personalizada.</CardText>
             </div>
-            
-            <label className="inline-flex cursor-pointer items-center gap-3 rounded-2xl bg-emerald-50 px-5 py-4 transition-colors hover:bg-emerald-100 border border-emerald-100 w-full sm:w-auto mt-2">
-              <input defaultChecked name="is_active" type="checkbox" className="h-5 w-5 accent-emerald-500" />
-              <span className="font-bold text-emerald-900 text-sm">Materia Activa (Visible para alumnos)</span>
-            </label>
           </div>
           
-          <div className="space-y-6">
-            <div>
-              <label className="mb-3 block text-sm font-bold text-brand-900">3. Color distintivo</label>
-              <div className="grid grid-cols-4 gap-3">
-                {[
-                  { value: "#f43f5e", bg: "bg-[#f43f5e]", shadow: "hover:shadow-rose-500/50" }, // Rose
-                  { value: "#f97316", bg: "bg-[#f97316]", shadow: "hover:shadow-orange-500/50" }, // Orange
-                  { value: "#eab308", bg: "bg-[#eab308]", shadow: "hover:shadow-yellow-500/50" }, // Yellow
-                  { value: "#10b981", bg: "bg-[#10b981]", shadow: "hover:shadow-emerald-500/50" }, // Emerald
-                  { value: "#0ea5e9", bg: "bg-[#0ea5e9]", shadow: "hover:shadow-sky-500/50" }, // Sky
-                  { value: "#3b82f6", bg: "bg-[#3b82f6]", shadow: "hover:shadow-blue-500/50" }, // Blue
-                  { value: "#14b8a6", bg: "bg-[#14b8a6]", shadow: "hover:shadow-teal-500/50" }, // Teal
-                  { value: "#ec4899", bg: "bg-[#ec4899]", shadow: "hover:shadow-pink-500/50" }, // Pink
-                ].map((color) => (
-                  <label key={color.value} className="group relative cursor-pointer">
-                    <input 
-                      type="radio" 
-                      name="color" 
-                      value={color.value} 
-                      className="peer sr-only"
-                      defaultChecked={color.value === "#0ea5e9"}
-                    />
-                    <div className={`h-14 w-full rounded-2xl ${color.bg} transition-all duration-300 peer-checked:ring-4 peer-checked:ring-brand-500 peer-checked:ring-offset-2 ${color.shadow} hover:-translate-y-1`}></div>
-                  </label>
-                ))}
+          <form action={createSubjectAction} className="grid gap-10 lg:grid-cols-2">
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <label htmlFor="title" className="mb-2 block text-xs font-black uppercase tracking-widest text-academic-gold">Nombre Mágico</label>
+                <input
+                  id="title"
+                  className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/30 px-6 text-lg font-black text-academic-navy transition-all focus:border-academic-gold focus:bg-white focus:outline-none shadow-sm"
+                  name="title"
+                  placeholder="Ej: Aventura Matemática"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-3">
+                <label htmlFor="description" className="mb-2 block text-xs font-black uppercase tracking-widest text-academic-gold">Misión Pedagógica</label>
+                <textarea
+                  id="description"
+                  className="min-h-32 w-full resize-none rounded-2xl border border-academic-gold/10 bg-academic-ivory/30 p-6 text-base font-medium text-academic-slate transition-all focus:border-academic-gold focus:bg-white focus:outline-none shadow-sm"
+                  name="description"
+                  placeholder="En esta materia vamos a aprender sumas y restas divirtiéndonos con animalitos..."
+                />
+              </div>
+              
+              <div className="pt-2">
+                <div className="relative inline-flex items-center cursor-pointer">
+                  <input defaultChecked name="is_active" type="checkbox" className="sr-only peer" id="is_active_toggle" />
+                  <div className="w-14 h-8 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-academic-gold after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
+                  <label htmlFor="is_active_toggle" className="ml-4 text-xs font-black uppercase tracking-widest text-academic-navy cursor-pointer">Visibilidad Activa</label>
+                </div>
               </div>
             </div>
+            
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <label className="mb-3 block text-xs font-black uppercase tracking-widest text-academic-gold">Identidad Visual (Color)</label>
+                <div className="grid grid-cols-4 gap-4">
+                  {[
+                    { value: "#C682A2", bg: "bg-[#C682A2]" }, // Muted Rose
+                    { value: "#D29062", bg: "bg-[#D29062]" }, // Muted Orange
+                    { value: "#C6A24E", bg: "bg-[#C6A24E]" }, // Academic Gold
+                    { value: "#528E82", bg: "bg-[#528E82]" }, // Muted Emerald
+                    { value: "#1A365D", bg: "bg-[#1A365D]" }, // Academic Navy
+                    { value: "#4A5568", bg: "bg-[#4A5568]" }, // Slate
+                    { value: "#2C7A7B", bg: "bg-[#2C7A7B]" }, // Teal
+                    { value: "#2D3748", bg: "bg-[#2D3748]" }, // Deep Slate
+                  ].map((color) => (
+                    <label key={color.value} className="group relative cursor-pointer" htmlFor={`color-${color.value}`}>
+                      <input 
+                        id={`color-${color.value}`}
+                        type="radio" 
+                        name="color" 
+                        value={color.value} 
+                        className="peer sr-only"
+                        defaultChecked={color.value === "#C6A24E"}
+                      />
+                      <div className={`h-14 w-full rounded-2xl ${color.bg} transition-all duration-300 peer-checked:ring-4 peer-checked:ring-academic-gold peer-checked:ring-offset-4 shadow-sm hover:scale-105 active:scale-95`}></div>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
-            <div>
-              <FileUploader 
-                name="icon" 
-                accept="image/*" 
-                label="4. Icono o Imagen representativa (Opcional)"
-              />
-              <p className="mt-2 text-xs text-brand-600 font-medium">Sube una imagen local que represente esta materia en el mapa.</p>
-            </div>
+              <div className="space-y-3">
+                <FileUploader 
+                  name="icon" 
+                  accept="image/*" 
+                  label="Icono de la materia"
+                />
+              </div>
 
-            <div className="pt-4">
-              <Button type="submit" className="h-14 w-full rounded-2xl bg-brand-600 text-lg font-bold tracking-wide hover:bg-brand-500 shadow-xl shadow-brand-500/30 transition-all hover:-translate-y-1">
-                <Sparkles className="mr-2 h-6 w-6" />
-                Dar vida a la materia
-              </Button>
+              <div className="pt-6">
+                <Button type="submit" className="h-20 w-full rounded-[2rem] bg-academic-navy text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
+                  <Sparkles className="mr-4 h-8 w-8 text-academic-gold" />
+                  Dar Vida a la Materia
+                </Button>
+              </div>
             </div>
+          </form>
+        </Card>
+
+        {/* SUBJECTS LIST */}
+        {subjects.length === 0 ? (
+          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center">
+            <EmptyState
+              title="Sin materias creadas"
+              description="Empieza a diseñar tus recorridos pedagógicos usando el panel superior."
+            />
           </div>
-        </form>
-      </Card>
-      </div>
-
-      {subjects.length === 0 ? (
-        <EmptyState
-          title="Sin materias aún"
-          description="Crea la primera materia para comenzar el armado del recorrido pedagógico."
-        />
-      ) : (
-        <section className="grid gap-4 md:grid-cols-2">
-          {subjects.map((subject) => {
-            const subjectColor = subject.color || "#43b8f4";
-            return (
-            <Card
-              key={subject.id}
-              className="group flex flex-col justify-between overflow-hidden border-none shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl rounded-[2rem]"
-              style={{
-                backgroundColor: hexToRgba(subjectColor, 0.1),
-                border: `2px solid ${hexToRgba(subjectColor, 0.3)}`
-              }}
-            >
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-3">
+        ) : (
+          <section className="grid gap-8 md:grid-cols-2">
+            {subjects.map((subject) => {
+              const subjectColor = subject.color || "#C6A24E";
+              return (
+              <Card
+                key={subject.id}
+                className="group flex flex-col justify-between overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-2 rounded-[3rem] bg-white"
+              >
+                <div className="p-10">
+                  <div className="flex items-start justify-between gap-6 mb-8">
+                    <div className="flex flex-wrap items-center gap-6">
                       <div 
-                        className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl text-2xl shadow-inner"
+                        className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-[1.5rem] text-3xl shadow-lg border border-white/50"
                         style={{ backgroundColor: subjectColor, color: "white" }}
                       >
                         {subject.icon ? (
-                          subject.icon.startsWith("http") || subject.icon.startsWith("/") ? (
+                          (subject.icon.startsWith("http") || subject.icon.startsWith("/")) ? (
                             <NextImage 
                               src={subject.icon} 
                               alt={subject.title} 
-                              width={48} 
-                              height={48} 
+                              width={64} 
+                              height={64} 
                               className="h-full w-full object-cover" 
                             />
                           ) : (
                             subject.icon
                           )
                         ) : (
-                          <BookOpen className="h-6 w-6" />
+                          <BookOpen className="h-8 w-8" />
                         )}
                       </div>
-                      <CardTitle className="text-2xl font-black text-brand-950 truncate">{subject.title}</CardTitle>
+                      <div className="flex flex-col">
+                        <CardTitle className="text-3xl font-black text-academic-navy tracking-tight truncate max-w-[200px] lg:max-w-md">{subject.title}</CardTitle>
+                        <Badge 
+                          className="mt-2 w-fit rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-widest border"
+                          variant={subject.is_active ? "success" : "default"}
+                          style={{ 
+                            backgroundColor: subject.is_active ? hexToRgba(subjectColor, 0.1) : undefined, 
+                            color: subject.is_active ? subjectColor : undefined,
+                            borderColor: subject.is_active ? hexToRgba(subjectColor, 0.2) : undefined
+                          }}
+                        >
+                          {subject.is_active ? "Materia Activa" : "Materia Oculta"}
+                        </Badge>
+                      </div>
                     </div>
-                    {subject.description ? (
-                      <CardText className="line-clamp-2 mt-2 font-medium leading-relaxed">{subject.description}</CardText>
-                    ) : null}
                   </div>
                   
-                  <Badge 
-                    className="rounded-full px-3 py-1 font-bold shadow-sm"
-                    variant={subject.is_active ? "success" : "default"}
-                    style={{ 
-                      backgroundColor: subject.is_active ? hexToRgba(subjectColor, 0.2) : undefined, 
-                      color: subject.is_active ? subjectColor : undefined,
-                      borderColor: subject.is_active ? hexToRgba(subjectColor, 0.3) : undefined
-                    }}
-                  >
-                    {subject.is_active ? "Activa" : "Oculta"}
-                  </Badge>
+                  {subject.description && (
+                    <CardText className="line-clamp-2 mt-4 font-medium text-academic-slate leading-relaxed italic opacity-80">&quot;{subject.description}&quot;</CardText>
+                  )}
+
+                  <div className="mt-10 grid gap-4 grid-cols-3">
+                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
+                      <Layers3 className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Módulos</p>
+                      <p className="text-2xl font-black text-academic-navy mt-1">{subject.modules_count}</p>
+                    </div>
+                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
+                      <Users className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Alumnos</p>
+                      <p className="text-2xl font-black text-academic-navy mt-1">{subject.assigned_students_count}</p>
+                    </div>
+                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
+                      <BarChart3 className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Avance</p>
+                      <p className="text-2xl font-black text-academic-navy mt-1">{percent(subject.progress_average)}</p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  <div className="flex flex-col rounded-2xl p-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.7)" }}>
-                    <div className="mb-2 flex items-center gap-2 text-slate-500">
-                      <Layers3 className="h-4 w-4" />
-                      <p className="text-xs font-bold uppercase tracking-wider">Módulos</p>
+                <div className="border-t border-academic-gold/5 p-8 bg-academic-ivory/10 group-hover:bg-academic-ivory/20 transition-all">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="flex gap-4 w-full sm:w-auto">
+                      <Link href={`/docente/materias/${subject.id}/modulos` as Route} className="w-full sm:w-auto">
+                        <Button className="h-14 rounded-xl px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 border-none text-white w-full sm:w-auto" style={{ backgroundColor: subjectColor }}>
+                          <Layers3 className="mr-2 h-5 w-5" /> Gestionar Contenidos
+                        </Button>
+                      </Link>
                     </div>
-                    <p className="text-2xl font-black text-slate-800">{subject.modules_count}</p>
-                  </div>
-                  <div className="flex flex-col rounded-2xl p-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.7)" }}>
-                    <div className="mb-2 flex items-center gap-2 text-slate-500">
-                      <Users className="h-4 w-4" />
-                      <p className="text-xs font-bold uppercase tracking-wider">Estudiantes</p>
+                    
+                    <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
+                      <Link href={`/docente/materias/${subject.id}/editar` as Route}>
+                        <Button variant="ghost" className="h-14 w-14 rounded-xl font-black text-academic-navy/40 hover:text-academic-navy hover:bg-white border border-academic-gold/5 transition-all">
+                          <Pencil className="h-5 w-5" />
+                        </Button>
+                      </Link>
+                      <form action={deleteSubjectAction}>
+                        <input name="subject_id" type="hidden" value={subject.id} />
+                        <Button variant="ghost" className="h-14 w-14 rounded-xl font-black text-rose-600/40 hover:bg-rose-50 hover:text-rose-600 border border-rose-100/50 transition-all" type="submit">
+                          <Trash2 className="h-5 w-5" />
+                        </Button>
+                      </form>
                     </div>
-                    <p className="text-2xl font-black text-slate-800">{subject.assigned_students_count}</p>
-                  </div>
-                  <div className="flex flex-col rounded-2xl p-4 transition-colors" style={{ backgroundColor: "rgba(255,255,255,0.7)" }}>
-                    <div className="mb-2 flex items-center gap-2 text-slate-500">
-                      <BarChart3 className="h-4 w-4" />
-                      <p className="text-xs font-bold uppercase tracking-wider">Avance</p>
-                    </div>
-                    <p className="text-2xl font-black text-slate-800">{percent(subject.progress_average)}</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="border-t p-4" style={{ borderColor: hexToRgba(subjectColor, 0.15), backgroundColor: "rgba(255,255,255,0.4)" }}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex gap-2">
-                    <Link href={`/docente/materias/${subject.id}/modulos`}>
-                      <Button size="sm" className="h-10 rounded-xl px-4 font-bold shadow-sm transition-transform hover:-translate-y-0.5 w-full sm:w-auto" style={{ backgroundColor: subjectColor }}>
-                        <Layers3 className="mr-2 h-4 w-4" /> Ver Módulos y Actividades
-                      </Button>
-                    </Link>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <Link href={`/docente/materias/${subject.id}/editar`}>
-                      <Button size="sm" variant="ghost" className="h-10 rounded-xl font-bold bg-white/50 hover:bg-white w-full sm:w-auto">
-                        <Pencil className="mr-2 h-4 w-4" /> Editar
-                      </Button>
-                    </Link>
-                    <form action={deleteSubjectAction}>
-                      <input name="subject_id" type="hidden" value={subject.id} />
-                      <Button size="sm" variant="ghost" className="h-10 rounded-xl font-bold text-rose-600 hover:bg-rose-100 w-full sm:w-auto" type="submit">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          );
-          })}
-        </section>
-      )}
+              </Card>
+            );
+            })}
+          </section>
+        )}
+      </div>
     </RoleLayout>
   );
 }

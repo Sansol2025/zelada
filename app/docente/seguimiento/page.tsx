@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { BarChart3, Eye } from "lucide-react";
+import { BarChart3, Eye, Search, Filter } from "lucide-react";
+import type { Route } from "next";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { StudentProgressTable } from "@/components/student-progress-table";
+import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
-import { Card, CardText, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { getStudentsProgressForTeacher } from "@/features/teacher/queries";
 import { teacherNavItems } from "@/lib/navigation";
@@ -37,39 +39,92 @@ export default async function TeacherTrackingPage() {
 
   return (
     <RoleLayout
-      title="Seguimiento por alumno"
-      description="Observa avance, bloqueos y tiempo de dedicación con vista detallada."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/seguimiento"
     >
-      <Card className="space-y-3">
-        <div className="flex items-center gap-2 text-brand-900">
-          <BarChart3 className="h-5 w-5" />
-          <CardTitle className="text-lg">Vista general de progreso</CardTitle>
-        </div>
-        <CardText>
-          Selecciona un estudiante para acceder al reporte detallado por materia, módulo y actividad.
-        </CardText>
-      </Card>
+      <div className="flex flex-col gap-8 animate-in">
 
-      <StudentProgressTable rows={rows} />
-
-      <section className="grid gap-3 md:grid-cols-2">
-        {rows.map((row) => (
-          <Card key={row.student_id} className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg">{row.student_name}</CardTitle>
-              <CardText>Avance {Math.round(row.progress_percent)}%</CardText>
+        {/* HEADER PREMIUM */}
+        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
+              <BarChart3 className="h-4 w-4" /> Observatorio de Progreso
             </div>
-            <Link href={`/docente/seguimiento/${row.student_id}`}>
-              <Button className="gap-2" size="sm" variant="secondary">
-                <Eye className="h-4 w-4" />
-                Ver detalle
-              </Button>
-            </Link>
-          </Card>
-        ))}
-      </section>
+            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+              Seguimiento de Alumnos
+            </h1>
+            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
+              Analiza el avance individual, identifica bloqueos tempranos y optimiza el tiempo de dedicación de cada estudiante.
+            </p>
+          </div>
+        </div>
+
+        {/* CONTROLS AREA (OPTIONAL BUT GOOD FOR DENSITY) */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-academic-ivory/20 p-6 rounded-[2rem] border border-academic-gold/5">
+          <div className="relative w-full md:w-96">
+            <label htmlFor="search_student" className="sr-only">Buscar estudiante</label>
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-academic-gold" />
+            <input 
+              id="search_student"
+              disabled
+              placeholder="Buscar estudiante... (Próximamente)"
+              className="h-14 w-full rounded-2xl border border-academic-gold/10 bg-white pl-12 pr-6 text-sm font-bold text-academic-navy focus:outline-none focus:border-academic-gold transition-all"
+            />
+          </div>
+          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black text-[10px] uppercase tracking-widest text-academic-navy/60 border border-academic-gold/5 bg-white/50 hover:bg-white" disabled>
+            <Filter className="mr-2 h-4 w-4" /> Filtrar por Grado
+          </Button>
+        </div>
+
+        {/* MAIN DATA TABLE/LIST */}
+        <div className="bg-white rounded-[3rem] shadow-premium border border-academic-gold/5 overflow-hidden">
+          <div className="p-8 border-b border-academic-gold/5">
+            <h3 className="text-xl font-black text-academic-navy tracking-tight uppercase">Radar de Rendimiento</h3>
+          </div>
+          <div className="p-8">
+            <StudentProgressTable rows={rows} />
+          </div>
+        </div>
+
+        {/* MOBILE GRID VIEW / DETAILED CARDS */}
+        <section className="grid gap-6 md:grid-cols-2">
+          {rows.map((row) => (
+            <Card key={row.student_id} className="group flex items-center justify-between p-8 rounded-[2.5rem] bg-white border border-academic-gold/5 shadow-sm transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="flex flex-col gap-1">
+                <span className="font-black text-xl text-academic-navy tracking-tight group-hover:text-academic-gold transition-colors">{row.student_name}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-academic-slate/40">
+                  Avance Global: <span className="text-academic-navy">{Math.round(row.progress_percent)}%</span>
+                </span>
+                <div className="mt-4 flex gap-3">
+                  <div className="h-1 w-24 bg-academic-ivory rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-academic-gold transition-all duration-1000" 
+                      style={{ width: `${row.progress_percent}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Link href={`/docente/seguimiento/${row.student_id}` as Route}>
+                <Button className="h-16 w-16 rounded-2xl bg-academic-navy text-white shadow-xl shadow-academic-navy/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center border-none">
+                  <Eye className="h-6 w-6 text-academic-gold" />
+                </Button>
+              </Link>
+            </Card>
+          ))}
+        </section>
+
+        {rows.length === 0 && (
+          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center">
+            <EmptyState
+              title="Sin estudiantes vinculados"
+              description="Asigna materias a tus alumnos para comenzar a visualizar su progreso detallado."
+            />
+          </div>
+        )}
+      </div>
     </RoleLayout>
   );
 }

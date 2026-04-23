@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
-import { Save, UserRound } from "lucide-react";
+import { Save, UserRound, Sparkles, Layout } from "lucide-react";
+
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
@@ -28,37 +29,73 @@ export default async function TeacherProfilePage() {
 
   return (
     <RoleLayout
-      title="Perfil docente"
-      description="Gestiona tus datos de perfil institucional."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/perfil"
     >
-      <Card className="space-y-4">
-        <div className="flex items-center gap-2 text-brand-900">
-          <UserRound className="h-5 w-5" />
-          <CardTitle className="text-lg">Datos personales</CardTitle>
-        </div>
-        <CardText>Rol actual: {current.role}</CardText>
-        <form action={updateProfileAction} className="grid gap-3 md:grid-cols-2">
-          <input
-            className="h-11 rounded-xl border border-brand-200 px-4 text-sm"
-            defaultValue={current.fullName || ""}
-            name="full_name"
-            placeholder="Nombre completo"
-          />
-          <input
-            className="h-11 rounded-xl border border-brand-200 px-4 text-sm"
-            name="avatar_url"
-            placeholder="URL de avatar (opcional)"
-          />
-          <div className="md:col-span-2">
-            <Button className="gap-2">
-              <Save className="h-4 w-4" />
-              Guardar perfil
-            </Button>
+      <div className="flex flex-col gap-8 animate-in">
+        
+        {/* HEADER PREMIUM */}
+        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
+              <UserRound className="h-4 w-4" /> Centro de Identidad
+            </div>
+            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+              Mi Perfil Docente
+            </h1>
+            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
+              Administra tu información institucional y personaliza tu presencia en la plataforma.
+            </p>
           </div>
-        </form>
-      </Card>
+        </div>
+
+        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
+          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
+              <Layout className="h-6 w-6" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-black uppercase tracking-tight">Datos Institucionales</CardTitle>
+              <CardText className="text-sm font-bold text-academic-gold uppercase tracking-[0.1em] mt-1">
+                Rol: {current.role === 'teacher' ? 'Docente' : current.role === 'admin' ? 'Administrador' : current.role}
+              </CardText>
+            </div>
+          </div>
+
+          <form action={updateProfileAction} className="grid gap-10 md:grid-cols-2">
+            <div className="space-y-3">
+              <label htmlFor="full_name" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Nombre Completo</label>
+              <input
+                id="full_name"
+                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
+                defaultValue={current.fullName || ""}
+                name="full_name"
+                placeholder="Ej: Profe Juan Pérez"
+              />
+            </div>
+            <div className="space-y-3">
+              <label htmlFor="avatar_url" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Imagen de Perfil (URL)</label>
+              <input
+                id="avatar_url"
+                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
+                name="avatar_url"
+                placeholder="https://..."
+              />
+            </div>
+            
+            <div className="md:col-span-2 pt-6">
+              <Button className="h-20 w-full md:w-auto rounded-[2rem] bg-academic-navy px-16 text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
+                <Save className="mr-4 h-8 w-8 text-academic-gold" />
+                Actualizar Identidad
+                <Sparkles className="ml-2 h-5 w-5 text-academic-gold" />
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
     </RoleLayout>
   );
 }

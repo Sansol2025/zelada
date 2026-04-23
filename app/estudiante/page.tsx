@@ -53,36 +53,38 @@ export default async function StudentHomePage() {
       description="Aquí encontrarás tus materias asignadas y el avance de cada recorrido."
       currentPath="/estudiante"
     >
-      <section className="grid gap-4 md:grid-cols-3">
-        <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-brand-800">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Avance general</span>
+      <section className="grid gap-6 md:grid-cols-3">
+        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-3 text-academic-gold mb-4">
+            <Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12" />
+            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Avance General</span>
           </div>
-          <p className="text-3xl font-extrabold text-brand-950">{percent(globalProgress.averageProgress)}</p>
-          <CardText>Promedio entre todas tus materias activas.</CardText>
+          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{percent(globalProgress.averageProgress)}</p>
+          <CardText className="mt-2 font-medium text-academic-slate">Promedio total de tus materias activas.</CardText>
         </Card>
-        <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-brand-800">
-            <BookOpenCheck className="h-4 w-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Materias</span>
+
+        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-3 text-academic-gold mb-4">
+            <BookOpenCheck className="h-5 w-5 transition-transform group-hover:scale-110" />
+            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Recorridos</span>
           </div>
-          <p className="text-3xl font-extrabold text-brand-950">{globalProgress.totalSubjects}</p>
-          <CardText>Recorridos asignados para este ciclo.</CardText>
+          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{globalProgress.totalSubjects}</p>
+          <CardText className="mt-2 font-medium text-academic-slate">Materias asignadas para este ciclo.</CardText>
         </Card>
-        <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-brand-800">
-            <GraduationCap className="h-4 w-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Completadas</span>
+
+        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-3 text-academic-gold mb-4">
+            <GraduationCap className="h-5 w-5 transition-transform group-hover:-translate-y-1" />
+            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Completadas</span>
           </div>
-          <p className="text-3xl font-extrabold text-brand-950">{globalProgress.completedSubjects}</p>
-          <CardText>Materias que ya tienen progreso finalizado.</CardText>
+          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{globalProgress.completedSubjects}</p>
+          <CardText className="mt-2 font-medium text-academic-slate">Proyectos que ya fueron finalizados.</CardText>
         </Card>
       </section>
 
-      <section className="flex items-center justify-between">
-        <h2 className="font-display text-2xl font-bold text-brand-900">Tus materias</h2>
-        <Badge variant="default">{assignedSubjects.length} activas</Badge>
+      <section className="flex items-center justify-between mt-12 mb-6">
+        <h2 className="font-display text-3xl font-black tracking-tight text-academic-navy">Tus Materias</h2>
+        <Badge className="bg-academic-gold/10 text-academic-gold border-none font-bold px-4 py-1 rounded-full">{assignedSubjects.length} activas</Badge>
       </section>
 
       {assignedSubjects.length === 0 ? (
@@ -91,23 +93,24 @@ export default async function StudentHomePage() {
           description="Cuando tu docente te asigne una materia, aparecerá aquí para comenzar el recorrido."
           action={
             <Link href="/acceso">
-              <Button variant="secondary">Volver al acceso</Button>
+              <Button variant="secondary" className="h-12 rounded-xl font-bold px-8">Volver al acceso</Button>
             </Link>
           }
         />
       ) : (
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {assignedSubjects.map((subject) => (
-            <SubjectCard
-              key={subject.id}
-              title={subject.title}
-              description={subject.description}
-              color={subject.color}
-              progressPercent={subject.progressPercent}
-              status={subject.status}
-              icon={subject.icon}
-              href={`/estudiante/${subject.id}` as Route}
-            />
+            <div key={subject.id} className="animate-in" style={{ animationDelay: "0.1s" }}>
+              <SubjectCard
+                title={subject.title}
+                description={subject.description}
+                color={subject.color}
+                progressPercent={subject.progressPercent}
+                status={subject.status}
+                icon={subject.icon}
+                href={`/estudiante/${subject.id}` as Route}
+              />
+            </div>
           ))}
         </section>
       )}

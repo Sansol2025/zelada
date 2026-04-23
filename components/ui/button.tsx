@@ -6,20 +6,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-xl font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-academic-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-brand-500 text-white hover:bg-brand-600",
-        secondary: "bg-white text-brand-900 border border-brand-200 hover:bg-brand-50",
-        ghost: "text-brand-900 hover:bg-brand-50",
-        success: "bg-emerald-500 text-white hover:bg-emerald-600"
+        primary: "bg-academic-navy text-white hover:bg-brand-950 shadow-sm",
+        secondary: "bg-academic-gold text-white hover:bg-[#b08d4a] shadow-sm",
+        outline: "bg-white text-academic-navy border border-academic-gold/30 hover:bg-academic-ivory",
+        ghost: "text-academic-navy hover:bg-academic-ivory",
+        success: "bg-academic-forest text-white hover:bg-[#23382f]",
+        link: "text-academic-gold underline-offset-4 hover:underline p-0 h-auto"
       },
       size: {
-        sm: "h-10 px-4 text-sm",
-        md: "h-11 px-5 text-sm",
-        lg: "h-14 px-7 text-base",
-        xl: "h-16 px-8 text-lg"
+        sm: "h-11 px-4 text-xs",
+        md: "h-12 px-6 text-sm",
+        lg: "h-14 px-8 text-base tracking-tight",
+        xl: "h-16 px-10 text-lg font-bold tracking-tight"
       }
     },
     defaultVariants: {

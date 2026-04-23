@@ -11,17 +11,24 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#ecf8ff",
-          100: "#d3efff",
-          200: "#b0e2ff",
-          300: "#7aceff",
-          400: "#43b8f4",
-          500: "#1e99d3",
-          600: "#1a7bb0",
-          700: "#1a648e",
-          800: "#1d5373",
-          900: "#1f4560",
-          950: "#122b3f"
+          50: "#f8f5f0",  // Bone/Ivory base
+          100: "#f1ede4",
+          200: "#e4dac6",
+          300: "#d7c7a8",
+          400: "#c5a059", // Academic Gold
+          500: "#1a2b3c", // Deep Navy
+          600: "#2e4a3e", // Forest Green
+          700: "#1a3b5c",
+          800: "#0f2135",
+          900: "#081421",
+          950: "#040a12"
+        },
+        academic: {
+          ivory: "#F8F5F0",
+          navy: "#1A2B3C",
+          forest: "#2E4A3E",
+          gold: "#C5A059",
+          slate: "#4A5568"
         },
         soft: {
           sky: "#f4faff",
@@ -30,11 +37,14 @@ const config: Config = {
         }
       },
       boxShadow: {
-        card: "0 20px 40px -30px rgba(31, 69, 96, 0.45)"
+        card: "0 10px 30px -10px rgba(26, 43, 60, 0.12)",
+        premium: "0 20px 40px -15px rgba(26, 43, 60, 0.15)",
+        inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)"
       },
       borderRadius: {
         xl: "1rem",
-        "2xl": "1.25rem"
+        "2xl": "1.5rem",
+        "3xl": "2rem"
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],

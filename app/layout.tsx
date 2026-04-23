@@ -19,9 +19,30 @@ const fontBody = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} | ${APP_SUBTITLE}`,
-  description:
-    "Plataforma educativa inclusiva para primaria con recorridos secuenciales, acceso sin barreras y seguimiento familiar."
+  title: {
+    default: `${APP_NAME} | ${APP_SUBTITLE}`,
+    template: `%s | ${APP_NAME}`
+  },
+  description: "Plataforma educativa inclusiva para primaria desarrollada para la Escuela N° 361. Recorridos secuenciales, acceso sin barreras y seguimiento familiar.",
+  keywords: ["educación inclusiva", "escuela zelada", "aprendizaje adaptativo", "primaria", "la rioja"],
+  authors: [{ name: "Aprender Sin Barreras" }],
+  openGraph: {
+    title: APP_NAME,
+    description: APP_SUBTITLE,
+    url: "https://aprender-sin-barreras.vercel.app",
+    siteName: APP_NAME,
+    locale: "es_AR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: APP_NAME,
+    description: APP_SUBTITLE,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

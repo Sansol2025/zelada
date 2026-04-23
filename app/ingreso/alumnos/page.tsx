@@ -1,7 +1,7 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from "fs";
+import path from "path";
 import Image from "next/image";
-import { QrCode, User } from "lucide-react";
+import { QrCode, User, School } from "lucide-react";
 
 import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { studentLoginAction } from "./actions";
@@ -46,70 +46,72 @@ export default async function IngresoAlumnosPage({ searchParams }: IngresoAlumno
   const logoSrc = getSchoolLogoSrc();
 
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-4 py-10 flex flex-col items-center justify-center bg-gradient-to-br from-brand-50 to-soft-sky">
-      <section className="mx-auto mb-8 max-w-xl text-center">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-10 flex flex-col items-center justify-center bg-academic-ivory">
+      <section className="mx-auto mb-10 max-w-xl text-center">
         {logoSrc ? (
-          <div className="mx-auto mb-5 w-44 sm:w-52">
+          <div className="mx-auto mb-8 w-44 sm:w-52">
             <Image
               src={logoSrc}
               alt="Logo de la Escuela"
               width={420}
               height={420}
-              className="h-auto w-full drop-shadow-xl transition-transform hover:scale-105"
+              className="h-auto w-full drop-shadow-2xl transition-transform hover:scale-105"
               priority
             />
           </div>
         ) : (
-          <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-brand-100 shadow-lg text-center text-xs font-bold text-brand-900">
-            Escuela
+          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-academic-navy text-academic-gold shadow-lg rotate-3">
+             <School className="h-12 w-12" />
           </div>
         )}
 
-        <h1 className="font-display text-4xl font-extrabold text-brand-950">¡Hola, Estudiante! 👋</h1>
-        <p className="mt-3 text-lg font-medium text-brand-700">
+        <h1 className="font-display text-4xl font-black text-academic-navy tracking-tight md:text-6xl">¡Hola, Estudiante! 👋</h1>
+        <p className="mt-4 text-xl font-medium text-academic-slate leading-relaxed">
           Ingresa tus datos para empezar a jugar y aprender.
         </p>
         {grado && (
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-brand-100 px-4 py-1.5 text-sm font-bold text-brand-800">
-            <QrCode className="h-4 w-4" /> Estás ingresando al grado {grado}
+          <div className="mt-6 inline-flex items-center gap-3 rounded-full bg-academic-gold/10 px-6 py-2 text-sm font-black uppercase tracking-widest text-[#a8863a] border border-academic-gold/10">
+            <QrCode className="h-5 w-5" /> Estás ingresando al grado {grado}
           </div>
         )}
       </section>
 
       {errorMessage ? (
-        <section className="mx-auto mb-6 w-full max-w-md rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800 text-center shadow-sm">
+        <section className="mx-auto mb-8 w-full max-w-md rounded-2xl border border-rose-200 bg-rose-50 px-6 py-4 text-sm font-black text-rose-800 uppercase tracking-widest text-center shadow-sm">
           {errorMessage}
         </section>
       ) : null}
 
       <section className="mx-auto w-full max-w-md">
-        <Card className="space-y-6 rounded-[2rem] border-none shadow-xl bg-white/80 p-8 backdrop-blur-md">
-          <div className="flex items-center gap-3 text-brand-900 justify-center mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100">
-              <User className="h-6 w-6 text-brand-600" />
+        <Card className="space-y-8 rounded-[3rem] border border-academic-gold/5 shadow-premium bg-white p-10">
+          <div className="flex items-center gap-4 text-academic-navy justify-center mb-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-academic-ivory text-academic-gold border border-academic-gold/10">
+              <User className="h-8 w-8" />
             </div>
           </div>
           <div className="text-center">
-            <CardTitle className="text-2xl font-bold text-brand-900">Tus datos</CardTitle>
-            <CardText className="text-brand-600">Escribe tu primer nombre y número de DNI</CardText>
+            <CardTitle className="text-2xl font-black text-academic-navy tracking-tight uppercase">Tus datos</CardTitle>
+            <CardText className="text-academic-slate font-medium italic mt-2 opacity-60">Escribe tu primer nombre y número de DNI</CardText>
           </div>
           
-          <form action={studentLoginAction} className="space-y-5">
+          <form action={studentLoginAction} className="space-y-6">
             {grado && <input type="hidden" name="grado" value={grado} />}
-            <div>
-              <label className="mb-1.5 block text-sm font-bold text-brand-900 pl-1">Primer Nombre</label>
+            <div className="space-y-2">
+              <label htmlFor="first_name" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Primer Nombre</label>
               <input
-                className="h-14 w-full rounded-2xl border border-brand-200 bg-brand-50/50 px-5 text-lg font-semibold text-brand-900 focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all"
+                id="first_name"
+                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-xl font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
                 name="first_name"
                 placeholder="Ejemplo: Juan"
                 required
                 autoComplete="off"
               />
             </div>
-            <div>
-              <label className="mb-1.5 block text-sm font-bold text-brand-900 pl-1">DNI</label>
+            <div className="space-y-2">
+              <label htmlFor="dni" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">DNI</label>
               <input
-                className="h-14 w-full rounded-2xl border border-brand-200 bg-brand-50/50 px-5 text-lg font-semibold text-brand-900 focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all"
+                id="dni"
+                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-xl font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
                 name="dni"
                 placeholder="Sin puntos ni espacios"
                 required
@@ -118,7 +120,7 @@ export default async function IngresoAlumnosPage({ searchParams }: IngresoAlumno
               />
             </div>
             
-            <button className="h-14 w-full rounded-2xl bg-brand-600 text-lg font-bold tracking-wide hover:bg-brand-500 shadow-xl shadow-brand-500/20 transition-all hover:-translate-y-1 text-white border-none mt-4" type="submit">
+            <button className="h-20 w-full rounded-[2rem] bg-academic-navy text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none mt-6" type="submit">
               Entrar a mi perfil
             </button>
           </form>

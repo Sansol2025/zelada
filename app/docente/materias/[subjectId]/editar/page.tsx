@@ -1,11 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { Save, Trash2 } from "lucide-react";
+import { Save, Trash2, BookOpen, Sparkles, Layout } from "lucide-react";
+
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle, CardText } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { deleteSubject, updateSubject } from "@/features/teacher/actions";
 import { getTeacherSubjectById } from "@/features/teacher/queries";
@@ -30,7 +31,7 @@ export default async function EditSubjectPage({ params }: EditSubjectPageProps) 
       {
         title: String(formData.get("title") ?? ""),
         description: String(formData.get("description") ?? ""),
-        color: String(formData.get("color") ?? "#43b8f4"),
+        color: String(formData.get("color") ?? "#C6A24E"),
         icon: String(formData.get("icon") ?? ""),
         is_active: formData.get("is_active") === "on"
       },
@@ -50,68 +51,115 @@ export default async function EditSubjectPage({ params }: EditSubjectPageProps) 
 
   return (
     <RoleLayout
-      title="Editar materia"
-      description="Actualiza nombre, descripción e identidad de la materia."
+      title=" "
+      description=" "
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <Card className="border-none shadow-card rounded-[2rem] p-8 max-w-4xl mx-auto">
-        <div className="mb-6 flex items-center gap-3 border-b border-brand-50 pb-4">
-          <CardTitle className="text-2xl font-black text-brand-950">Configuración de Materia</CardTitle>
-        </div>
+      <div className="flex flex-col gap-8 animate-in">
         
-        <form action={updateSubjectAction} className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Nombre de la materia</label>
-              <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-bold text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none text-left" defaultValue={subject.title} name="title" required />
+        {/* HEADER PREMIUM */}
+        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
+              <BookOpen className="h-4 w-4" /> Restauración Pedagógica
             </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Color de identidad</label>
-              <input className="h-14 w-full cursor-pointer rounded-2xl border border-brand-200 bg-white px-2 py-1 transition-colors focus:border-brand-500 focus:outline-none" defaultValue={subject.color || "#43b8f4"} name="color" type="color" />
-            </div>
-
-            <label className="flex cursor-pointer items-center gap-3 rounded-2xl bg-emerald-50 px-5 py-4 transition-colors hover:bg-emerald-100 border border-emerald-100">
-              <input defaultChecked={subject.is_active} name="is_active" type="checkbox" className="h-5 w-5 accent-emerald-500" />
-              <span className="font-bold text-emerald-900 text-sm">Materia Activa (Visible para alumnos)</span>
-            </label>
+            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+              Editar Materia
+            </h1>
+            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
+              Estás modificando <span className="text-academic-gold font-black">&quot;{subject.title}&quot;</span>. Ajusta la identidad visual y los objetivos del reino.
+            </p>
           </div>
+        </div>
 
-          <div className="space-y-6">
-            <div>
-              <label className="mb-2 block text-sm font-bold text-brand-900 text-left">Misión o descripción</label>
-              <textarea
-                className="min-h-32 w-full resize-none rounded-2xl border border-brand-200 bg-soft-sky p-5 text-base text-brand-900 transition-colors focus:border-brand-500 focus:bg-white focus:outline-none text-left leading-relaxed"
-                defaultValue={subject.description || ""}
-                name="description"
-                placeholder="Describe la aventura..."
-              />
+        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
+          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
+              <Layout className="h-6 w-6" />
             </div>
-            
-            <FileUploader 
-              name="icon" 
-              accept="image/*" 
-              label="Cambiar Icono o Imagen"
-              initialUrl={subject.icon || ""}
-            />
+            <div>
+              <CardTitle className="text-2xl font-black uppercase tracking-tight">Datos del Reino</CardTitle>
+              <CardText className="text-sm font-medium text-academic-slate italic opacity-60">Configura la esencia de tu materia.</CardText>
+            </div>
           </div>
+          
+          <form action={updateSubjectAction} className="grid md:grid-cols-2 gap-10">
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Nombre de la Materia</label>
+                <input 
+                  id="title"
+                  className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                  defaultValue={subject.title} 
+                  name="title" 
+                  required 
+                />
+              </div>
 
-          <div className="md:col-span-2 pt-6 border-t border-brand-50 flex flex-wrap gap-4 justify-between items-center">
-            <Button className="h-14 px-10 rounded-2xl bg-brand-600 text-lg font-bold tracking-wide hover:bg-brand-500 shadow-xl shadow-brand-500/30 transition-all hover:-translate-y-1" type="submit">
-              <Save className="mr-2 h-6 w-6" />
-              Guardar Cambios
-            </Button>
-            
-            <form action={deleteSubjectAction}>
-              <Button className="h-12 px-6 rounded-xl font-bold text-rose-600 hover:bg-rose-50 border-none bg-transparent" type="submit">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Eliminar Materia
+              <div className="space-y-3">
+                <label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Color de Identidad</label>
+                <div className="flex items-center gap-4">
+                  <input 
+                    id="color"
+                    className="h-14 w-32 cursor-pointer rounded-xl border border-academic-gold/10 bg-white p-1 transition-all focus:ring-4 focus:ring-academic-gold/10" 
+                    defaultValue={subject.color || "#C6A24E"} 
+                    name="color" 
+                    type="color" 
+                  />
+                  <span className="text-xs font-bold text-academic-navy/40 italic">Usa colores que faciliten la distinción visual</span>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <div className="relative inline-flex items-center cursor-pointer">
+                  <input defaultChecked={subject.is_active} name="is_active" type="checkbox" className="sr-only peer" id="is_active_toggle" />
+                  <div className="w-14 h-8 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-academic-gold after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
+                  <label htmlFor="is_active_toggle" className="ml-4 text-xs font-black uppercase tracking-widest text-academic-navy cursor-pointer">Materia Visible para Alumnos</label>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <label htmlFor="description" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Misión o Descripción</label>
+                <textarea
+                  id="description"
+                  className="min-h-32 w-full resize-none rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 p-6 text-base font-medium text-academic-slate focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm leading-relaxed"
+                  defaultValue={subject.description || ""}
+                  name="description"
+                  placeholder="Describe la aventura..."
+                />
+              </div>
+              
+              <div className="space-y-3">
+                <FileUploader 
+                  name="icon" 
+                  accept="image/*" 
+                  label="Cambiar Icono o Ilustración"
+                  initialUrl={subject.icon || ""}
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-2 pt-10 border-t border-academic-gold/5 flex flex-wrap gap-6 justify-between items-center">
+              <Button className="h-20 px-16 rounded-[2rem] bg-academic-navy text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none" type="submit">
+                <Save className="mr-4 h-8 w-8 text-academic-gold" />
+                Guardar Reformas
+                <Sparkles className="ml-2 h-5 w-5 text-academic-gold" />
               </Button>
-            </form>
-          </div>
-        </form>
-      </Card>
+              
+              <form action={deleteSubjectAction}>
+                <Button className="h-14 px-8 rounded-xl font-black text-rose-600/40 hover:bg-rose-50 hover:text-rose-600 border border-rose-100/50 bg-white transition-all text-[10px] uppercase tracking-widest" type="submit">
+                  <Trash2 className="mr-3 h-5 w-5" />
+                  Borrar Permanentemente
+                </Button>
+              </form>
+            </div>
+          </form>
+        </Card>
+      </div>
     </RoleLayout>
   );
 }
