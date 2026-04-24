@@ -88,15 +88,12 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
       <Card className="animate-in mx-auto w-full max-w-md overflow-hidden border-academic-gold/10 bg-white/90 p-8 shadow-premium backdrop-blur-md sm:p-10">
         <div className="flex flex-col items-center text-center">
           {logoSrc ? (
-            <div className="mb-6 w-32 sm:w-40">
-              <Image
+            <div className="mb-6 w-32 sm:w-40 flex justify-center">
+              <img
                 src={logoSrc}
                 alt={SCHOOL_NAME}
-                width={300}
-                height={300}
                 className="h-auto w-full drop-shadow-xl"
-                priority
-                unoptimized
+                loading="eager"
               />
             </div>
           ) : (
