@@ -10,6 +10,7 @@ import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { createModule, deleteModuleForTeacher } from "@/features/teacher/actions";
 import { getTeacherModulesBySubject, getTeacherSubjectById } from "@/features/teacher/queries";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 
 type SubjectModulesPageProps = {
@@ -64,21 +65,12 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
     >
       <div className="flex flex-col gap-8 animate-in">
 
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <Map className="h-4 w-4" /> Mapa de Ruta Pedagógica
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Módulos de <span className="text-academic-gold italic">{subject.title}</span>
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Organiza la aventura paso a paso. Agrega módulos como &quot;Niveles&quot; secuenciales que tus estudiantes deberán conquistar para progresar.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<Map className="h-4 w-4" />}
+          subtitle="Mapa de Ruta Pedagógica"
+          title={<>Módulos de <span className="text-academic-gold italic">{subject.title}</span></>}
+          description="Organiza la aventura paso a paso. Agrega módulos como 'Niveles' secuenciales que tus estudiantes deberán conquistar para progresar."
+        />
 
         <div className="grid gap-8 lg:grid-cols-[1fr,400px]">
           

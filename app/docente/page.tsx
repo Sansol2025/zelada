@@ -98,35 +98,27 @@ export default async function TeacherDashboardPage() {
     >
       <div className="flex flex-col gap-10 pb-12">
         
-        {/* WELCOME BANNER */}
-        <div className="animate-in relative overflow-hidden rounded-[2.5rem] bg-academic-navy p-10 text-white shadow-premium sm:p-14">
-          {/* Background Elements */}
-          <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-academic-gold opacity-10 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-academic-ivory opacity-5 blur-3xl"></div>
-          
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-2 text-academic-gold mb-4">
-                <School className="h-5 w-5" />
-                <span className="text-xs font-black uppercase tracking-widest opacity-80">Portal Institucional</span>
+        {/* WELCOME BANNER COMPACT */}
+        <div className="animate-in relative overflow-hidden rounded-[2.5rem] bg-academic-navy p-8 text-white shadow-premium md:p-10">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold opacity-10 blur-3xl"></div>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-2 text-academic-gold mb-3">
+                <School className="h-4 w-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Portal Institucional</span>
               </div>
-              <h1 className="font-display text-4xl font-black tracking-tight sm:text-6xl">
-                ¡Buen día, Docente!
+              <h1 className="font-display text-3xl font-black tracking-tight sm:text-4xl">
+                ¡Buen día, Docente! 🏫
               </h1>
-              <p className="mt-6 text-lg font-medium text-white/70 sm:text-xl leading-relaxed">
-                Transformamos el aprendizaje en una experiencia sin barreras. Monitorea el progreso y gestiona tus materias aquí.
+              <p className="mt-4 text-base font-medium text-white/70 leading-relaxed">
+                Transformamos el aprendizaje en una experiencia sin barreras. Monitorea el progreso y gestiona tus materias.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/docente/materias/nueva">
-                <Button className="h-14 rounded-2xl bg-academic-gold px-8 font-black text-academic-navy hover:bg-academic-gold/90 shadow-lg transition-all hover:scale-105 active:scale-95">
-                  <PlusCircle className="mr-3 h-6 w-6" /> Nueva Materia
-                </Button>
-              </Link>
-              <Link href="/docente/asignaciones">
-                <Button className="h-14 rounded-2xl border-academic-gold/20 bg-white/5 px-8 font-bold text-white hover:bg-white/10 shadow-sm transition-all backdrop-blur-md">
-                  <UserPlus className="mr-3 h-6 w-6" /> Asignar Alumnos
+                <Button className="h-12 rounded-xl bg-academic-gold px-6 font-black text-academic-navy hover:bg-academic-gold/90 shadow-lg transition-all hover:scale-105 border-none">
+                  <PlusCircle className="mr-2 h-5 w-5" /> Nueva Materia
                 </Button>
               </Link>
             </div>

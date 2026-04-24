@@ -9,6 +9,7 @@ import { requireRole } from "@/features/auth/session";
 import { linkFamilyToStudent, unlinkFamilyFromStudent } from "@/features/teacher/actions";
 import { getAvailableFamilies, getTeacherFamilies, getTeacherStudents } from "@/features/teacher/queries";
 import { teacherNavItems } from "@/lib/navigation";
+import { PageHeader } from "@/components/page-header";
 
 export default async function TeacherFamiliesPage() {
   const session = await requireRole(["teacher", "admin"]);
@@ -51,21 +52,12 @@ export default async function TeacherFamiliesPage() {
     >
       <div className="flex flex-col gap-8 animate-in">
         
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <HeartHandshake className="h-4 w-4" /> Vínculo Institucional
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Gestión de Familias
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Establece el puente entre el aula y el hogar. Conecta a los responsables con el perfil académico de sus hijos para un seguimiento compartido.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<HeartHandshake className="h-4 w-4" />}
+          subtitle="Vínculo Institucional"
+          title="Gestión de Familias"
+          description="Establece el puente entre el aula y el hogar. Conecta a los responsables con el perfil académico para un seguimiento compartido."
+        />
 
         {/* CONNECTION FORM */}
         <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">

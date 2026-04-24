@@ -14,6 +14,7 @@ import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { deleteSubject, createSubject } from "@/features/teacher/actions";
 import { getTeacherSubjectsOverview } from "@/features/teacher/queries";
 import { requireRole } from "@/features/auth/session";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 import { percent } from "@/lib/utils";
 
@@ -127,21 +128,12 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
           </div>
         )}
 
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <Layout className="h-4 w-4" /> Centro de Ingeniería Educativa
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Gestión de Materias
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Define recorridos, organiza módulos y monitorea el alcance pedagógico de tus propios contenidos.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<Layout className="h-4 w-4" />}
+          subtitle="Centro de Ingeniería Educativa"
+          title="Gestión de Materias"
+          description="Define recorridos, organiza módulos y monitorea el alcance pedagógico de tus propios contenidos."
+        />
 
         {/* METRICS ROW */}
         <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

@@ -6,6 +6,7 @@ import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { getCurrentSession, requireRole } from "@/features/auth/session";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -36,21 +37,12 @@ export default async function TeacherProfilePage() {
     >
       <div className="flex flex-col gap-8 animate-in">
         
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <UserRound className="h-4 w-4" /> Centro de Identidad
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Mi Perfil Docente
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Administra tu información institucional y personaliza tu presencia en la plataforma.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<UserRound className="h-4 w-4" />}
+          subtitle="Centro de Identidad"
+          title="Mi Perfil Docente"
+          description="Administra tu información institucional y personaliza tu presencia en la plataforma."
+        />
 
         <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
           <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">

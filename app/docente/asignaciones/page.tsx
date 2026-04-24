@@ -9,6 +9,7 @@ import { requireRole } from "@/features/auth/session";
 import { assignSubjectToStudent, unassignSubjectFromStudent } from "@/features/teacher/actions";
 import { getTeacherAssignments, getTeacherStudents, getTeacherSubjects } from "@/features/teacher/queries";
 import { teacherNavItems } from "@/lib/navigation";
+import { PageHeader } from "@/components/page-header";
 
 export default async function TeacherAssignmentsPage() {
   const session = await requireRole(["teacher", "admin"]);
@@ -51,21 +52,12 @@ export default async function TeacherAssignmentsPage() {
     >
       <div className="flex flex-col gap-8 animate-in">
 
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <Users className="h-4 w-4" /> Gestión de Estudiantes
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Asignación de Materias
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Vincula los recorridos pedagógicos con tus estudiantes para habilitar su acceso a las actividades.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<Users className="h-4 w-4" />}
+          subtitle="Gestión de Estudiantes"
+          title="Asignación de Materias"
+          description="Vincula los recorridos pedagógicos con tus estudiantes para habilitar su acceso a las actividades."
+        />
 
         <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
           <div className="mb-8 flex items-center gap-4 border-b border-academic-gold/5 pb-6 text-academic-navy">

@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/empty-state";
 import { requireRole } from "@/features/auth/session";
 import { createAccessLinkForStudent } from "@/features/teacher/actions";
 import { getTeacherAccessLinks, getTeacherStudents } from "@/features/teacher/queries";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { buildAccessUrl, buildQRCodeDataUrl } from "@/services/access-links";
@@ -87,21 +88,12 @@ export default async function TeacherAccessLinksPage() {
     >
       <div className="flex flex-col gap-8 animate-in">
 
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <KeyRound className="h-4 w-4" /> Seguridad y Accesibilidad
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Llaves Mágicas (QR)
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Elimina las barreras de entrada. Genera Códigos QR de acceso directo para que tus alumnos ingresen a su aventura sin necesidad de contraseñas complejas.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<KeyRound className="h-4 w-4" />}
+          subtitle="Seguridad y Accesibilidad"
+          title="Llaves Mágicas (QR)"
+          description="Elimina las barreras de entrada. Genera Códigos QR de acceso directo para que tus alumnos ingresen a su aventura sin necesidad de contraseñas complejas."
+        />
 
         <div className="grid gap-8 md:grid-cols-2">
           

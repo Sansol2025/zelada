@@ -12,6 +12,7 @@ import { deleteActivityForTeacher } from "@/features/teacher/actions";
 import { requireRole } from "@/features/auth/session";
 import { getTeacherModuleActivities, getTeacherModuleById } from "@/features/teacher/queries";
 import { teacherNavItems } from "@/lib/navigation";
+import { PageHeader } from "@/components/page-header";
 
 type ModuleActivitiesPageProps = {
   params: Promise<{ moduleId: string }>;
@@ -46,30 +47,20 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
     >
       <div className="flex flex-col gap-8 animate-in">
         
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-                <Gamepad2 className="h-4 w-4" /> Taller de Juegos Interactivos
-              </div>
-              <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-                {moduleData.title}
-              </h1>
-              <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-                Diseña experiencias de aprendizaje autoguiadas. Los estudiantes avanzarán resolviendo desafíos visuales y auditivos.
-              </p>
-            </div>
-            
-            <Link href={`/docente/modulos/${moduleId}/actividades/nueva` as Route} className="shrink-0">
-              <Button className="h-16 rounded-2xl bg-academic-gold px-10 text-lg font-black tracking-tight hover:scale-105 active:scale-95 shadow-lg shadow-academic-gold/20 transition-all text-academic-navy border-none">
-                <Wand2 className="mr-3 h-6 w-6" />
+        <PageHeader
+          icon={<Gamepad2 className="h-4 w-4" />}
+          subtitle="Taller de Juegos Interactivos"
+          title={moduleData.title}
+          description="Diseña experiencias de aprendizaje autoguiadas. Los estudiantes avanzarán resolviendo desafíos visuales y auditivos."
+          actions={
+            <Link href={`/docente/modulos/${moduleId}/actividades/nueva` as Route}>
+              <Button className="h-12 rounded-xl bg-academic-gold px-6 font-black text-academic-navy hover:bg-academic-gold/90 shadow-lg transition-all hover:scale-105 border-none">
+                <Wand2 className="mr-2 h-5 w-5" />
                 Nuevo Juego
               </Button>
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {activities.length === 0 ? (
           <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/20 bg-academic-ivory/50 p-20 text-center">

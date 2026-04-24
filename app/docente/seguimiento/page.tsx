@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { getStudentsProgressForTeacher } from "@/features/teacher/queries";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 import type { StudentSummary } from "@/types/domain";
 
@@ -47,20 +48,12 @@ export default async function TeacherTrackingPage() {
       <div className="flex flex-col gap-8 animate-in">
 
         {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <BarChart3 className="h-4 w-4" /> Observatorio de Progreso
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Seguimiento de Alumnos
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Analiza el avance individual, identifica bloqueos tempranos y optimiza el tiempo de dedicación de cada estudiante.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<BarChart3 className="h-4 w-4" />}
+          subtitle="Observatorio de Progreso"
+          title="Seguimiento de Alumnos"
+          description="Analiza el avance individual, identifica bloqueos tempranos y optimiza el tiempo de dedicación de cada estudiante."
+        />
 
         {/* CONTROLS AREA (OPTIONAL BUT GOOD FOR DENSITY) */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-academic-ivory/20 p-6 rounded-[2rem] border border-academic-gold/5">

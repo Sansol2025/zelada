@@ -8,6 +8,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { createStudentForTeacher, importStudentsFromCsv } from "@/features/teacher/actions";
 import { getStudentsCatalogForTeacher } from "@/features/teacher/queries";
+import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
 
 type TeacherStudentsPageProps = {
@@ -109,21 +110,12 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
           </div>
         )}
 
-        {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
-          <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <Users className="h-4 w-4" /> Gestión de Matrícula
-            </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
-              Registro de Alumnos
-            </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Administra la comunidad de aprendices. Registra estudiantes de forma individual o mediante importación masiva para habilitar su experiencia digital.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          icon={<Users className="h-4 w-4" />}
+          subtitle="Gestión de Matrícula"
+          title="Registro de Alumnos"
+          description="Administra la comunidad de aprendices. Registra estudiantes de forma individual o mediante importación masiva para habilitar su experiencia digital."
+        />
 
         {/* METRICS */}
         <section className="grid gap-6 md:grid-cols-3">
