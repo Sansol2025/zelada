@@ -1,5 +1,6 @@
 import { Lock, Mail, QrCode, School, Sparkles, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
@@ -61,11 +62,13 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
         <div className="flex flex-col items-center text-center">
           {logoSrc ? (
             <div className="mb-6 w-32 sm:w-40 flex justify-center">
-              <img
+              <Image
                 src={logoSrc}
                 alt={SCHOOL_NAME}
+                width={160}
+                height={160}
                 className="h-auto w-full drop-shadow-xl"
-                loading="eager"
+                priority
               />
             </div>
           ) : (
