@@ -10,7 +10,7 @@ type PageHeaderProps = {
   className?: string;
 };
 
-export function PageHeader({ icon, title, subtitle, description, className }: PageHeaderProps) {
+export function PageHeader({ icon, title, subtitle, description, actions, className }: PageHeaderProps) {
   return (
     <div className={cn(
       "relative overflow-hidden rounded-[2rem] bg-academic-navy p-6 text-white shadow-xl md:p-8",
