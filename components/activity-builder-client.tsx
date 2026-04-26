@@ -7,15 +7,17 @@ import { Button } from "@/components/ui/button";
 import { FileUploader } from "@/components/file-uploader";
 import { cn } from "@/lib/utils";
 
+// Tipos disponibles para el docente (solo mouse — sin teclado ni micrófono)
 const ACTIVITY_TYPE_LABELS: Record<string, string> = {
-  multiple_choice_visual: "🔵 Opción Múltiple (Recomendado)",
+  multiple_choice_visual: "🔵 Opción Múltiple",
   image_select: "🏞️ Señalar la imagen correcta",
   true_false: "⚖️ Verdadero o Falso",
-  sequence: "🔄 Ordenar elementos (Secuencia)",
-  fill_with_support: "✍️ Completar palabra/frase",
-  drag_drop: "✋ Arrastrar y Soltar",
-  touch_activity: "👆 Tocar libremente (Sensorial)",
-  audio_guided_response: "🎙️ Responder grabando voz"
+  sequence: "🔄 Ordenar elementos",
+  drag_drop: "✋ Seleccionar los correctos",
+  classify_two_columns: "📂 Clasificar en dos columnas",
+  match_pairs: "🔗 Unir pares",
+  word_bank: "💬 Completar con banco de palabras",
+  touch_activity: "👆 Exploración libre"
 };
 
 type OptionItem = {
@@ -23,6 +25,27 @@ type OptionItem = {
   label: string;
   imageUrl?: string;
   isCorrect?: boolean;
+};
+
+type ClassifyItem = {
+  id: string;
+  label: string;
+  imageUrl?: string;
+  correctColumn: "A" | "B";
+};
+
+type MatchPair = {
+  id: string;
+  left: string;
+  leftImageUrl?: string;
+  right: string;
+  rightImageUrl?: string;
+};
+
+type WordBankSettings = {
+  sentence: string;
+  words: string[];
+  correct: string;
 };
 
 type ActivityBuilderProps = {
@@ -62,6 +85,53 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
     return String(initialSettings?.expected || "");
   });
 
+  // Classify two columns
+  const [columnALabel, setColumnALabel] = useState(() => String(initialSettings?.columnA || "Columna A"));
+  const [columnBLabel, setColumnBLabel] = useState(() => String(initialSettings?.columnB || "Columna B"));
+  const [classifyItems, setClassifyItems] = useState<ClassifyItem[]>(() => {
+    if (initialSettings?.items && Array.isArray(initialSettings.items)) {
+      return (initialSettings.items as Record<string, unknown>[]).map((o, idx) => ({
+        id: String(o.id || `ci-${idx}`),
+        label: String(o.label || ""),
+        imageUrl: o.imageUrl ? String(o.imageUrl) : undefined,
+        correctColumn: (o.correctColumn === "B" ? "B" : "A") as "A" | "B"
+      }));
+    }
+    return [
+      { id: "ci-1", label: "Ítem 1", correctColumn: "A" },
+      { id: "ci-2", label: "Ítem 2", correctColumn: "B" },
+      { id: "ci-3", label: "Ítem 3", correctColumn: "A" },
+      { id: "ci-4", label: "Ítem 4", correctColumn: "B" },
+    ];
+  });
+
+  // Match pairs
+  const [matchPairs, setMatchPairs] = useState<MatchPair[]>(() => {
+    if (initialSettings?.pairs && Array.isArray(initialSettings.pairs)) {
+      return (initialSettings.pairs as Record<string, unknown>[]).map((p, idx) => ({
+        id: String(p.id || `mp-${idx}`),
+        left: String(p.left || ""),
+        leftImageUrl: p.leftImageUrl ? String(p.leftImageUrl) : undefined,
+        right: String(p.right || ""),
+        rightImageUrl: p.rightImageUrl ? String(p.rightImageUrl) : undefined,
+      }));
+    }
+    return [
+      { id: "mp-1", left: "Par A izquierda", right: "Par A derecha" },
+      { id: "mp-2", left: "Par B izquierda", right: "Par B derecha" },
+    ];
+  });
+
+  // Word bank
+  const [wbSentence, setWbSentence] = useState(() => String(initialSettings?.sentence || ""));
+  const [wbWords, setWbWords] = useState<string[]>(() => {
+    if (initialSettings?.words && Array.isArray(initialSettings.words)) {
+      return (initialSettings.words as unknown[]).map(String);
+    }
+    return ["palabra1", "palabra2", "palabra3"];
+  });
+  const [wbCorrect, setWbCorrect] = useState(() => String(initialSettings?.correct || ""));
+
   const addOption = () => {
     setOptions([
       ...options, 
@@ -80,6 +150,28 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
     [newOptions[index], newOptions[nextIdx]] = [newOptions[nextIdx], newOptions[index]];
     setOptions(newOptions);
   };
+
+  // --- Helpers: Classify Two Columns ---
+  const addClassifyItem = () => setClassifyItems(prev => [
+    ...prev, { id: `ci-${Date.now()}`, label: "", correctColumn: "A" }
+  ]);
+  const removeClassifyItem = (id: string) => setClassifyItems(prev => prev.filter(i => i.id !== id));
+  const updateClassifyItem = (id: string, field: keyof ClassifyItem, value: string) =>
+    setClassifyItems(prev => prev.map(i => i.id === id ? { ...i, [field]: value } : i));
+
+  // --- Helpers: Match Pairs ---
+  const addMatchPair = () => setMatchPairs(prev => [
+    ...prev, { id: `mp-${Date.now()}`, left: "", right: "" }
+  ]);
+  const removeMatchPair = (id: string) => setMatchPairs(prev => prev.filter(p => p.id !== id));
+  const updateMatchPair = (id: string, field: keyof MatchPair, value: string) =>
+    setMatchPairs(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
+
+  // --- Helpers: Word Bank ---
+  const addWbWord = () => setWbWords(prev => [...prev, ""]);
+  const removeWbWord = (idx: number) => setWbWords(prev => prev.filter((_, i) => i !== idx));
+  const updateWbWord = (idx: number, val: string) =>
+    setWbWords(prev => prev.map((w, i) => i === idx ? val : w));
 
   const updateOption = (id: string, field: keyof OptionItem, value: string | boolean) => {
     setOptions(options.map(o => {
@@ -100,16 +192,19 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
   // Generar el JSON final según el tipo seleccionado
   let finalSettings = {};
   if (["multiple_choice_visual", "image_select", "drag_drop", "sequence"].includes(activityType)) {
-    finalSettings = { 
-      options: options.map((opt, index) => ({
-        ...opt,
-        order: index + 1
-      }))
+    finalSettings = {
+      options: options.map((opt, index) => ({ ...opt, order: index + 1 }))
     };
   } else if (activityType === "true_false") {
     finalSettings = { correct: isStatementTrue ? "true" : "false" };
   } else if (activityType === "fill_with_support") {
     finalSettings = { expected: expectedWord };
+  } else if (activityType === "classify_two_columns") {
+    finalSettings = { columnA: columnALabel, columnB: columnBLabel, items: classifyItems };
+  } else if (activityType === "match_pairs") {
+    finalSettings = { pairs: matchPairs };
+  } else if (activityType === "word_bank") {
+    finalSettings = { sentence: wbSentence, words: wbWords, correct: wbCorrect };
   } else {
     finalSettings = { mode: "free_touch" };
   }
@@ -341,20 +436,177 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
           </div>
         )}
 
-        {(activityType === "touch_activity" || activityType === "audio_guided_response") && (
+        {activityType === "touch_activity" && (
           <div className="flex flex-col items-center justify-center gap-6 py-12 text-center">
              <div className="flex h-24 w-24 items-center justify-center rounded-[2.5rem] bg-brand-50 text-brand-500 shadow-inner">
-                {activityType === "touch_activity" ? <ImageIcon className="h-12 w-12" /> : <Volume2 className="h-12 w-12" />}
+                <ImageIcon className="h-12 w-12" />
              </div>
              <div className="max-w-md space-y-2">
                <h4 className="text-xl font-black text-brand-950">¡Configuración Simplificada!</h4>
-               <p className="text-slate-500 font-medium">
-                 {activityType === "touch_activity" 
-                   ? "El alumno explorará la imagen y escuchará los sonidos. ¡Sube tu imagen principal y audio de ayuda arriba!" 
-                   : "El sistema habilitará el micrófono para que el alumno hable. Graba tu consigna en la sección de Accesibilidad."
-                 }
-               </p>
+               <p className="text-slate-500 font-medium">El alumno explorará la imagen y escuchará los sonidos. ¡Sube tu imagen principal arriba!</p>
              </div>
+          </div>
+        )}
+
+        {/* ── CLASIFICAR EN DOS COLUMNAS ── */}
+        {activityType === "classify_two_columns" && (
+          <div className="space-y-8">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-sky-50 p-5 border-2 border-sky-100">
+                <label className="mb-2 block text-xs font-black text-sky-800 uppercase tracking-widest">Nombre Columna A</label>
+                <input
+                  value={columnALabel}
+                  onChange={(e) => setColumnALabel(e.target.value)}
+                  className="w-full rounded-xl border-2 border-sky-200 bg-white px-4 py-3 font-bold text-slate-800 focus:border-sky-500 focus:outline-none"
+                  placeholder="Ej: Seres vivos"
+                />
+              </div>
+              <div className="rounded-2xl bg-rose-50 p-5 border-2 border-rose-100">
+                <label className="mb-2 block text-xs font-black text-rose-800 uppercase tracking-widest">Nombre Columna B</label>
+                <input
+                  value={columnBLabel}
+                  onChange={(e) => setColumnBLabel(e.target.value)}
+                  className="w-full rounded-xl border-2 border-rose-200 bg-white px-4 py-3 font-bold text-slate-800 focus:border-rose-500 focus:outline-none"
+                  placeholder="Ej: Seres inertes"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-sm font-black text-brand-700 uppercase tracking-widest">Ítems para clasificar</p>
+              {classifyItems.map((item) => (
+                <div key={item.id} className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-4">
+                  <input
+                    value={item.label}
+                    onChange={(e) => updateClassifyItem(item.id, "label", e.target.value)}
+                    className="flex-1 min-w-[140px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-brand-400 focus:outline-none"
+                    placeholder="Nombre del ítem"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => updateClassifyItem(item.id, "correctColumn", "A")}
+                      className={cn(
+                        "rounded-xl px-4 py-2 text-sm font-black transition-all",
+                        item.correctColumn === "A" ? "bg-sky-500 text-white shadow-md" : "bg-white border-2 border-sky-200 text-sky-700 hover:bg-sky-50"
+                      )}
+                    >
+                      → {columnALabel || "A"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateClassifyItem(item.id, "correctColumn", "B")}
+                      className={cn(
+                        "rounded-xl px-4 py-2 text-sm font-black transition-all",
+                        item.correctColumn === "B" ? "bg-rose-500 text-white shadow-md" : "bg-white border-2 border-rose-200 text-rose-700 hover:bg-rose-50"
+                      )}
+                    >
+                      → {columnBLabel || "B"}
+                    </button>
+                  </div>
+                  {classifyItems.length > 2 && (
+                    <button type="button" onClick={() => removeClassifyItem(item.id)} className="h-9 w-9 flex items-center justify-center rounded-xl bg-rose-50 text-rose-400 hover:text-rose-600 transition-all">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <Button type="button" variant="ghost" onClick={addClassifyItem}
+              className="w-full border-4 border-dashed border-brand-100 bg-brand-50/30 text-brand-600 hover:bg-brand-50 rounded-2xl h-14 font-black transition-all">
+              <Plus className="mr-2 h-5 w-5" /> Agregar ítem
+            </Button>
+          </div>
+        )}
+
+        {/* ── UNIR PARES ── */}
+        {activityType === "match_pairs" && (
+          <div className="space-y-4">
+            <p className="text-sm font-black text-brand-700 uppercase tracking-widest">Pares a unir</p>
+            {matchPairs.map((pair, index) => (
+              <div key={pair.id} className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-sm font-black text-violet-700 shadow-sm">
+                  {index + 1}
+                </div>
+                <input
+                  value={pair.left}
+                  onChange={(e) => updateMatchPair(pair.id, "left", e.target.value)}
+                  className="flex-1 min-w-[120px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-violet-400 focus:outline-none"
+                  placeholder="Lado izquierdo"
+                />
+                <div className="text-slate-300 font-black text-xl">↔</div>
+                <input
+                  value={pair.right}
+                  onChange={(e) => updateMatchPair(pair.id, "right", e.target.value)}
+                  className="flex-1 min-w-[120px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-violet-400 focus:outline-none"
+                  placeholder="Lado derecho"
+                />
+                {matchPairs.length > 2 && (
+                  <button type="button" onClick={() => removeMatchPair(pair.id)} className="h-9 w-9 flex items-center justify-center rounded-xl bg-rose-50 text-rose-400 hover:text-rose-600 transition-all">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+            <Button type="button" variant="ghost" onClick={addMatchPair}
+              className="w-full border-4 border-dashed border-brand-100 bg-brand-50/30 text-brand-600 hover:bg-brand-50 rounded-2xl h-14 font-black transition-all">
+              <Plus className="mr-2 h-5 w-5" /> Agregar par
+            </Button>
+          </div>
+        )}
+
+        {/* ── BANCO DE PALABRAS ── */}
+        {activityType === "word_bank" && (
+          <div className="space-y-6 max-w-2xl mx-auto">
+            <div className="rounded-2xl bg-amber-50 p-6 border-2 border-amber-100">
+              <label className="mb-2 block text-sm font-black text-amber-900 uppercase tracking-widest">
+                Frase (usá ___ donde va el espacio en blanco)
+              </label>
+              <input
+                value={wbSentence}
+                onChange={(e) => setWbSentence(e.target.value)}
+                className="w-full rounded-xl border-2 border-amber-200 bg-white px-4 py-3 font-bold text-slate-800 focus:border-amber-500 focus:outline-none"
+                placeholder="Ej: El perro es un ser ___"
+              />
+              <p className="mt-2 text-xs font-bold text-amber-600">Usá exactamente tres guiones bajos: ___</p>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-sm font-black text-brand-700 uppercase tracking-widest">Palabras del banco</p>
+              {wbWords.map((word, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <input
+                    value={word}
+                    onChange={(e) => updateWbWord(idx, e.target.value)}
+                    className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 font-bold text-slate-800 focus:border-brand-400 focus:outline-none"
+                    placeholder={`Palabra ${idx + 1}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setWbCorrect(word)}
+                    title="Marcar como correcta"
+                    className={cn(
+                      "flex h-11 w-11 items-center justify-center rounded-xl transition-all border-2",
+                      wbCorrect === word ? "bg-emerald-500 border-emerald-500 text-white" : "bg-white border-slate-200 text-slate-300 hover:text-emerald-400"
+                    )}
+                  >
+                    <Check className="h-5 w-5" />
+                  </button>
+                  {wbWords.length > 2 && (
+                    <button type="button" onClick={() => removeWbWord(idx)} className="h-11 w-11 flex items-center justify-center rounded-xl bg-rose-50 text-rose-400 hover:text-rose-600 transition-all">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {wbCorrect && (
+                <p className="text-xs font-bold text-emerald-600 mt-1">✓ Respuesta correcta: <span className="bg-emerald-100 px-2 py-0.5 rounded-lg">{wbCorrect}</span></p>
+              )}
+            </div>
+            <Button type="button" variant="ghost" onClick={addWbWord}
+              className="w-full border-4 border-dashed border-brand-100 bg-brand-50/30 text-brand-600 hover:bg-brand-50 rounded-2xl h-14 font-black transition-all">
+              <Plus className="mr-2 h-5 w-5" /> Agregar palabra
+            </Button>
           </div>
         )}
       </div>

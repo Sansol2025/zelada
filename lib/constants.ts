@@ -20,7 +20,10 @@ export const ACTIVITY_TYPES = [
   "fill_with_support",
   "sequence",
   "audio_guided_response",
-  "touch_activity"
+  "touch_activity",
+  "classify_two_columns",
+  "match_pairs",
+  "word_bank"
 ] as const;
 
 export type ActivityType = (typeof ACTIVITY_TYPES)[number];

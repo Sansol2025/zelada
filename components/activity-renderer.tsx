@@ -32,6 +32,24 @@ type OptionItem = {
   order?: number;
 };
 
+type ClassifyItem = {
+  id: string;
+  label: string;
+  imageUrl?: string;
+  correctColumn: "A" | "B";
+};
+
+type MatchPair = {
+  id: string;
+  left: string;
+  right: string;
+};
+
+// Mezcla un array sin mutar el original
+function shuffle<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
 function parseOptions(settings: Record<string, unknown> | null | undefined): OptionItem[] {
   const options = settings?.options;
   if (!Array.isArray(options)) return [];
@@ -65,6 +83,43 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
   const [pending, setPending] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [feedback, setFeedback] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+
+  // classify_two_columns
+  const classifyItems = useMemo<ClassifyItem[]>(() => {
+    const raw = activity.settings_json?.items;
+    if (!Array.isArray(raw)) return [];
+    return shuffle(raw.map((i: Record<string, unknown>, idx: number) => ({
+      id: String(i.id ?? idx),
+      label: String(i.label ?? ""),
+      imageUrl: i.imageUrl ? String(i.imageUrl) : undefined,
+      correctColumn: (i.correctColumn === "B" ? "B" : "A") as "A" | "B"
+    })));
+  }, [activity.settings_json]);
+  const [classifyAssigned, setClassifyAssigned] = useState<Record<string, "A" | "B" | null>>({});
+  const [classifySelected, setClassifySelected] = useState<string | null>(null);
+
+  // match_pairs
+  const matchPairs = useMemo<MatchPair[]>(() => {
+    const raw = activity.settings_json?.pairs;
+    if (!Array.isArray(raw)) return [];
+    return (raw as Record<string, unknown>[]).map((p, idx) => ({
+      id: String(p.id ?? idx),
+      left: String(p.left ?? ""),
+      right: String(p.right ?? "")
+    }));
+  }, [activity.settings_json]);
+  const shuffledRights = useMemo(() => shuffle(matchPairs.map(p => ({ id: p.id, label: p.right }))), [matchPairs]);
+  const [matchSelectedLeft, setMatchSelectedLeft] = useState<string | null>(null);
+  const [matchConnections, setMatchConnections] = useState<Record<string, string>>({}); // leftId → rightId
+
+  // word_bank
+  const wbSentence = String(activity.settings_json?.sentence ?? "");
+  const wbWords = useMemo<string[]>(() => {
+    const raw = activity.settings_json?.words;
+    return Array.isArray(raw) ? shuffle(raw.map(String)) : [];
+  }, [activity.settings_json]);
+  const wbCorrect = String(activity.settings_json?.correct ?? "");
+  const [wbSelected, setWbSelected] = useState<string | null>(null);
 
   // Sync options if settings change
   useEffect(() => {
@@ -128,11 +183,19 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
       isCorrect = currentOrder === originalOrder;
       responseData.finalOrder = options.map(o => o.id);
     } else if (activity.type === "drag_drop") {
-      // Simulamos drag drop como selección múltiple de los elementos correctos
       const correctIds = options.filter(o => o.isCorrect).map(o => o.id).sort();
       const selectedIds = [...multiSelected].sort();
       isCorrect = correctIds.length === selectedIds.length && correctIds.every((id, i) => id === selectedIds[i]);
       responseData.selectedIds = multiSelected;
+    } else if (activity.type === "classify_two_columns") {
+      isCorrect = classifyItems.every(item => classifyAssigned[item.id] === item.correctColumn);
+      responseData.assigned = classifyAssigned;
+    } else if (activity.type === "match_pairs") {
+      isCorrect = matchPairs.every(pair => matchConnections[pair.id] === pair.id);
+      responseData.connections = matchConnections;
+    } else if (activity.type === "word_bank") {
+      isCorrect = wbSelected?.trim().toLowerCase() === wbCorrect.trim().toLowerCase();
+      responseData.selected = wbSelected;
     }
 
     if (isCorrect) {
@@ -391,6 +454,229 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
             </div>
           )}
 
+          {/* ── CLASIFICAR EN DOS COLUMNAS ── */}
+          {activity.type === "classify_two_columns" && (() => {
+            const colA = String(activity.settings_json?.columnA ?? "Columna A");
+            const colB = String(activity.settings_json?.columnB ?? "Columna B");
+            const unassigned = classifyItems.filter(i => classifyAssigned[i.id] == null);
+            const inA = classifyItems.filter(i => classifyAssigned[i.id] === "A");
+            const inB = classifyItems.filter(i => classifyAssigned[i.id] === "B");
+
+            const handleItemClick = (id: string) => {
+              if (completed) return;
+              setClassifySelected(prev => prev === id ? null : id);
+            };
+            const handleColumnClick = (col: "A" | "B") => {
+              if (!classifySelected || completed) return;
+              setClassifyAssigned(prev => ({ ...prev, [classifySelected]: col }));
+              setClassifySelected(null);
+            };
+            const resetItem = (id: string) => {
+              if (completed) return;
+              setClassifyAssigned(prev => { const n = { ...prev }; delete n[id]; return n; });
+            };
+
+            const ItemCard = ({ item, inColumn }: { item: ClassifyItem; inColumn?: boolean }) => (
+              <button
+                type="button"
+                onClick={() => inColumn ? resetItem(item.id) : handleItemClick(item.id)}
+                className={cn(
+                  "flex items-center gap-3 rounded-2xl border-4 px-4 py-3 font-black text-lg transition-all duration-200",
+                  classifySelected === item.id
+                    ? "border-brand-500 bg-brand-50 scale-105 shadow-lg"
+                    : inColumn
+                    ? "border-slate-100 bg-white hover:border-rose-200 hover:bg-rose-50"
+                    : "border-slate-100 bg-white hover:border-brand-300 hover:bg-brand-50/30"
+                )}
+              >
+                {item.imageUrl && (
+                  <NextImage src={item.imageUrl} alt={item.label} width={48} height={48} className="h-12 w-12 rounded-xl object-cover" />
+                )}
+                <span className="text-slate-800">{item.label}</span>
+                {inColumn && <span className="ml-auto text-xs text-slate-300 font-medium">✕</span>}
+              </button>
+            );
+
+            return (
+              <div className="space-y-6">
+                {/* Instrucción contextual */}
+                {classifySelected ? (
+                  <p className="text-center text-lg font-black text-brand-600 animate-pulse">
+                    ¿Dónde va <span className="bg-brand-100 px-2 py-1 rounded-xl">{classifyItems.find(i => i.id === classifySelected)?.label}</span>? Hacé click en una columna.
+                  </p>
+                ) : (
+                  <p className="text-center text-base font-bold text-slate-400">Hacé click en una tarjeta y luego en la columna correcta.</p>
+                )}
+
+                {/* Columnas destino */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {(["A", "B"] as const).map((col) => {
+                    const isCol = col === "A";
+                    const items = isCol ? inA : inB;
+                    const label = isCol ? colA : colB;
+                    return (
+                      <div
+                        key={col}
+                        onClick={() => handleColumnClick(col)}
+                        className={cn(
+                          "min-h-[140px] rounded-[2rem] border-4 p-4 transition-all duration-200 cursor-pointer",
+                          classifySelected
+                            ? isCol ? "border-sky-400 bg-sky-50 shadow-lg scale-[1.01]" : "border-rose-400 bg-rose-50 shadow-lg scale-[1.01]"
+                            : isCol ? "border-sky-200 bg-sky-50/50" : "border-rose-200 bg-rose-50/50"
+                        )}
+                      >
+                        <p className={cn("mb-3 text-center text-sm font-black uppercase tracking-widest", isCol ? "text-sky-700" : "text-rose-700")}>{label}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {items.map(item => <ItemCard key={item.id} item={item} inColumn />)}
+                          {items.length === 0 && (
+                            <p className="w-full text-center text-sm text-slate-300 font-medium py-4">
+                              {classifySelected ? "← Hacé click acá" : "Vacío"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Baraja sin asignar */}
+                {unassigned.length > 0 && (
+                  <div className="rounded-[2rem] border-4 border-dashed border-slate-200 bg-slate-50/30 p-4">
+                    <p className="mb-3 text-center text-xs font-black uppercase tracking-widest text-slate-400">Por clasificar</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {unassigned.map(item => <ItemCard key={item.id} item={item} />)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ── UNIR PARES ── */}
+          {activity.type === "match_pairs" && (() => {
+            const handleLeftClick = (id: string) => {
+              if (completed) return;
+              setMatchSelectedLeft(prev => prev === id ? null : id);
+            };
+            const handleRightClick = (id: string) => {
+              if (!matchSelectedLeft || completed) return;
+              setMatchConnections(prev => ({ ...prev, [matchSelectedLeft]: id }));
+              setMatchSelectedLeft(null);
+            };
+            const disconnectPair = (leftId: string) => {
+              if (completed) return;
+              setMatchConnections(prev => { const n = { ...prev }; delete n[leftId]; return n; });
+            };
+
+            return (
+              <div className="space-y-4 max-w-3xl mx-auto">
+                {matchSelectedLeft ? (
+                  <p className="text-center text-base font-black text-violet-600 animate-pulse">Ahora hacé click en el par correcto de la derecha →</p>
+                ) : (
+                  <p className="text-center text-base font-bold text-slate-400">Hacé click en un ítem de la izquierda y luego en su par.</p>
+                )}
+
+                <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-start">
+                  {/* Columna izquierda */}
+                  <div className="space-y-3">
+                    {matchPairs.map((pair) => {
+                      const isConnected = matchConnections[pair.id] != null;
+                      const isActive = matchSelectedLeft === pair.id;
+                      return (
+                        <button
+                          key={pair.id}
+                          type="button"
+                          onClick={() => isConnected ? disconnectPair(pair.id) : handleLeftClick(pair.id)}
+                          className={cn(
+                            "w-full rounded-2xl border-4 px-5 py-4 text-left font-black text-lg transition-all duration-200",
+                            isActive ? "border-violet-500 bg-violet-50 scale-105 shadow-lg" :
+                            isConnected ? "border-emerald-400 bg-emerald-50" :
+                            "border-slate-100 bg-white hover:border-violet-300"
+                          )}
+                        >
+                          {pair.left}
+                          {isConnected && <span className="ml-2 text-emerald-500 text-sm">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Línea central */}
+                  <div className="flex flex-col items-center gap-3 pt-2">
+                    {matchPairs.map((pair) => (
+                      <div key={pair.id} className={cn(
+                        "h-14 w-1 rounded-full transition-all duration-300",
+                        matchConnections[pair.id] != null ? "bg-emerald-400" : "bg-slate-100"
+                      )} />
+                    ))}
+                  </div>
+
+                  {/* Columna derecha (mezclada) */}
+                  <div className="space-y-3">
+                    {shuffledRights.map((right) => {
+                      const isConnected = Object.values(matchConnections).includes(right.id);
+                      return (
+                        <button
+                          key={right.id}
+                          type="button"
+                          onClick={() => handleRightClick(right.id)}
+                          className={cn(
+                            "w-full rounded-2xl border-4 px-5 py-4 text-left font-black text-lg transition-all duration-200",
+                            isConnected ? "border-emerald-400 bg-emerald-50 opacity-60" :
+                            matchSelectedLeft ? "border-violet-200 bg-violet-50/50 hover:border-violet-500 hover:scale-105" :
+                            "border-slate-100 bg-white"
+                          )}
+                        >
+                          {right.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ── BANCO DE PALABRAS ── */}
+          {activity.type === "word_bank" && (() => {
+            const parts = wbSentence.split("___");
+            return (
+              <div className="flex flex-col items-center gap-10 max-w-2xl mx-auto py-4">
+                {/* Frase con hueco */}
+                <div className="rounded-[2rem] border-4 border-slate-100 bg-slate-50 px-8 py-8 text-3xl font-black text-slate-800 text-center leading-relaxed shadow-inner w-full">
+                  {parts[0]}
+                  <span className={cn(
+                    "inline-block mx-2 min-w-[120px] rounded-2xl border-b-4 px-4 py-1 text-center transition-all duration-300",
+                    wbSelected ? "border-amber-400 bg-amber-50 text-amber-900" : "border-slate-300 bg-white text-slate-300"
+                  )}>
+                    {wbSelected ?? "_ _ _"}
+                  </span>
+                  {parts[1]}
+                </div>
+
+                {/* Banco de palabras */}
+                <div className="flex flex-wrap justify-center gap-4">
+                  {wbWords.map((word) => (
+                    <button
+                      key={word}
+                      type="button"
+                      disabled={completed}
+                      onClick={() => setWbSelected(prev => prev === word ? null : word)}
+                      className={cn(
+                        "rounded-2xl border-4 px-6 py-4 text-2xl font-black transition-all duration-200",
+                        wbSelected === word
+                          ? "border-amber-400 bg-amber-400 text-white scale-110 shadow-xl"
+                          : "border-slate-100 bg-white text-slate-700 hover:border-amber-300 hover:-translate-y-1 hover:shadow-md"
+                      )}
+                    >
+                      {word}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* SENSORIAL / AUDIO GUIDED */}
           {(activity.type === "touch_activity" || activity.type === "audio_guided_response") && (
              <div className="flex flex-col items-center justify-center space-y-8 py-12 text-center">
@@ -430,11 +716,24 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
           <Button
             className={cn(
               "h-24 w-full md:w-auto md:min-w-[20rem] rounded-[2.5rem] px-16 text-3xl font-black uppercase tracking-tighter transition-all duration-300 shadow-2xl",
-              (selected || multiSelected.length > 0 || textAnswer || ["sequence", "touch_activity", "audio_guided_response"].includes(activity.type))
+              (selected || multiSelected.length > 0 || textAnswer || wbSelected ||
+               Object.keys(classifyAssigned).length === classifyItems.length && classifyItems.length > 0 ||
+               Object.keys(matchConnections).length === matchPairs.length && matchPairs.length > 0 ||
+               ["sequence", "touch_activity", "audio_guided_response"].includes(activity.type))
                 ? "bg-brand-600 hover:bg-brand-500 text-white shadow-brand-500/40 hover:-translate-y-2 hover:scale-105"
                 : "bg-slate-100 text-slate-300 opacity-50 cursor-not-allowed"
             )}
-            disabled={(!selected && multiSelected.length === 0 && !textAnswer && !["sequence", "touch_activity", "audio_guided_response"].includes(activity.type)) || pending || completed}
+            disabled={(() => {
+            if (completed || pending) return true;
+            const t = activity.type;
+            if (t === "multiple_choice_visual" || t === "image_select" || t === "true_false") return !selected;
+            if (t === "drag_drop") return multiSelected.length === 0;
+            if (t === "fill_with_support") return !textAnswer;
+            if (t === "classify_two_columns") return Object.keys(classifyAssigned).length < classifyItems.length;
+            if (t === "match_pairs") return Object.keys(matchConnections).length < matchPairs.length;
+            if (t === "word_bank") return !wbSelected;
+            return false; // sequence, touch_activity, audio_guided_response siempre habilitado
+          })()}
             onClick={handleValidation}
           >
             {completed ? (
