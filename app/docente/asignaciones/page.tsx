@@ -16,9 +16,9 @@ export default async function TeacherAssignmentsPage() {
   const teacherId = session.userId as string;
 
   const [assignments, students, subjects] = await Promise.all([
-    getTeacherAssignments(teacherId),
-    getStudentsCatalogForTeacher(),
-    getTeacherSubjects(teacherId)
+    getTeacherAssignments(teacherId).catch(() => []),
+    getStudentsCatalogForTeacher().catch(() => []),
+    getTeacherSubjects(teacherId).catch(() => [])
   ]);
 
   async function assignAction(formData: FormData) {
@@ -139,7 +139,7 @@ export default async function TeacherAssignmentsPage() {
 
                   <div className="mt-8 flex items-center justify-between border-t border-academic-gold/5 pt-6">
                     <span className="text-[10px] font-black uppercase tracking-widest text-academic-slate/40">
-                      Desde: {new Date(assignment.assigned_at).toLocaleDateString()}
+                      Desde: {assignment.assigned_at ? new Date(assignment.assigned_at).toLocaleDateString() : "Fecha pendiente"}
                     </span>
                     <form action={unassignAction}>
                       <input name="assignment_id" type="hidden" value={assignment.assignment_id} />
