@@ -19,10 +19,17 @@ export function AccessibleAudioButton({
   audioUrl,
   autoPlay = false
 }: AccessibleAudioButtonProps) {
-  const { isSupported, isSpeaking: isBrowserSpeaking, speak, stop } = useSpeech();
+  const [isSupported, setIsSupported] = useState(false);
+  const { isPlaying: isBrowserSpeaking, play: speak, stop } = useSpeech(text, { autoReadIfEnabled: false });
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      setIsSupported(true);
+    }
+  }, []);
 
   useEffect(() => {
     // Si hay una URL de audio, la pre-cargamos. No usamos autoPlay directamente en el render para cumplir reglas de navegadores.
