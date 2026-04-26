@@ -26,8 +26,8 @@ export default async function StudentHomePage() {
   const studentContext = await getStudentContextOrRedirect();
 
   const [assignedRaw, globalProgress] = await Promise.all([
-    getStudentAssignedSubjects(studentContext.studentId),
-    getStudentGlobalProgress(studentContext.studentId)
+    getStudentAssignedSubjects(studentContext.studentId).catch(() => []),
+    getStudentGlobalProgress(studentContext.studentId).catch(() => ({ averageProgress: 0, totalSubjects: 0, completedSubjects: 0 }))
   ]);
 
   const assignedSubjects: AssignedSubject[] = (assignedRaw ?? [])
