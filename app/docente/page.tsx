@@ -1,4 +1,4 @@
-import { BarChart3, BookOpenCheck, Layers3, Sparkles, Users, PlusCircle, UserPlus, QrCode, Activity, School, ArrowRight } from "lucide-react";
+import { BarChart3, BookOpenCheck, Layers3, Sparkles, Users, PlusCircle, QrCode, Activity, School, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 

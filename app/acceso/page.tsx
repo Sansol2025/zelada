@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import fs from "node:fs";
 import path from "node:path";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
