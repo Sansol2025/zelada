@@ -1,8 +1,6 @@
 import { Lock, Mail, QrCode, School, Sparkles, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import fs from "node:fs";
-import path from "node:path";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,32 +11,7 @@ export const metadata: Metadata = {
   description: "Portal de ingreso seguro para estudiantes, docentes y familias."
 };
 
-const SCHOOL_LOGO_CANDIDATES = [
-  "/logo.png",
-  "/logo-escuela.jpg",
-  "/logo-escuela.jpeg",
-  "/logo-escuela.webp",
-  "/logo-escuela.svg"
-] as const;
-
-function getSchoolLogoSrc() {
-  // In production (Vercel), using fs.existsSync with process.cwd() can be unreliable
-  // for the public folder. We'll prioritize the known logo and fallback.
-  try {
-    for (const candidate of SCHOOL_LOGO_CANDIDATES) {
-      const filePath = path.join(process.cwd(), "public", candidate.slice(1));
-      if (fs.existsSync(filePath)) {
-        console.log(`[DIAGNOSTIC] Logo found at: ${filePath}`);
-        return candidate;
-      }
-    }
-  } catch (error) {
-    console.error("[DIAGNOSTIC] Error checking logo files:", error);
-  }
-  
-  // Default fallback if we can't verify or none found
-  return "/logo.png";
-}
+const logoSrc = "/logo.png";
 
 interface AccesoPageProps {
   searchParams: Promise<{ error?: string; success?: string; mode?: string }>;
@@ -55,7 +28,7 @@ export default async function AccesoPage({ searchParams }: AccesoPageProps) {
     key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   });
 
-  const logoSrc = getSchoolLogoSrc();
+
 
   return (
     <main className="min-h-screen relative overflow-hidden flex flex-col justify-center py-12 md:py-20 px-4 bg-academic-ivory">

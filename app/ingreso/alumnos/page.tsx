@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import Image from "next/image";
 import { QrCode, User, School } from "lucide-react";
 
@@ -13,21 +11,7 @@ type IngresoAlumnosPageProps = {
   }>;
 };
 
-const SCHOOL_LOGO_CANDIDATES = [
-  "/logo.png",
-  "/logo-escuela.jpg",
-  "/logo-escuela.jpeg",
-  "/logo-escuela.webp",
-  "/logo-escuela.svg"
-] as const;
-
-function getSchoolLogoSrc() {
-  for (const candidate of SCHOOL_LOGO_CANDIDATES) {
-    const filePath = path.join(process.cwd(), "public", candidate.slice(1));
-    if (fs.existsSync(filePath)) return candidate;
-  }
-  return null;
-}
+const logoSrc = "/logo.png";
 
 function readQueryValue(value?: string | string[]) {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -43,7 +27,6 @@ export default async function IngresoAlumnosPage({ searchParams }: IngresoAlumno
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const errorMessage = readQueryValue(resolvedSearchParams?.error);
   const grado = readQueryValue(resolvedSearchParams?.grado);
-  const logoSrc = getSchoolLogoSrc();
 
   return (
     <main className="mx-auto min-h-screen max-w-6xl px-4 py-10 flex flex-col items-center justify-center bg-academic-ivory">

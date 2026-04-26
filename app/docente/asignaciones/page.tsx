@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardText, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
 import { assignSubjectToStudent, unassignSubjectFromStudent } from "@/features/teacher/actions";
-import { getTeacherAssignments, getTeacherStudents, getTeacherSubjects } from "@/features/teacher/queries";
+import { getTeacherAssignments, getStudentsCatalogForTeacher, getTeacherSubjects } from "@/features/teacher/queries";
 import { teacherNavItems } from "@/lib/navigation";
 import { PageHeader } from "@/components/page-header";
 
@@ -17,7 +17,7 @@ export default async function TeacherAssignmentsPage() {
 
   const [assignments, students, subjects] = await Promise.all([
     getTeacherAssignments(teacherId),
-    getTeacherStudents(teacherId),
+    getStudentsCatalogForTeacher(),
     getTeacherSubjects(teacherId)
   ]);
 
@@ -116,7 +116,7 @@ export default async function TeacherAssignmentsPage() {
         ) : (
           <section className="grid gap-6 md:grid-cols-2">
             {assignments.map((assignment) => (
-              <Card key={assignment.id} className="group overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-1 rounded-[2.5rem] p-0 flex flex-col sm:flex-row bg-white">
+              <Card key={assignment.assignment_id} className="group overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-1 rounded-[2.5rem] p-0 flex flex-col sm:flex-row bg-white">
                 <div className="flex w-full sm:w-32 shrink-0 items-center justify-center bg-academic-ivory/30 p-6 border-b sm:border-b-0 sm:border-r border-academic-gold/5 text-academic-gold">
                   <Users className="h-12 w-12 opacity-30 group-hover:scale-110 transition-transform" />
                 </div>
@@ -142,7 +142,7 @@ export default async function TeacherAssignmentsPage() {
                       Desde: {new Date(assignment.assigned_at).toLocaleDateString()}
                     </span>
                     <form action={unassignAction}>
-                      <input name="assignment_id" type="hidden" value={assignment.id} />
+                      <input name="assignment_id" type="hidden" value={assignment.assignment_id} />
                       <Button className="h-10 px-5 rounded-xl text-rose-600/60 bg-rose-50 hover:bg-rose-100 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest transition-all" size="sm" variant="ghost">
                         <Trash2 className="mr-2 h-4 w-4" /> Quitar
                       </Button>
