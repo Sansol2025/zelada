@@ -87,12 +87,12 @@ export default async function FamilyDashboardPage() {
         ) : (
           <div className="animate-in space-y-8" style={{ animationDelay: "0.2s" }}>
             <div className="flex items-center gap-4 text-academic-navy px-2">
-              <div className="h-1px bg-academic-navy/10 flex-grow"></div>
+              <div className="h-px bg-academic-navy/10 flex-grow"></div>
               <div className="flex items-center gap-3">
                 <BookOpenCheck className="h-6 w-6 text-academic-gold" />
                 <h2 className="font-display text-2xl font-black tracking-tight">Tus Estudiantes</h2>
               </div>
-              <div className="h-1px bg-academic-navy/10 flex-grow"></div>
+              <div className="h-px bg-academic-navy/10 flex-grow"></div>
             </div>
             
             <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">

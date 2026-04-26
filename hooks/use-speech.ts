@@ -1,45 +1,73 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useAccessibleMode } from "@/hooks/use-accessible-mode";
 
-export function useSpeech(defaultRate = 0.95) {
-  const [isSupported, setIsSupported] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+export function useSpeech(
+  text: string | null | undefined,
+  options?: {
+    autoReadIfEnabled?: boolean;
+    delay?: number;
+  }
+) {
+  const { mode } = useAccessibleMode();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  
+  const { autoReadIfEnabled = true, delay = 500 } = options || {};
 
   useEffect(() => {
-    setIsSupported(typeof window !== "undefined" && "speechSynthesis" in window);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      synthRef.current = window.speechSynthesis;
+    }
+    
+    return () => {
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+    };
   }, []);
 
-  const stop = useCallback(() => {
-    if (!isSupported) return;
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-  }, [isSupported]);
+  const play = useCallback(
+    (customText?: string) => {
+      const textToRead = customText || text;
+      if (!textToRead || !synthRef.current) return;
 
-  const speak = useCallback(
-    (text: string) => {
-      if (!isSupported || !text.trim()) return;
-      stop();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "es-AR";
-      utterance.rate = defaultRate;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      setIsSpeaking(true);
-      window.speechSynthesis.speak(utterance);
+      synthRef.current.cancel(); 
+      
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+      
+      utterance.onstart = () => setIsPlaying(true);
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
+
+      synthRef.current.speak(utterance);
     },
-    [defaultRate, isSupported, stop]
+    [text]
   );
 
-  useEffect(() => stop, [stop]);
+  const stop = useCallback(() => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      setIsPlaying(false);
+    }
+  }, []);
 
-  return useMemo(
-    () => ({
-      isSupported,
-      isSpeaking,
-      speak,
-      stop
-    }),
-    [isSupported, isSpeaking, speak, stop]
-  );
+  useEffect(() => {
+    if (!text || !mode.autoRead || !autoReadIfEnabled) return;
+
+    const timer = setTimeout(() => {
+      play(text);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      stop();
+    };
+  }, [text, mode.autoRead, autoReadIfEnabled, delay, play, stop]);
+
+  return { play, stop, isPlaying };
 }

@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { ACCESS_TOKEN_COOKIE } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL("/acceso?error=token_invalido", request.url));
   }
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
   const { data: link } = await supabase
     .from("access_links")
     .select("token, is_active, expires_at")

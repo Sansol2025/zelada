@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const SCHOOL_LOGO_CANDIDATES = [
-  "/logo-escuela.png",
+  "/logo.png",
   "/logo-escuela.jpg",
   "/logo-escuela.jpeg",
   "/logo-escuela.webp",
@@ -38,7 +38,7 @@ function getSchoolLogoSrc() {
   }
   
   // Default fallback if we can't verify or none found
-  return "/logo-escuela.png";
+  return "/logo.png";
 }
 
 interface AccesoPageProps {

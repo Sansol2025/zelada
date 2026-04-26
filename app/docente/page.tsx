@@ -130,7 +130,7 @@ export default async function TeacherDashboardPage() {
           {stats.map((stat) => (
             <Card 
               key={stat.title} 
-              className="group cursor-default overflow-hidden border- academic-gold/5 shadow-card transition-all duration-300 hover:-translate-y-2 hover:shadow-premium rounded-[2rem] p-6 bg-white"
+              className="group cursor-default overflow-hidden border-academic-gold/5 shadow-card transition-all duration-300 hover:-translate-y-2 hover:shadow-premium rounded-[2rem] p-6 bg-white"
             >
               <div className="flex items-center gap-5">
                 <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.25rem] ${stat.bgClass} transition-colors duration-300 group-hover:bg-academic-navy group-hover:text-white`}>

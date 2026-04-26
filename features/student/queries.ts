@@ -85,8 +85,7 @@ export async function getSubjectLearningPath(subjectId: string, studentId: strin
     const progress = progressMap.get(module.id);
     const previous = path[index - 1];
     const previousUnlocked = !previous || previous.status === "completed";
-    const isLockedByProgress = !previousUnlocked;
-    const isLocked = module.is_locked_by_default || isLockedByProgress;
+    const isLocked = progress ? progress.status === "blocked" : (module.is_locked_by_default || !previousUnlocked);
 
     path.push({
       id: module.id,

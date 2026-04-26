@@ -433,6 +433,15 @@ begin
     raise exception 'Actividad no encontrada';
   end if;
 
+  if not exists (
+    select 1
+    from public.student_subjects ss
+    where ss.student_id = p_student_id
+      and ss.subject_id = v_subject_id
+  ) then
+    raise exception 'El estudiante no está asignado a la materia de esta actividad';
+  end if;
+
   insert into public.student_activity_progress (
     student_id,
     activity_id,
@@ -716,7 +725,17 @@ drop policy if exists students_select on public.students;
 create policy students_select on public.students
 for select using (
   profile_id = auth.uid()
-  or public.current_profile_role() in ('teacher', 'admin')
+  or public.current_profile_role() = 'admin'
+  or (
+    public.current_profile_role() = 'teacher'
+    and exists (
+      select 1
+      from public.student_subjects ss
+      join public.subjects s on s.id = ss.subject_id
+      where ss.student_id = students.id
+        and s.teacher_id = auth.uid()
+    )
+  )
   or exists (
     select 1
     from public.family_students fs
@@ -735,7 +754,18 @@ drop policy if exists families_select on public.families;
 create policy families_select on public.families
 for select using (
   profile_id = auth.uid()
-  or public.current_profile_role() in ('teacher', 'admin')
+  or public.current_profile_role() = 'admin'
+  or (
+    public.current_profile_role() = 'teacher'
+    and exists (
+      select 1
+      from public.family_students fs
+      join public.student_subjects ss on ss.student_id = fs.student_id
+      join public.subjects sub on sub.id = ss.subject_id
+      where fs.family_id = families.id
+        and sub.teacher_id = auth.uid()
+    )
+  )
 );
 
 drop policy if exists families_manage_teacher_admin on public.families;

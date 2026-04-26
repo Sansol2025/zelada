@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { ACCESS_TOKEN_COOKIE } from "@/lib/constants";
 
-const PUBLIC_PATHS = ["/", "/acceso", "/proyecto", "/auth/callback"];
+const PUBLIC_PATHS = ["/", "/acceso", "/acceso/login", "/proyecto", "/auth/callback"];
 const PUBLIC_API_PREFIXES = ["/api/public", "/api/auth/", "/api/access/"];
 type SupabaseCookie = {
   name: string;

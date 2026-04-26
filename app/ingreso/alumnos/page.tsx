@@ -14,7 +14,7 @@ type IngresoAlumnosPageProps = {
 };
 
 const SCHOOL_LOGO_CANDIDATES = [
-  "/logo-escuela.png",
+  "/logo.png",
   "/logo-escuela.jpg",
   "/logo-escuela.jpeg",
   "/logo-escuela.webp",

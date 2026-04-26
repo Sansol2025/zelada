@@ -145,7 +145,7 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
           {/* RIGHT: CREATOR */}
           <aside>
             <div className="sticky top-10">
-              <Card className="border border-academic-gold/5 shadow- premium rounded-[3rem] p-10 bg-white relative overflow-hidden">
+              <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white relative overflow-hidden">
                 <div className="absolute right-0 top-0 h-40 w-40 rounded-bl-full bg-academic-gold/5 border-l border-b border-academic-gold/10"></div>
                 
                 <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy relative z-10">

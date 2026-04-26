@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { generateAccessToken } from "@/services/access-links";
 
 function normalizeDni(value: string) {
@@ -28,7 +28,7 @@ export async function studentLoginAction(formData: FormData) {
     redirect(`/ingreso/alumnos?error=Comprueba%20tus%20datos${grado ? `&grado=${grado}` : ""}`);
   }
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data: student, error } = await supabase
     .from("students")

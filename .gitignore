@@ -33,3 +33,7 @@ pnpm-debug.log*
 
 # local codex workspace
 .agent/
+
+# testing
+playwright-report/
+test-results/

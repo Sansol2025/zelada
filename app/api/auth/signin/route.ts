@@ -15,7 +15,10 @@ const roleHome: Record<Role, string> = {
 };
 
 function normalizeInternalPath(value: string) {
-  return value.startsWith("/") ? value : "/acceso";
+  if (value.startsWith("/") && !value.startsWith("//") && !value.startsWith("/\\")) {
+    return value;
+  }
+  return "/acceso";
 }
 
 export async function GET(request: Request) {
