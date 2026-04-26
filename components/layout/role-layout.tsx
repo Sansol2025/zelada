@@ -36,26 +36,36 @@ export function RoleLayout({ title, description, navItems, children, currentPath
               </div>
             </div>
           </Link>
-          <nav className="space-y-2">
-            {navItems.map((item) => (
-              <Link
-                className={cn(
-                  "block rounded-xl px-3 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50",
-                  currentPath === item.href && "bg-brand-100 text-brand-900"
-                )}
-                href={item.href}
-                key={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = currentPath === item.href;
+              return (
+                <Link
+                  className={cn(
+                    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-900",
+                    isActive
+                      ? "bg-academic-navy text-white shadow-sm"
+                      : "text-brand-700"
+                  )}
+                  href={item.href}
+                  key={item.href}
+                >
+                  {item.icon && (
+                    <item.icon className={cn("h-4 w-4 shrink-0", isActive ? "text-academic-gold" : "text-brand-400")} />
+                  )}
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
-          <form action="/api/auth/signout" className="mt-6" method="POST">
-            <button className="inline-flex items-center gap-2 text-sm font-semibold text-brand-700" type="submit">
-              <LogOut className="h-4 w-4" />
-              Cerrar sesión
-            </button>
-          </form>
+          <div className="mt-6 border-t border-brand-100 pt-4">
+            <form action="/api/auth/signout" method="POST">
+              <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-red-50 hover:text-red-600" type="submit">
+                <LogOut className="h-4 w-4 shrink-0" />
+                Cerrar sesión
+              </button>
+            </form>
+          </div>
         </aside>
 
         <main className="space-y-4">

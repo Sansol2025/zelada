@@ -6,7 +6,11 @@
   --ivory-white: #f8f5f0;
   --deep-navy: #1a2b3c;
   --academic-gold: #c5a059;
-  --page-gradient: radial-gradient(circle at 0% 0%, #ffffff 0%, var(--ivory-white) 50%, #f1ede4 100%);
+  --page-gradient:
+    radial-gradient(ellipse 80% 50% at 5% 5%, #ffffff 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 95% 5%, rgba(197,160,89,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 55% at 95% 95%, rgba(46,74,62,0.05) 0%, transparent 55%),
+    linear-gradient(165deg, #fefcf8 0%, #f8f4ee 45%, #f0e8d3 100%);
   
   /* Fluid Typography Scale */
   --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
@@ -110,14 +114,33 @@ a {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger animation delays */
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 160ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 320ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 480ms; }
+
 @media (prefers-reduced-motion: no-preference) {
   .animate-in {
     animation: fade-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
+  .animate-up {
+    opacity: 0;
+    animation: fade-up 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-in {
+  .animate-in,
+  .animate-up {
     opacity: 1;
+    animation: none;
   }
 }

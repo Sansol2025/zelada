@@ -34,6 +34,16 @@ const config: Config = {
           sky: "#f4faff",
           mint: "#e9f9ef",
           sun: "#fff9dc"
+        },
+        subject: {
+          coral: "#ff6b6b",
+          sky: "#4dabf7",
+          lime: "#82c91e",
+          violet: "#9775fa",
+          orange: "#ff922b",
+          teal: "#20c997",
+          pink: "#f783ac",
+          indigo: "#5c7cfa"
         }
       },
       boxShadow: {

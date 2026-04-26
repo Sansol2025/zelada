@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 
 import { APP_NAME } from "@/lib/constants";
 import { studentNavItems } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 
 type StudentShellProps = {
   title: string;
@@ -35,12 +36,14 @@ export function StudentShell({ title, description, currentPath, children }: Stud
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-xl px-5 py-2.5 text-sm font-bold tracking-tight transition-all ${
-                  isActive 
-                    ? "bg-academic-navy text-white shadow-md scale-105" 
-                    : "bg-academic-ivory text-academic-navy hover:bg-academic-gold/10"
-                }`}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold tracking-tight transition-all duration-200",
+                  isActive
+                    ? "bg-academic-navy text-white shadow-md"
+                    : "bg-academic-ivory text-academic-navy hover:bg-academic-gold/10 hover:-translate-y-0.5"
+                )}
               >
+                {link.icon && <link.icon className={cn("h-4 w-4 shrink-0", isActive ? "text-academic-gold" : "text-academic-navy/50")} />}
                 {link.label}
               </Link>
             );

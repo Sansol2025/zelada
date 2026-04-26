@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
-import { ArrowRight, CheckCircle2, HeartHandshake, School, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Eye, HeartHandshake, School, ShieldCheck, Sparkles } from "lucide-react";
 
 import { AccessibilityPanel } from "@/components/accessibility-panel";
 import { BigActionButton } from "@/components/big-action-button";
@@ -11,15 +11,24 @@ import { APP_NAME, APP_SUBTITLE, SCHOOL_NAME } from "@/lib/constants";
 const pillars = [
   {
     title: "Accesibilidad real",
-    description: "Lectura asistida, alto contraste, texto grande y navegación guiada por pasos."
+    description: "Lectura asistida, alto contraste, texto grande y navegación guiada por pasos.",
+    Icon: Eye,
+    iconClass: "bg-sky-100 text-sky-600 group-hover:bg-sky-500 group-hover:text-white",
+    topBorder: "border-t-4 border-t-sky-300"
   },
   {
     title: "Autonomía docente",
-    description: "Creación libre de materias, módulos y actividades sin currícula rígida."
+    description: "Creación libre de materias, módulos y actividades sin currícula rígida.",
+    Icon: BookOpen,
+    iconClass: "bg-amber-100 text-amber-600 group-hover:bg-amber-500 group-hover:text-white",
+    topBorder: "border-t-4 border-t-amber-300"
   },
   {
     title: "Seguimiento familiar",
-    description: "Visualización simple del avance para acompañar desde el hogar."
+    description: "Visualización simple del avance para acompañar desde el hogar.",
+    Icon: HeartHandshake,
+    iconClass: "bg-emerald-100 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white",
+    topBorder: "border-t-4 border-t-emerald-300"
   }
 ];
 
@@ -127,9 +136,9 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <AccessibilityPanel />
             <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-10 text-white shadow-2xl transition-all hover:shadow-premium">
               <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-academic-gold/20 blur-3xl transition-all group-hover:bg-academic-gold/40"></div>
+              <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md">
@@ -142,15 +151,21 @@ export default function LandingPage() {
                 </p>
               </div>
             </div>
+            <div className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-white to-soft-sky p-1 shadow-sm">
+              <AccessibilityPanel />
+            </div>
           </div>
         </section>
 
         <section className="mt-20 grid gap-8 md:grid-cols-3">
-          {pillars.map((pillar) => (
-            <article key={pillar.title} className="group flex flex-col justify-between rounded-[2.5rem] border border-academic-gold/5 bg-white p-10 shadow-card transition-all duration-500 hover:shadow-premium hover:-translate-y-2">
-              <div>
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-academic-ivory text-academic-gold transition-all duration-300 group-hover:bg-academic-navy group-hover:text-white">
-                  <School className="h-7 w-7" />
+          {pillars.map((pillar, index) => (
+            <article
+              key={pillar.title}
+              className={`animate-up stagger-${index + 1} group flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-academic-gold/5 bg-white shadow-card transition-all duration-500 hover:shadow-premium hover:-translate-y-2 ${pillar.topBorder}`}
+            >
+              <div className="p-10">
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-[1.25rem] transition-all duration-300 ${pillar.iconClass}`}>
+                  <pillar.Icon className="h-7 w-7" />
                 </div>
                 <h2 className="font-display text-3xl font-black tracking-tight text-academic-navy">{pillar.title}</h2>
                 <p className="mt-4 text-lg font-medium leading-relaxed text-academic-slate">{pillar.description}</p>
@@ -179,8 +194,8 @@ export default function LandingPage() {
             </Link>
           </div>
           <ul className="grid gap-8 md:grid-cols-2">
-            {highlights.map((item) => (
-              <li className="flex items-start gap-5 text-xl font-medium text-academic-slate transition-all hover:translate-x-2" key={item}>
+            {highlights.map((item, index) => (
+              <li className={`animate-up stagger-${index + 1} flex items-start gap-5 text-xl font-medium text-academic-slate transition-all hover:translate-x-2`} key={item}>
                 <div className="mt-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-academic-forest/10 text-academic-forest shrink-0">
                   <CheckCircle2 className="h-5 w-5" />
                 </div>

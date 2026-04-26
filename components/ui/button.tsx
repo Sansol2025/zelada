@@ -6,15 +6,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-academic-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-academic-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-academic-navy text-white hover:bg-brand-950 shadow-sm",
-        secondary: "bg-academic-gold text-white hover:bg-[#b08d4a] shadow-sm",
-        outline: "bg-white text-academic-navy border border-academic-gold/30 hover:bg-academic-ivory",
-        ghost: "text-academic-navy hover:bg-academic-ivory",
-        success: "bg-academic-forest text-white hover:bg-[#23382f]",
+        primary: "bg-academic-navy text-white shadow-sm hover:bg-brand-950 hover:-translate-y-0.5 hover:shadow-md",
+        secondary: "bg-academic-gold text-white shadow-sm hover:bg-[#b08d4a] hover:-translate-y-0.5 hover:shadow-md",
+        outline: "bg-white text-academic-navy border border-academic-gold/30 hover:bg-academic-ivory hover:-translate-y-0.5 hover:shadow-sm",
+        ghost: "text-academic-navy hover:bg-academic-ivory hover:-translate-y-0.5",
+        success: "bg-academic-forest text-white shadow-sm hover:bg-[#23382f] hover:-translate-y-0.5 hover:shadow-md",
         link: "text-academic-gold underline-offset-4 hover:underline p-0 h-auto"
       },
       size: {
