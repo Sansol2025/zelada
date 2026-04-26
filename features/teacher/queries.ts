@@ -398,7 +398,7 @@ export async function getTeacherAssignments(teacherId: string) {
     const student = Array.isArray(item.students) ? item.students[0] : item.students;
 
     return {
-      id: item.id,
+      assignment_id: item.id,
       assigned_at: item.assigned_at,
       subject_id: item.subject_id,
       subject_title: subject?.title ?? "Materia",
