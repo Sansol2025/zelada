@@ -50,7 +50,7 @@ export async function getTeacherSubjects(teacherId: string) {
 }
 
 export async function getTeacherSubjectsOverview(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: subjects, error } = await supabase
     .from("subjects")
     .select("id, title, description, color, icon, is_active, created_at")
@@ -114,7 +114,7 @@ export async function getTeacherSubjectsOverview(teacherId: string) {
 }
 
 export async function getTeacherSubjectById(subjectId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("subjects")
     .select(
@@ -130,7 +130,7 @@ export async function getTeacherSubjectById(subjectId: string, teacherId: string
 
 export async function getTeacherModulesBySubject(subjectId: string, teacherId: string) {
   await assertTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("modules")
     .select("id, subject_id, title, description, position, is_locked_by_default, intro_video_url, created_at")
@@ -143,7 +143,7 @@ export async function getTeacherModulesBySubject(subjectId: string, teacherId: s
 
 export async function getTeacherModuleById(moduleId: string, teacherId: string) {
   await assertTeacherOwnsModule(moduleId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("modules")
     .select("id, subject_id, title, description, position, is_locked_by_default, intro_video_url, created_at")
@@ -156,7 +156,7 @@ export async function getTeacherModuleById(moduleId: string, teacherId: string) 
 
 export async function getTeacherModuleActivities(moduleId: string, teacherId: string) {
   await assertTeacherOwnsModule(moduleId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("activities")
     .select(
@@ -170,7 +170,7 @@ export async function getTeacherModuleActivities(moduleId: string, teacherId: st
 }
 
 export async function getTeacherActivityById(activityId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: activity } = await supabase
     .from("activities")
     .select("id, module_id, type, title, prompt, instructions, audio_url, image_url, settings_json, position, created_at")
@@ -193,7 +193,7 @@ export async function getModuleActivities(moduleId: string, teacherId: string) {
 }
 
 export async function getTeacherDashboardMetrics(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { count: subjectsCount } = await supabase
     .from("subjects")

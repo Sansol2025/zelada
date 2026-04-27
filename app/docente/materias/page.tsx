@@ -61,6 +61,7 @@ function hexToRgba(hexColor: string, alpha: number) {
 export default async function TeacherSubjectsPage({ searchParams }: TeacherSubjectsPageProps) {
   const session = await requireRole(["teacher", "admin"]);
   const subjects = await getTeacherSubjectsOverview(session.userId as string).catch(() => []);
+
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const errorMessage = readQueryValue(resolvedSearchParams?.error);
   const successValue = readQueryValue(resolvedSearchParams?.success);
