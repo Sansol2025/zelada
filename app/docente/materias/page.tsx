@@ -87,12 +87,12 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         activeSession.userId as string
       );
     } catch (error) {
-      // Si el error es una redirección de Next.js, dejarla pasar
       if (error instanceof Error && error.message === "NEXT_REDIRECT") {
         throw error;
       }
       console.error("Error creating subject:", error);
-      redirect(`/docente/materias?error=error_creacion`);
+      const msg = error instanceof Error ? error.message : "error_creacion";
+      redirect(`/docente/materias?error=${encodeURIComponent(msg)}`);
     }
 
     revalidatePath("/docente/materias");
@@ -124,7 +124,11 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         {/* MESSAGES */}
         {errorMessage && (
           <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-sm font-black text-rose-800 uppercase tracking-widest text-center shadow-lg animate-in fade-in slide-in-from-top-4 duration-500">
-            {errorMessage === "error_creacion" ? "Error al crear la materia. Verifica que el nombre tenga al menos 3 caracteres." : "Error en la operación. Intenta nuevamente."}
+            {errorMessage === "error_creacion" 
+              ? "Error al crear la materia. Verifica que el nombre tenga al menos 3 caracteres." 
+              : errorMessage.includes('new row violates row-level security policy')
+                ? "Error de permisos: No puedes crear materias con este usuario."
+                : `Error: ${errorMessage}`}
           </div>
         )}
         {successMessage && (
