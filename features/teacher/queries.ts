@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 function getProfileFullName(profileValue: unknown, fallback: string) {
   if (Array.isArray(profileValue)) {
@@ -14,7 +14,7 @@ function getProfileFullName(profileValue: unknown, fallback: string) {
 }
 
 async function assertTeacherOwnsSubject(subjectId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data } = await supabase
     .from("subjects")
     .select("id")
@@ -26,7 +26,7 @@ async function assertTeacherOwnsSubject(subjectId: string, teacherId: string) {
 }
 
 async function assertTeacherOwnsModule(moduleId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: moduleData } = await supabase
     .from("modules")
     .select("subject_id")
@@ -38,7 +38,7 @@ async function assertTeacherOwnsModule(moduleId: string, teacherId: string) {
 }
 
 export async function getTeacherSubjects(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("subjects")
     .select("id, title, description, color, icon, is_active, created_at")
