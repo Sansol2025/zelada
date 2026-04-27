@@ -456,7 +456,7 @@ export async function importStudentsFromCsv(file: File, teacherId: string): Prom
 }
 
 async function ensureTeacherOwnsSubject(subjectId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("subjects")
     .select("id")
@@ -472,7 +472,7 @@ async function ensureTeacherOwnsSubject(subjectId: string, teacherId: string) {
 }
 
 async function getModuleSubjectId(moduleId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("modules")
     .select("subject_id")
@@ -484,7 +484,7 @@ async function getModuleSubjectId(moduleId: string) {
 }
 
 async function getActivityModuleId(activityId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("activities")
     .select("module_id")
@@ -496,7 +496,7 @@ async function getActivityModuleId(activityId: string) {
 }
 
 async function ensureTeacherHasStudent(studentId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data } = await supabase
     .from("student_subjects")
     .select("student_id, subjects!inner(teacher_id)")
@@ -511,7 +511,7 @@ async function ensureTeacherHasStudent(studentId: string, teacherId: string) {
 
 export async function createSubject(input: unknown, teacherId: string) {
   const parsed = subjectSchema.parse(input);
-  const supabase = await createClient();
+  const supabase = await createServiceClient(); // Usar ServiceRole para bypass RLS recursion
 
   const { data, error } = await supabase
     .from("subjects")
@@ -530,7 +530,7 @@ export async function createSubject(input: unknown, teacherId: string) {
 
 export async function updateSubject(subjectId: string, input: unknown, teacherId: string) {
   const parsed = subjectSchema.partial().parse(input);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("subjects")
@@ -549,7 +549,7 @@ export async function updateSubject(subjectId: string, input: unknown, teacherId
 }
 
 export async function deleteSubject(subjectId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { error } = await supabase
     .from("subjects")
     .delete()
@@ -561,7 +561,7 @@ export async function deleteSubject(subjectId: string, teacherId: string) {
 export async function createModule(input: unknown, teacherId: string) {
   const parsed = moduleSchema.parse(input);
   await ensureTeacherOwnsSubject(parsed.subject_id, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("modules")
@@ -581,7 +581,7 @@ export async function updateModule(moduleId: string, input: unknown, teacherId: 
   const parsed = moduleSchema.partial().parse(input);
   const subjectId = parsed.subject_id ?? (await getModuleSubjectId(moduleId));
   await ensureTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("modules")
@@ -601,7 +601,7 @@ export async function updateModule(moduleId: string, input: unknown, teacherId: 
 export async function deleteModuleForTeacher(moduleId: string, teacherId: string) {
   const subjectId = await getModuleSubjectId(moduleId);
   await ensureTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { error } = await supabase.from("modules").delete().eq("id", moduleId);
   if (error) throw error;
 }
@@ -610,7 +610,7 @@ export async function createActivity(input: unknown, teacherId: string) {
   const parsed = activitySchema.parse(input);
   const subjectId = await getModuleSubjectId(parsed.module_id);
   await ensureTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("activities")
@@ -633,7 +633,7 @@ export async function updateActivity(activityId: string, input: unknown, teacher
   const moduleId = parsed.module_id ?? (await getActivityModuleId(activityId));
   const subjectId = await getModuleSubjectId(moduleId);
   await ensureTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("activities")
@@ -656,7 +656,7 @@ export async function deleteActivityForTeacher(activityId: string, teacherId: st
   const moduleId = await getActivityModuleId(activityId);
   const subjectId = await getModuleSubjectId(moduleId);
   await ensureTeacherOwnsSubject(subjectId, teacherId);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { error } = await supabase.from("activities").delete().eq("id", activityId);
   if (error) throw error;
 }
@@ -665,7 +665,7 @@ export async function assignSubjectToStudent(input: unknown, teacherId: string) 
   const parsed = subjectAssignSchema.parse(input);
   await ensureTeacherOwnsSubject(parsed.subject_id, teacherId);
 
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("student_subjects")
     .upsert(
@@ -683,7 +683,7 @@ export async function assignSubjectToStudent(input: unknown, teacherId: string) 
 }
 
 export async function unassignSubjectFromStudent(assignmentId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: assignment, error: assignmentError } = await supabase
     .from("student_subjects")
     .select("id, subject_id")
@@ -703,7 +703,7 @@ export async function unassignSubjectFromStudent(assignmentId: string, teacherId
 
 export async function createAccessLinkForStudent(input: unknown, teacherId: string) {
   const parsed = accessLinkSchema.parse(input);
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data: ownership } = await supabase
     .from("student_subjects")
@@ -743,7 +743,7 @@ export async function linkFamilyToStudent(input: unknown, teacherId: string) {
   const parsed = familyLinkSchema.parse(input);
   await ensureTeacherHasStudent(parsed.student_id, teacherId);
 
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("family_students")
     .upsert(
@@ -761,7 +761,7 @@ export async function linkFamilyToStudent(input: unknown, teacherId: string) {
 }
 
 export async function unlinkFamilyFromStudent(relationId: string, teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: relation, error: relationError } = await supabase
     .from("family_students")
     .select("id, student_id")
