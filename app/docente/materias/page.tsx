@@ -86,13 +86,15 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         },
         activeSession.userId as string
       );
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof Error && error.message === "NEXT_REDIRECT") {
         throw error;
       }
       console.error("Error creating subject:", error);
-      const msg = error instanceof Error ? error.message : "error_creacion";
-      redirect(`/docente/materias?error=${encodeURIComponent(msg)}`);
+      
+      // Capturar mensaje de error de forma robusta (Supabase o genérico)
+      const errorMsg = error?.message || (typeof error === 'string' ? error : "error_creacion");
+      redirect(`/docente/materias?error=${encodeURIComponent(errorMsg)}`);
     }
 
     revalidatePath("/docente/materias");
