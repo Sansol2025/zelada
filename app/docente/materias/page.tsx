@@ -86,7 +86,12 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         },
         activeSession.userId as string
       );
-    } catch {
+    } catch (error) {
+      // Si el error es una redirección de Next.js, dejarla pasar
+      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+        throw error;
+      }
+      console.error("Error creating subject:", error);
       redirect(`/docente/materias?error=error_creacion`);
     }
 
@@ -118,8 +123,8 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
 
         {/* MESSAGES */}
         {errorMessage && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm font-black text-rose-800 uppercase tracking-widest text-center">
-            Error en la operación. Intenta nuevamente.
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-sm font-black text-rose-800 uppercase tracking-widest text-center shadow-lg animate-in fade-in slide-in-from-top-4 duration-500">
+            {errorMessage === "error_creacion" ? "Error al crear la materia. Verifica que el nombre tenga al menos 3 caracteres." : "Error en la operación. Intenta nuevamente."}
           </div>
         )}
         {successMessage && (
@@ -208,14 +213,14 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                 <label className="mb-3 block text-xs font-black uppercase tracking-widest text-academic-gold">Identidad Visual (Color)</label>
                 <div className="grid grid-cols-4 gap-4">
                   {[
-                    { value: "#C682A2", bg: "bg-[#C682A2]" }, // Muted Rose
-                    { value: "#D29062", bg: "bg-[#D29062]" }, // Muted Orange
                     { value: "#C6A24E", bg: "bg-[#C6A24E]" }, // Academic Gold
-                    { value: "#528E82", bg: "bg-[#528E82]" }, // Muted Emerald
-                    { value: "#1A365D", bg: "bg-[#1A365D]" }, // Academic Navy
-                    { value: "#4A5568", bg: "bg-[#4A5568]" }, // Slate
-                    { value: "#2C7A7B", bg: "bg-[#2C7A7B]" }, // Teal
-                    { value: "#2D3748", bg: "bg-[#2D3748]" }, // Deep Slate
+                    { value: "#1A2B3C", bg: "bg-[#1A2B3C]" }, // Sovereign Navy
+                    { value: "#E11D48", bg: "bg-[#E11D48]" }, // Vibrant Rose
+                    { value: "#059669", bg: "bg-[#059669]" }, // Emerald Growth
+                    { value: "#4F46E5", bg: "bg-[#4F46E5]" }, // Premium Indigo
+                    { value: "#D97706", bg: "bg-[#D97706]" }, // Sunset Amber
+                    { value: "#7C3AED", bg: "bg-[#7C3AED]" }, // Royal Violet
+                    { value: "#0284C7", bg: "bg-[#0284C7]" }, // Ocean Azure
                   ].map((color) => (
                     <label key={color.value} className="group relative cursor-pointer" htmlFor={`color-${color.value}`}>
                       <input 

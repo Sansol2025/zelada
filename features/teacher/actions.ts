@@ -8,7 +8,7 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { buildAccessUrl, generateAccessToken } from "@/services/access-links";
 
 const subjectSchema = z.object({
-  title: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  title: z.string().trim().min(3, "El nombre debe tener al menos 3 caracteres"),
   description: z.string().optional(),
   color: z.string().default("#43b8f4"),
   icon: z.string().optional(),
