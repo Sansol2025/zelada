@@ -19,6 +19,7 @@ type QRAccessCardProps = {
 export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: QRAccessCardProps) {
   const [copied, setCopied] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
 
   return (
     <>
@@ -64,10 +65,11 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
               className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-academic-navy hover:bg-academic-ivory"
               onClick={() => {
                 setIsPrinting(true);
+                // Dar tiempo a que el portal se monte
                 setTimeout(() => {
                   window.print();
                   setIsPrinting(false);
-                }, 100);
+                }, 500); // Aumentar timeout por el peso del logo (3.7MB)
               }}
             >
               <Printer className="h-3 w-3" />
@@ -89,7 +91,17 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
       {isPrinting && typeof document !== "undefined" && createPortal(
         <div className="print-page font-sans text-academic-navy">
           <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
-            <Image src="/logo.png" alt="Logo Escuela" width={100} height={100} className="mb-4 h-24 w-24 object-contain" />
+            {/* Logo de la escuela */}
+            <div className="mb-4 h-24 w-24 relative">
+              <Image 
+                src="/logo.png" 
+                alt="Logo Escuela" 
+                fill
+                priority
+                className="object-contain"
+                onLoad={() => setLogoLoaded(true)}
+              />
+            </div>
             
             <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy leading-tight">
               {SCHOOL_NAME.split("–")[0]}
