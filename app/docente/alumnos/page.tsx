@@ -32,21 +32,22 @@ function formatActionError(error: unknown) {
   if (error && typeof error === "object" && "message" in error) {
     const message = String((error as { message?: unknown }).message ?? "");
     
-    // Si parece un JSON de Zod, intentar extraer el primer mensaje
+    // Intentar extraer mensaje de Zod (soporta minúsculas y mayúsculas de la captura)
     if (message.startsWith("[{") && message.endsWith("}]")) {
       try {
         const parsed = JSON.parse(message);
-        if (Array.isArray(parsed) && parsed[0]?.message) {
-          return String(parsed[0].message);
+        if (Array.isArray(parsed) && parsed[0]) {
+          const issue = parsed[0];
+          return String(issue.message || issue.MESSAGE || "Error de validación en los datos.");
         }
       } catch {
-        // Fallback al mensaje original
+        // Fallback al mensaje original si falla el parseo
       }
     }
     
     if (message) return message;
   }
-  return "No se pudo completar la operación. Intenta nuevamente.";
+  return "No se pudo completar la operación. Verifica los campos e intenta nuevamente.";
 }
 
 export default async function TeacherStudentsPage({ searchParams }: TeacherStudentsPageProps) {
@@ -111,15 +112,33 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
     >
       <div className="flex flex-col gap-4 animate-in">
         
-        {/* MESSAGES */}
+        {/* MESSAGES PREMIUM */}
         {errorMessage && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm font-black text-rose-800 uppercase tracking-widest text-center">
-            {errorMessage}
+          <div className="relative overflow-hidden rounded-xl border border-red-200 bg-white p-4 shadow-sm animate-in fade-in slide-in-from-top-2">
+            <div className="absolute left-0 top-0 h-full w-1.5 bg-red-500"></div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+                <span className="text-lg font-bold">!</span>
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-red-500 opacity-70">Error de Sistema</p>
+                <p className="text-sm font-bold text-slate-800">{errorMessage}</p>
+              </div>
+            </div>
           </div>
         )}
         {successMessage && (
-          <div className="rounded-2xl border border-academic-gold/20 bg-academic-gold/10 p-6 text-sm font-black text-academic-navy uppercase tracking-widest text-center">
-            {successMessage}
+          <div className="relative overflow-hidden rounded-xl border border-academic-gold/20 bg-white p-4 shadow-sm animate-in fade-in slide-in-from-top-2">
+            <div className="absolute left-0 top-0 h-full w-1.5 bg-academic-gold"></div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-academic-gold/10 text-academic-gold">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-academic-gold opacity-70">Operación Exitosa</p>
+                <p className="text-sm font-bold text-academic-navy">{successMessage}</p>
+              </div>
+            </div>
           </div>
         )}
 

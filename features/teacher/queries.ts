@@ -304,7 +304,7 @@ export async function getTeacherStudents(teacherId: string) {
 }
 
 export async function getStudentsCatalogForTeacher() {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("students")
     .select("id, profile_id, grade, section, age, dni, active, created_at, profiles ( full_name )")
