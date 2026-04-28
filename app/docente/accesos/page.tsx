@@ -40,10 +40,14 @@ export default async function TeacherAccessLinksPage() {
 
   const uniqueGrades = Array.from(new Set(students.map(s => s.grade).filter(Boolean))) as string[];
   
-  // Detect base URL for production/preview
-  const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_SITE_URL || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  // Usar siempre la URL pública configurada para evitar bloqueos de autenticación de Vercel (Preview mode)
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL || "http://localhost:3000";
+  
+  // Asegurar que baseUrl tenga el protocolo correcto si viene de VERCEL_URL (que no lo trae)
+  if (!baseUrl.startsWith("http")) {
+    const protocol = baseUrl.includes("localhost") ? "http" : "https";
+    baseUrl = `${protocol}://${baseUrl}`;
+  }
   
   const gradeQRs = await Promise.all(
     uniqueGrades.map(async (grade) => {
