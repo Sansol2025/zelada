@@ -270,7 +270,7 @@ export async function getStudentsProgressForTeacher(teacherId: string) {
 }
 
 export async function getTeacherStudents(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data: subjects } = await supabase
     .from("subjects")
@@ -326,7 +326,7 @@ export async function getStudentsCatalogForTeacher() {
 }
 
 export async function getTeacherFamilies(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: subjects } = await supabase
     .from("subjects")
     .select("id")
@@ -364,7 +364,7 @@ export async function getTeacherFamilies(teacherId: string) {
 }
 
 export async function getAvailableFamilies() {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("families")
     .select("id, relation_type, profiles(full_name)")
@@ -382,7 +382,7 @@ export async function getAvailableFamilies() {
 }
 
 export async function getTeacherAssignments(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("student_subjects")
     .select(
@@ -411,7 +411,7 @@ export async function getTeacherAssignments(teacherId: string) {
 }
 
 export async function getTeacherAccessLinks(teacherId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("access_links")
     .select(
@@ -455,7 +455,7 @@ export async function getTeacherAccessLinks(teacherId: string) {
 }
 
 export async function getTeacherStudentDetail(teacherId: string, studentId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: teacherSubjects } = await supabase
     .from("subjects")
     .select("id, title")
