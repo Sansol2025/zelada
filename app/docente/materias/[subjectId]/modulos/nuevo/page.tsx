@@ -51,50 +51,50 @@ export default async function NewModulePage({ params }: NewModulePageProps) {
       <div className="flex flex-col gap-8 animate-in">
         
         {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-[3rem] bg-academic-navy p-10 text-white shadow-2xl md:p-16">
+        <div className="relative overflow-hidden rounded-xl bg-academic-navy p-4 text-white shadow-md md:p-6">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold/20 blur-3xl"></div>
           <div className="relative z-10 max-w-2xl">
-            <div className="mb-4 flex items-center gap-2 text-academic-gold font-black uppercase tracking-[0.2em] text-xs">
-              <Plus className="h-4 w-4" /> Construcción de Módulo
+            <div className="mb-2 flex items-center gap-2 text-academic-gold font-bold uppercase tracking-[0.2em] text-[10px]">
+              <Plus className="h-3.5 w-3.5" /> Construcción de Módulo
             </div>
-            <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl leading-[1.1]">
+            <h1 className="font-display text-xl font-bold tracking-tight sm:text-2xl leading-tight">
               Nuevo Módulo
             </h1>
-            <p className="mt-6 text-xl font-medium text-white/70 max-w-prose leading-relaxed">
-              Expande el reino de <span className="text-academic-gold font-black">&quot;{subject.title}&quot;</span>. Define un nuevo capítulo en el viaje del aprendiz.
+            <p className="mt-2 text-xs font-medium text-white/70 max-w-prose leading-relaxed">
+              Expande el reino de <span className="text-academic-gold font-bold">&quot;{subject.title}&quot;</span>. Define un nuevo capítulo en el viaje del aprendiz.
             </p>
           </div>
         </div>
 
-        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
-          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
-              <BookOpen className="h-6 w-6" />
+        <Card className="border border-academic-gold/5 shadow-sm rounded-xl p-4 bg-white">
+          <div className="mb-4 flex items-center gap-3 border-b border-academic-gold/5 pb-4 text-academic-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
+              <BookOpen className="h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-black uppercase tracking-tight">Detalles del Capítulo</CardTitle>
-              <CardText className="text-sm font-medium text-academic-slate italic opacity-60">Configura la estructura secuencial del módulo.</CardText>
+              <CardTitle className="text-base font-bold uppercase tracking-tight">Detalles del Capítulo</CardTitle>
+              <CardText className="text-[10px] font-medium text-academic-slate italic opacity-60">Configura la estructura secuencial del módulo.</CardText>
             </div>
           </div>
 
-          <form action={createModuleAction} className="grid md:grid-cols-2 gap-10">
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Título del Módulo</label>
+          <form action={createModuleAction} className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="title" className="text-[10px] font-bold uppercase tracking-widest text-academic-gold ml-2">Título del Módulo</label>
                 <input 
                   id="title"
-                  className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                  className="h-10 w-full rounded-lg border border-academic-gold/10 bg-academic-ivory/50 px-4 text-sm font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
                   name="title" 
                   placeholder="Ej: Fundamentos de la Aventura" 
                   required 
                 />
               </div>
               
-              <div className="space-y-3">
-                <label htmlFor="position" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Posición Secuencial</label>
+              <div className="space-y-2">
+                <label htmlFor="position" className="text-[10px] font-bold uppercase tracking-widest text-academic-gold ml-2">Posición Secuencial</label>
                 <input
                   id="position"
-                  className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
+                  className="h-10 w-full rounded-lg border border-academic-gold/10 bg-academic-ivory/50 px-4 text-sm font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
                   defaultValue={String(modules.length + 1)}
                   min={1}
                   name="position"
@@ -103,31 +103,31 @@ export default async function NewModulePage({ params }: NewModulePageProps) {
               </div>
             </div>
 
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <label htmlFor="description" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Descripción Pedagógica</label>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="description" className="text-[10px] font-bold uppercase tracking-widest text-academic-gold ml-2">Descripción Pedagógica</label>
                 <textarea 
                   id="description"
-                  className="min-h-[148px] w-full resize-none rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 p-6 text-base font-medium text-academic-slate focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm leading-relaxed" 
+                  className="min-h-24 w-full resize-none rounded-lg border border-academic-gold/10 bg-academic-ivory/50 p-4 text-sm font-medium text-academic-slate focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm leading-relaxed" 
                   name="description" 
                   placeholder="¿Qué descubrirán los alumnos en este capítulo?"
                 />
               </div>
             </div>
 
-            <div className="md:col-span-2 pt-4">
+            <div className="md:col-span-2 pt-2">
               <div className="relative inline-flex items-center cursor-pointer">
                 <input name="is_locked_by_default" type="checkbox" className="sr-only peer" id="is_locked_toggle" />
-                <div className="w-14 h-8 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-academic-gold after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
-                <label htmlFor="is_locked_toggle" className="ml-4 text-xs font-black uppercase tracking-widest text-academic-navy cursor-pointer">Bloqueado por Defecto (Habilitar manualmente)</label>
+                <div className="w-10 h-6 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-academic-gold after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
+                <label htmlFor="is_locked_toggle" className="ml-3 text-[10px] font-bold uppercase tracking-widest text-academic-navy cursor-pointer">Bloqueado por Defecto</label>
               </div>
             </div>
 
-            <div className="md:col-span-2 pt-10 border-t border-academic-gold/5">
-              <Button className="h-20 w-full md:w-auto rounded-[2rem] bg-academic-navy px-16 text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
-                <Plus className="mr-4 h-8 w-8 text-academic-gold" />
+            <div className="md:col-span-2 pt-6 border-t border-academic-gold/5">
+              <Button className="h-10 w-full md:w-auto rounded-lg bg-academic-navy px-10 text-sm font-bold tracking-tight hover:-translate-y-0.5 shadow-md transition-all text-white border-none">
+                <Plus className="mr-2 h-4 w-4 text-academic-gold" />
                 Sellar Módulo
-                <Sparkles className="ml-2 h-5 w-5 text-academic-gold" />
+                <Sparkles className="ml-2 h-4 w-4 text-academic-gold" />
               </Button>
             </div>
           </form>

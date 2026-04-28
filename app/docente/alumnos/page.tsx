@@ -31,6 +31,19 @@ function readQueryValue(value?: string | string[]) {
 function formatActionError(error: unknown) {
   if (error && typeof error === "object" && "message" in error) {
     const message = String((error as { message?: unknown }).message ?? "");
+    
+    // Si parece un JSON de Zod, intentar extraer el primer mensaje
+    if (message.startsWith("[{") && message.endsWith("}]")) {
+      try {
+        const parsed = JSON.parse(message);
+        if (Array.isArray(parsed) && parsed[0]?.message) {
+          return String(parsed[0].message);
+        }
+      } catch {
+        // Fallback al mensaje original
+      }
+    }
+    
     if (message) return message;
   }
   return "No se pudo completar la operación. Intenta nuevamente.";

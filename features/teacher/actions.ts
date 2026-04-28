@@ -61,7 +61,9 @@ const studentSchema = z.object({
   dni: z
     .string()
     .trim()
-    .regex(/^[0-9.\-\s]{6,20}$/, "DNI inválido")
+    .min(6, "El DNI debe tener al menos 6 caracteres")
+    .max(20, "El DNI es demasiado largo")
+    .regex(/^[0-9.\-\s]+$/, "El DNI solo puede contener números, puntos o guiones")
 });
 
 type ParsedStudentInput = z.infer<typeof studentSchema>;

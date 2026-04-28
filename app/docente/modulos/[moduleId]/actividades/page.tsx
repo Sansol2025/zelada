@@ -45,7 +45,7 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <div className="flex flex-col gap-8 animate-in">
+      <div className="flex flex-col gap-4 animate-in">
         
         <PageHeader
           icon={<Gamepad2 className="h-4 w-4" />}
@@ -63,17 +63,17 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
         />
 
         {activities.length === 0 ? (
-          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/20 bg-academic-ivory/50 p-20 text-center">
+          <div className="rounded-xl border-2 border-dashed border-academic-gold/20 bg-academic-ivory/50 p-10 text-center">
             <EmptyState
               title="Aún no hay juegos creados"
               description="Haz clic en 'Nuevo Juego' para abrir el Taller de Magia y crear la primera actividad de este módulo."
             />
           </div>
         ) : (
-          <section className="grid gap-6">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="font-display text-2xl font-black tracking-tight text-academic-navy">Actividades del Módulo</h2>
-              <div className="rounded-full bg-academic-gold/10 px-4 py-1 text-xs font-black uppercase tracking-widest text-academic-gold">{activities.length} juegos</div>
+          <section className="grid gap-3">
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="font-display text-lg font-bold tracking-tight text-academic-navy">Actividades del Módulo</h2>
+              <div className="rounded-full bg-academic-gold/10 px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest text-academic-gold">{activities.length} juegos</div>
             </div>
             {activities.map((activity, index) => (
               <Card key={activity.id} className="group overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 rounded-xl p-0 flex flex-col md:flex-row bg-white">
@@ -89,23 +89,23 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
                 </div>
 
                 {/* Contenido principal */}
-                <div className="flex flex-1 flex-col justify-between p-5 lg:p-6">
+                <div className="flex flex-1 flex-col justify-between p-4 lg:p-5">
                   <div>
-                    <CardTitle className="text-xl font-bold text-academic-navy mb-1 tracking-tight">{activity.title}</CardTitle>
-                    <CardText className="text-sm text-slate-500 font-medium leading-relaxed italic">&quot;{activity.prompt}&quot;</CardText>
+                    <CardTitle className="text-lg font-bold text-academic-navy mb-0.5 tracking-tight">{activity.title}</CardTitle>
+                    <CardText className="text-xs text-slate-500 font-medium leading-relaxed italic">&quot;{activity.prompt}&quot;</CardText>
                     
                     {activity.audio_url && (
-                      <div className="mt-3 flex items-center gap-1.5 text-academic-forest bg-green-50 px-3 py-1 rounded-md inline-flex text-[10px] font-bold uppercase tracking-wider border border-green-100">
-                        <Volume2 className="h-3.5 w-3.5" /> Audio Configurado
+                      <div className="mt-2 flex items-center gap-1 text-academic-forest bg-green-50 px-2 py-0.5 rounded inline-flex text-[9px] font-bold uppercase tracking-wider border border-green-100">
+                        <Volume2 className="h-3 w-3" /> Audio Configurado
                       </div>
                     )}
                   </div>
                   
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-3">
                     <div className="flex gap-2">
                       <Link href={`/docente/actividades/${activity.id}/editar` as Route}>
-                        <Button size="sm" variant="outline" className="h-9 rounded-md px-4 font-bold bg-white text-academic-navy border-slate-200 hover:border-academic-navy transition-all text-xs uppercase tracking-wider">
-                          <Pencil className="mr-2 h-3.5 w-3.5" />
+                        <Button size="sm" variant="outline" className="h-8 rounded-md px-3 font-bold bg-white text-academic-navy border-slate-200 hover:border-academic-navy transition-all text-[10px] uppercase tracking-wider">
+                          <Pencil className="mr-2 h-3 w-3" />
                           Editar
                         </Button>
                       </Link>
@@ -113,8 +113,8 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
                     
                     <form action={deleteActivityAction}>
                       <input name="activity_id" type="hidden" value={activity.id} />
-                      <Button size="sm" variant="ghost" className="h-9 rounded-md font-bold text-rose-500/70 hover:bg-rose-50 hover:text-rose-600 transition-all text-xs uppercase tracking-wider px-4">
-                        <Trash2 className="mr-2 h-3.5 w-3.5" /> Eliminar
+                      <Button size="sm" variant="ghost" className="h-8 rounded-md font-bold text-rose-500/70 hover:bg-rose-50 hover:text-rose-600 transition-all text-[10px] uppercase tracking-wider px-3">
+                        <Trash2 className="mr-2 h-3 w-3" /> Eliminar
                       </Button>
                     </form>
                   </div>
