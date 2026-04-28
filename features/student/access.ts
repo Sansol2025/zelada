@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { ACCESS_TOKEN_COOKIE } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 export type StudentContext = {
   studentId: string;
@@ -45,7 +45,10 @@ export async function getStudentContextOrRedirect(): Promise<StudentContext> {
   const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
   if (!token) redirect("/acceso");
 
-  const { data: accessLink } = await supabase
+  // Utilizamos el service client porque el estudiante solo tiene un token (es anónimo para Supabase Auth)
+  // y RLS bloquearía la lectura de access_links
+  const serviceSupabase = createServiceClient();
+  const { data: accessLink } = await serviceSupabase
     .from("access_links")
     .select("student_id, is_active, expires_at, students ( id, profile_id )")
     .eq("token", token)
@@ -63,7 +66,7 @@ export async function getStudentContextOrRedirect(): Promise<StudentContext> {
 
   if (!student) redirect("/acceso");
 
-  const { data: profile } = await supabase
+  const { data: profile } = await serviceSupabase
     .from("profiles")
     .select("full_name")
     .eq("id", student.profile_id)
