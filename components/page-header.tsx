@@ -13,12 +13,12 @@ type PageHeaderProps = {
 export function PageHeader({ icon, title, subtitle, description, actions, className }: PageHeaderProps) {
   return (
     <div className={cn(
-      "relative overflow-hidden rounded-[2rem] bg-academic-navy p-6 text-white shadow-xl md:p-8",
+      "relative overflow-hidden rounded-xl bg-academic-navy p-5 text-white shadow-md md:p-6",
       className
     )}>
       {/* Decorative Glow */}
-      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-academic-gold/15 blur-3xl"></div>
-      <div className="absolute -left-16 bottom-16 h-32 w-32 rounded-full bg-academic-gold/5 blur-2xl"></div>
+      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-academic-gold/15 blur-2xl"></div>
+      <div className="absolute -left-10 bottom-10 h-24 w-24 rounded-full bg-academic-gold/5 blur-xl"></div>
       
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>

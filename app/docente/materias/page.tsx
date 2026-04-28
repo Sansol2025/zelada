@@ -130,7 +130,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <div className="flex flex-col gap-8 animate-in">
+      <div className="flex flex-col gap-4 animate-in">
 
         {/* MESSAGES */}
         {errorMessage && (
@@ -156,59 +156,59 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
         />
 
         {/* METRICS ROW */}
-        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Materias Totales</span>
-            <span className="text-4xl font-display font-black text-academic-navy my-4">{subjects.length}</span>
-            <span className="text-[10px] font-black text-academic-slate/40">Recorridos creados</span>
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Materias Totales</span>
+            <span className="text-2xl font-display font-bold text-academic-navy my-2">{subjects.length}</span>
+            <span className="text-[10px] font-semibold text-slate-400">Recorridos creados</span>
           </Card>
-          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Visibilidad</span>
-            <span className="text-4xl font-display font-black text-academic-navy my-4">{activeSubjectsCount}</span>
-            <span className="text-[10px] font-black text-academic-slate/40">Materias Activas</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Visibilidad</span>
+            <span className="text-2xl font-display font-bold text-academic-navy my-2">{activeSubjectsCount}</span>
+            <span className="text-[10px] font-semibold text-slate-400">Materias Activas</span>
           </Card>
-          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Alcance</span>
-            <span className="text-4xl font-display font-black text-academic-navy my-4">{assignedStudentsCount}</span>
-            <span className="text-[10px] font-black text-academic-slate/40">Estudiantes Vinculados</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Alcance</span>
+            <span className="text-2xl font-display font-bold text-academic-navy my-2">{assignedStudentsCount}</span>
+            <span className="text-[10px] font-semibold text-slate-400">Estudiantes Vinculados</span>
           </Card>
-          <Card className="border border-academic-gold/5 shadow-premium rounded-[2.5rem] p-8 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold">Efectividad</span>
-            <span className="text-4xl font-display font-black text-academic-navy my-4">{percent(averageProgress)}</span>
-            <span className="text-[10px] font-black text-academic-slate/40">Progreso Promedio</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Efectividad</span>
+            <span className="text-2xl font-display font-bold text-academic-navy my-2">{percent(averageProgress)}</span>
+            <span className="text-[10px] font-semibold text-slate-400">Progreso Promedio</span>
           </Card>
         </section>
 
         {/* CREATION FORM */}
-        <Card className="overflow-hidden border border-academic-gold/5 bg-white shadow-premium rounded-[3rem] p-10">
-          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-navy text-white shadow-lg">
-              <Wand2 className="h-6 w-6 text-academic-gold" />
+        <Card className="overflow-hidden border border-slate-200 bg-white shadow-sm rounded-2xl p-6">
+          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-academic-navy text-white shadow-sm">
+              <Wand2 className="h-5 w-5 text-academic-gold" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-black uppercase tracking-tight">Crear Reino de Aprendizaje</CardTitle>
-              <CardText className="font-medium text-academic-slate italic opacity-60">Diseña una nueva materia lúdica personalizada.</CardText>
+              <CardTitle className="text-lg font-bold uppercase tracking-tight">Crear Reino de Aprendizaje</CardTitle>
+              <CardText className="text-xs font-medium text-slate-500 italic">Diseña una nueva materia lúdica personalizada.</CardText>
             </div>
           </div>
           
-          <form action={createSubjectAction} className="grid gap-10 lg:grid-cols-2">
-            <div className="space-y-8">
-              <div className="space-y-3">
-                <label htmlFor="title" className="mb-2 block text-xs font-black uppercase tracking-widest text-academic-gold">Nombre Mágico</label>
+          <form action={createSubjectAction} className="grid gap-6 lg:grid-cols-2">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label htmlFor="title" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Nombre Mágico</label>
                 <input
                   id="title"
-                  className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/30 px-6 text-lg font-black text-academic-navy transition-all focus:border-academic-gold focus:bg-white focus:outline-none shadow-sm"
+                  className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy transition-all focus:border-academic-navy focus:bg-white focus:outline-none shadow-sm"
                   name="title"
                   placeholder="Ej: Aventura Matemática"
                   required
                 />
               </div>
               
-              <div className="space-y-3">
-                <label htmlFor="description" className="mb-2 block text-xs font-black uppercase tracking-widest text-academic-gold">Misión Pedagógica</label>
+              <div className="space-y-2">
+                <label htmlFor="description" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Misión Pedagógica</label>
                 <textarea
                   id="description"
-                  className="min-h-32 w-full resize-none rounded-2xl border border-academic-gold/10 bg-academic-ivory/30 p-6 text-base font-medium text-academic-slate transition-all focus:border-academic-gold focus:bg-white focus:outline-none shadow-sm"
+                  className="min-h-24 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-600 transition-all focus:border-academic-navy focus:bg-white focus:outline-none shadow-sm"
                   name="description"
                   placeholder="En esta materia vamos a aprender sumas y restas divirtiéndonos con animalitos..."
                 />
@@ -223,10 +223,10 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
               </div>
             </div>
             
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <label className="mb-3 block text-xs font-black uppercase tracking-widest text-academic-gold">Identidad Visual (Color)</label>
-                <div className="grid grid-cols-4 gap-4">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Identidad Visual (Color)</label>
+                <div className="grid grid-cols-4 gap-3">
                   {[
                     { value: "#C6A24E", bg: "bg-[#C6A24E]" }, // Academic Gold
                     { value: "#1A2B3C", bg: "bg-[#1A2B3C]" }, // Sovereign Navy
@@ -246,13 +246,13 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                         className="peer sr-only"
                         defaultChecked={color.value === "#C6A24E"}
                       />
-                      <div className={`h-14 w-full rounded-2xl ${color.bg} transition-all duration-300 peer-checked:ring-4 peer-checked:ring-academic-gold peer-checked:ring-offset-4 shadow-sm hover:scale-105 active:scale-95`}></div>
+                      <div className={`h-10 w-full rounded-lg ${color.bg} transition-all duration-200 peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-academic-navy shadow-sm hover:scale-105 active:scale-95`}></div>
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <FileUploader 
                   name="icon" 
                   accept="image/*" 
@@ -260,10 +260,10 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                 />
               </div>
 
-              <div className="pt-6">
-                <Button type="submit" className="h-20 w-full rounded-[2rem] bg-academic-navy text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
-                  <Sparkles className="mr-4 h-8 w-8 text-academic-gold" />
-                  Dar Vida a la Materia
+              <div className="pt-4">
+                <Button type="submit" className="h-12 w-full rounded-xl bg-academic-navy text-sm font-bold hover:scale-[1.02] active:scale-95 shadow-md transition-all text-white border-none">
+                  <Sparkles className="mr-2 h-4 w-4 text-academic-gold" />
+                  Crear Materia
                 </Button>
               </div>
             </div>
@@ -272,26 +272,26 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
 
         {/* SUBJECTS LIST */}
         {subjects.length === 0 ? (
-          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center">
+          <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 text-center">
             <EmptyState
               title="Sin materias creadas"
               description="Empieza a diseñar tus recorridos pedagógicos usando el panel superior."
             />
           </div>
         ) : (
-          <section className="grid gap-8 md:grid-cols-2">
+          <section className="grid gap-6 md:grid-cols-2">
             {subjects.map((subject) => {
               const subjectColor = subject.color || "#C6A24E";
               return (
               <Card
                 key={subject.id}
-                className="group flex flex-col justify-between overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-2 rounded-[3rem] bg-white"
+                className="group flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1 rounded-2xl bg-white"
               >
-                <div className="p-10">
-                  <div className="flex items-start justify-between gap-6 mb-8">
-                    <div className="flex flex-wrap items-center gap-6">
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex flex-wrap items-center gap-4">
                       <div 
-                        className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-[1.5rem] text-3xl shadow-lg border border-white/50"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl text-2xl shadow-sm border border-black/5"
                         style={{ backgroundColor: subjectColor, color: "white" }}
                       >
                         {subject.icon ? (
@@ -299,21 +299,21 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                             <NextImage 
                               src={subject.icon} 
                               alt={subject.title} 
-                              width={64} 
-                              height={64} 
+                              width={48} 
+                              height={48} 
                               className="h-full w-full object-cover" 
                             />
                           ) : (
                             subject.icon
                           )
                         ) : (
-                          <BookOpen className="h-8 w-8" />
+                          <BookOpen className="h-6 w-6" />
                         )}
                       </div>
                       <div className="flex flex-col">
-                        <CardTitle className="text-3xl font-black text-academic-navy tracking-tight truncate max-w-[200px] lg:max-w-md">{subject.title}</CardTitle>
+                        <CardTitle className="text-lg font-bold text-academic-navy tracking-tight truncate max-w-[180px] lg:max-w-[220px]">{subject.title}</CardTitle>
                         <Badge 
-                          className="mt-2 w-fit rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-widest border"
+                          className="mt-1 w-fit rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider border"
                           variant={subject.is_active ? "success" : "default"}
                           style={{ 
                             backgroundColor: subject.is_active ? hexToRgba(subjectColor, 0.1) : undefined, 
@@ -328,48 +328,48 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                   </div>
                   
                   {subject.description && (
-                    <CardText className="line-clamp-2 mt-4 font-medium text-academic-slate leading-relaxed italic opacity-80">&quot;{subject.description}&quot;</CardText>
+                    <CardText className="line-clamp-2 mt-2 text-xs font-medium text-slate-500 leading-relaxed italic">&quot;{subject.description}&quot;</CardText>
                   )}
 
-                  <div className="mt-10 grid gap-4 grid-cols-3">
-                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
-                      <Layers3 className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
-                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Módulos</p>
-                      <p className="text-2xl font-black text-academic-navy mt-1">{subject.modules_count}</p>
+                  <div className="mt-6 grid gap-2 grid-cols-3">
+                    <div className="flex flex-col rounded-lg bg-slate-50 p-3 border border-slate-100 transition-all group-hover:bg-slate-100">
+                      <Layers3 className="h-3.5 w-3.5 text-slate-400 mb-1" />
+                      <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Módulos</p>
+                      <p className="text-lg font-bold text-academic-navy mt-0.5">{subject.modules_count}</p>
                     </div>
-                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
-                      <Users className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
-                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Alumnos</p>
-                      <p className="text-2xl font-black text-academic-navy mt-1">{subject.assigned_students_count}</p>
+                    <div className="flex flex-col rounded-lg bg-slate-50 p-3 border border-slate-100 transition-all group-hover:bg-slate-100">
+                      <Users className="h-3.5 w-3.5 text-slate-400 mb-1" />
+                      <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Alumnos</p>
+                      <p className="text-lg font-bold text-academic-navy mt-0.5">{subject.assigned_students_count}</p>
                     </div>
-                    <div className="flex flex-col rounded-2xl bg-academic-ivory/30 p-5 border border-academic-gold/5 transition-all group-hover:bg-academic-ivory/50">
-                      <BarChart3 className="h-4 w-4 text-academic-gold mb-2 opacity-50" />
-                      <p className="text-[10px] font-black uppercase tracking-[0.1em] text-academic-slate/60">Avance</p>
-                      <p className="text-2xl font-black text-academic-navy mt-1">{percent(subject.progress_average)}</p>
+                    <div className="flex flex-col rounded-lg bg-slate-50 p-3 border border-slate-100 transition-all group-hover:bg-slate-100">
+                      <BarChart3 className="h-3.5 w-3.5 text-slate-400 mb-1" />
+                      <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Avance</p>
+                      <p className="text-lg font-bold text-academic-navy mt-0.5">{percent(subject.progress_average)}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-academic-gold/5 p-8 bg-academic-ivory/10 group-hover:bg-academic-ivory/20 transition-all">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                    <div className="flex gap-4 w-full sm:w-auto">
+                <div className="border-t border-slate-100 p-4 bg-slate-50 transition-all">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex gap-2 w-full sm:w-auto">
                       <Link href={`/docente/materias/${subject.id}/modulos` as Route} className="w-full sm:w-auto">
-                        <Button className="h-14 rounded-xl px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 border-none text-white w-full sm:w-auto" style={{ backgroundColor: subjectColor }}>
-                          <Layers3 className="mr-2 h-5 w-5" /> Gestionar Contenidos
+                        <Button className="h-10 rounded-lg px-4 font-bold text-[11px] shadow-sm transition-all hover:-translate-y-0.5 border-none text-white w-full sm:w-auto" style={{ backgroundColor: subjectColor }}>
+                          <Layers3 className="mr-1.5 h-4 w-4" /> Gestionar Contenidos
                         </Button>
                       </Link>
                     </div>
                     
-                    <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                       <Link href={`/docente/materias/${subject.id}/editar` as Route}>
-                        <Button variant="ghost" className="h-14 w-14 rounded-xl font-black text-academic-navy/40 hover:text-academic-navy hover:bg-white border border-academic-gold/5 transition-all">
-                          <Pencil className="h-5 w-5" />
+                        <Button variant="outline" className="h-10 w-10 p-0 rounded-lg text-slate-400 hover:text-academic-navy hover:bg-white border-slate-200 transition-all">
+                          <Pencil className="h-4 w-4" />
                         </Button>
                       </Link>
                       <form action={deleteSubjectAction}>
                         <input name="subject_id" type="hidden" value={subject.id} />
-                        <Button variant="ghost" className="h-14 w-14 rounded-xl font-black text-rose-600/40 hover:bg-rose-50 hover:text-rose-600 border border-rose-100/50 transition-all" type="submit">
-                          <Trash2 className="h-5 w-5" />
+                        <Button variant="outline" className="h-10 w-10 p-0 rounded-lg text-rose-400 hover:bg-rose-50 hover:text-rose-600 border-rose-100 transition-all" type="submit">
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </form>
                     </div>
