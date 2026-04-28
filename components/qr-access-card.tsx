@@ -1,4 +1,5 @@
 "use client";
+import { APP_NAME, SCHOOL_NAME } from "@/lib/constants";
 
 import Image from "next/image";
 import { useState } from "react";
@@ -18,60 +19,101 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
   const [copied, setCopied] = useState(false);
 
   return (
-    <Card className="flex flex-col sm:flex-row gap-4 p-3 md:p-3 max-w-sm overflow-hidden items-start">
-      <div className="shrink-0 flex h-[110px] w-[110px] items-center justify-center rounded-lg border border-slate-100 bg-white p-1.5 shadow-sm">
-        <Image src={qrDataUrl} alt={`QR de acceso para ${studentName}`} width={100} height={100} className="h-full w-full object-contain" />
-      </div>
-      <div className="flex-1 min-w-0 space-y-2 py-0.5">
-        <div>
-          <CardTitle className="text-sm font-bold text-academic-navy leading-tight">{studentName}</CardTitle>
-          <CardText className="text-[10px] leading-tight text-slate-400 font-medium">
-            Ingreso rápido por QR o enlace directo.
-          </CardText>
+    <>
+      {/* VISTA DE PANTALLA (EXISTENTE) */}
+      <Card className="flex flex-col sm:flex-row gap-4 p-3 md:p-3 max-w-sm overflow-hidden items-start no-print">
+        <div className="shrink-0 flex h-[110px] w-[110px] items-center justify-center rounded-lg border border-slate-100 bg-white p-1.5 shadow-sm">
+          <Image src={qrDataUrl} alt={`QR de acceso para ${studentName}`} width={100} height={100} className="h-full w-full object-contain" />
         </div>
-        
-        <div className="w-full rounded bg-slate-50 border border-slate-100 p-1.5 overflow-hidden">
-          <p className="text-[9px] font-mono text-slate-400 truncate">
-            {accessUrl}
-          </p>
-        </div>
-        
-        <div className="flex flex-wrap gap-1.5">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight bg-academic-gold/10 text-academic-gold hover:bg-academic-gold hover:text-white border-none"
-            onClick={async () => {
-              await navigator.clipboard.writeText(accessUrl);
-              setCopied(true);
-              setTimeout(() => setCopied(false), 1200);
-            }}
-          >
-            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-            {copied ? "LISTO" : "COPIAR"}
-          </Button>
+        <div className="flex-1 min-w-0 space-y-2 py-0.5">
+          <div>
+            <CardTitle className="text-sm font-bold text-academic-navy leading-tight">{studentName}</CardTitle>
+            <CardText className="text-[10px] leading-tight text-slate-400 font-medium">
+              Ingreso rápido por QR o enlace directo.
+            </CardText>
+          </div>
           
-          <Button 
-            type="button" 
-            variant="ghost" 
-            size="sm" 
-            className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-academic-navy hover:bg-academic-ivory"
-            onClick={() => window.print()}
-          >
-            <Printer className="h-3 w-3" />
-            IMPRIMIR
-          </Button>
+          <div className="w-full rounded bg-slate-50 border border-slate-100 p-1.5 overflow-hidden">
+            <p className="text-[9px] font-mono text-slate-400 truncate">
+              {accessUrl}
+            </p>
+          </div>
           
-          <a className="inline-flex" href={accessUrl} target="_blank" rel="noreferrer">
-            <Button type="button" variant="ghost" size="sm" className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-slate-400 hover:text-academic-navy">
-              <Link2 className="h-3 w-3" />
-              ABRIR
+          <div className="flex flex-wrap gap-1.5">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight bg-academic-gold/10 text-academic-gold hover:bg-academic-gold hover:text-white border-none"
+              onClick={async () => {
+                await navigator.clipboard.writeText(accessUrl);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1200);
+              }}
+            >
+              {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              {copied ? "LISTO" : "COPIAR"}
             </Button>
-          </a>
+            
+            <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
+              className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-academic-navy hover:bg-academic-ivory"
+              onClick={() => window.print()}
+            >
+              <Printer className="h-3 w-3" />
+              IMPRIMIR
+            </Button>
+            
+            <a className="inline-flex" href={accessUrl} target="_blank" rel="noreferrer">
+              <Button type="button" variant="ghost" size="sm" className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-slate-400 hover:text-academic-navy">
+                <Link2 className="h-3 w-3" />
+                ABRIR
+              </Button>
+            </a>
+          </div>
+          {expiresAt ? <p className="text-[8px] font-bold text-rose-400 uppercase tracking-widest">Expira: {new Date(expiresAt).toLocaleDateString()}</p> : null}
         </div>
-        {expiresAt ? <p className="text-[8px] font-bold text-rose-400 uppercase tracking-widest">Expira: {new Date(expiresAt).toLocaleDateString()}</p> : null}
+      </Card>
+
+      {/* VISTA DE IMPRESIÓN (A4) */}
+      <div className="print-only print-page font-sans text-academic-navy">
+        <div className="flex flex-col items-center justify-center h-full border-[10px] border-double border-academic-gold/20 p-10 text-center">
+          <Image src="/logo.png" alt="Logo Escuela" width={120} height={120} className="mb-6 h-30 w-30 object-contain" />
+          
+          <h1 className="text-4xl font-black mb-2 uppercase tracking-tighter text-academic-navy">
+            {SCHOOL_NAME.split("–")[0]}
+          </h1>
+          <p className="text-xl font-bold text-academic-gold mb-10 uppercase tracking-widest">
+            {APP_NAME}
+          </p>
+
+          <div className="bg-white p-8 rounded-3xl border-[3px] border-academic-navy/10 shadow-xl mb-12">
+            <Image src={qrDataUrl} alt="Código QR" width={400} height={400} className="w-[300px] h-[300px]" />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-5xl font-black text-academic-navy uppercase tracking-tighter">
+              {studentName}
+            </h2>
+            <p className="text-xl font-medium text-slate-500 max-w-md mx-auto italic">
+              Escanea el código con la cámara de tu tablet o celular para ingresar directamente a tu aventura.
+            </p>
+          </div>
+
+          <div className="mt-auto pt-20 border-t border-slate-100 w-full flex justify-between items-end">
+            <div className="text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Plataforma Educativa</p>
+              <p className="text-sm font-bold text-slate-400">zelada.vercel.app</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Fecha de Impresión</p>
+              <p className="text-sm font-bold text-slate-400">{new Date().toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </Card>
+    </>
   );
 }
