@@ -157,42 +157,42 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
 
         {/* METRICS ROW */}
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Materias Totales</span>
-            <span className="text-2xl font-display font-bold text-academic-navy my-2">{subjects.length}</span>
-            <span className="text-[10px] font-semibold text-slate-400">Recorridos creados</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-3 bg-white flex flex-col justify-between">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Materias Totales</span>
+            <span className="text-xl font-display font-bold text-academic-navy my-1">{subjects.length}</span>
+            <span className="text-[9px] font-semibold text-slate-400">Recorridos creados</span>
           </Card>
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Visibilidad</span>
-            <span className="text-2xl font-display font-bold text-academic-navy my-2">{activeSubjectsCount}</span>
-            <span className="text-[10px] font-semibold text-slate-400">Materias Activas</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-3 bg-white flex flex-col justify-between">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Visibilidad</span>
+            <span className="text-xl font-display font-bold text-academic-navy my-1">{activeSubjectsCount}</span>
+            <span className="text-[9px] font-semibold text-slate-400">Materias Activas</span>
           </Card>
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Alcance</span>
-            <span className="text-2xl font-display font-bold text-academic-navy my-2">{assignedStudentsCount}</span>
-            <span className="text-[10px] font-semibold text-slate-400">Estudiantes Vinculados</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-3 bg-white flex flex-col justify-between">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Alcance</span>
+            <span className="text-xl font-display font-bold text-academic-navy my-1">{assignedStudentsCount}</span>
+            <span className="text-[9px] font-semibold text-slate-400">Estudiantes Vinculados</span>
           </Card>
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-5 bg-white flex flex-col justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Efectividad</span>
-            <span className="text-2xl font-display font-bold text-academic-navy my-2">{percent(averageProgress)}</span>
-            <span className="text-[10px] font-semibold text-slate-400">Progreso Promedio</span>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-3 bg-white flex flex-col justify-between">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Efectividad</span>
+            <span className="text-xl font-display font-bold text-academic-navy my-1">{percent(averageProgress)}</span>
+            <span className="text-[9px] font-semibold text-slate-400">Progreso Promedio</span>
           </Card>
         </section>
 
         {/* CREATION FORM */}
-        <Card className="overflow-hidden border border-slate-200 bg-white shadow-sm rounded-2xl p-6">
-          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+        <Card className="overflow-hidden border border-slate-200 bg-white shadow-sm rounded-xl p-4">
+          <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3 text-academic-navy">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-academic-navy text-white shadow-sm">
               <Wand2 className="h-5 w-5 text-academic-gold" />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold uppercase tracking-tight">Crear Reino de Aprendizaje</CardTitle>
-              <CardText className="text-xs font-medium text-slate-500 italic">Diseña una nueva materia lúdica personalizada.</CardText>
+              <CardTitle className="text-base font-bold uppercase tracking-tight">Crear Reino de Aprendizaje</CardTitle>
+              <CardText className="text-[10px] font-medium text-slate-500 italic">Diseña una nueva materia lúdica personalizada.</CardText>
             </div>
           </div>
           
-          <form action={createSubjectAction} className="grid gap-6 lg:grid-cols-2">
-            <div className="space-y-6">
+          <form action={createSubjectAction} className="grid gap-4 lg:grid-cols-2">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="title" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Nombre Mágico</label>
                 <input
@@ -208,7 +208,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                 <label htmlFor="description" className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Misión Pedagógica</label>
                 <textarea
                   id="description"
-                  className="min-h-24 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-600 transition-all focus:border-academic-navy focus:bg-white focus:outline-none shadow-sm"
+                  className="min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm font-medium text-slate-600 transition-all focus:border-academic-navy focus:bg-white focus:outline-none shadow-sm"
                   name="description"
                   placeholder="En esta materia vamos a aprender sumas y restas divirtiéndonos con animalitos..."
                 />
@@ -223,8 +223,8 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
               </div>
             </div>
             
-            <div className="space-y-6">
-              <div className="space-y-3">
+            <div className="space-y-4">
+              <div className="space-y-2">
                 <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Identidad Visual (Color)</label>
                 <div className="grid grid-cols-4 gap-3">
                   {[
@@ -246,7 +246,7 @@ export default async function TeacherSubjectsPage({ searchParams }: TeacherSubje
                         className="peer sr-only"
                         defaultChecked={color.value === "#C6A24E"}
                       />
-                      <div className={`h-10 w-full rounded-lg ${color.bg} transition-all duration-200 peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-academic-navy shadow-sm hover:scale-105 active:scale-95`}></div>
+                      <div className={`h-8 w-full rounded-lg ${color.bg} transition-all duration-200 peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-academic-navy shadow-sm hover:scale-105 active:scale-95`}></div>
                     </label>
                   ))}
                 </div>

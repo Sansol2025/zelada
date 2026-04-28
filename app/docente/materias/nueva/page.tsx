@@ -37,7 +37,7 @@ export default async function NewSubjectPage() {
       <div className="flex flex-col gap-4 animate-in">
         
         {/* HEADER PREMIUM */}
-        <div className="relative overflow-hidden rounded-xl bg-academic-navy p-6 text-white shadow-md md:p-8">
+        <div className="relative overflow-hidden rounded-xl bg-academic-navy p-4 text-white shadow-md md:p-5">
           <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-academic-gold/20 blur-2xl"></div>
           <div className="relative z-10 max-w-2xl">
             <div className="mb-2 flex items-center gap-2 text-academic-gold font-bold uppercase tracking-wider text-[10px]">
@@ -52,15 +52,15 @@ export default async function NewSubjectPage() {
           </div>
         </div>
 
-        <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-white">
-          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+        <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-white">
+          <div className="mb-3 flex items-center gap-3 border-b border-slate-100 pb-3 text-academic-navy">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
               <BookOpen className="h-5 w-5" />
             </div>
-            <CardTitle className="text-lg font-bold tracking-tight uppercase">Datos de la Materia</CardTitle>
+            <CardTitle className="text-base font-bold tracking-tight uppercase">Datos de la Materia</CardTitle>
           </div>
 
-          <form action={createSubjectAction} className="grid gap-6 lg:grid-cols-2">
+          <form action={createSubjectAction} className="grid gap-3 lg:grid-cols-2">
             <div className="space-y-2">
               <label htmlFor="title" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Título de la Materia</label>
               <input 
@@ -86,7 +86,7 @@ export default async function NewSubjectPage() {
               <label htmlFor="description" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Descripción Pedagógica</label>
               <textarea
                 id="description"
-                className="min-h-24 w-full resize-none rounded-lg border border-slate-200 bg-white p-4 text-sm font-medium text-slate-600 focus:border-academic-navy focus:outline-none transition-all shadow-sm"
+                className="min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-white p-3 text-sm font-medium text-slate-600 focus:border-academic-navy focus:outline-none transition-all shadow-sm"
                 name="description"
                 placeholder="Describe el viaje de aprendizaje para tus estudiantes..."
               />
@@ -116,11 +116,11 @@ export default async function NewSubjectPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-2 pt-6 border-t border-slate-100 mt-2">
-              <Button className="h-12 w-full sm:w-auto rounded-xl bg-academic-navy px-10 text-base font-bold tracking-tight hover:-translate-y-0.5 shadow-md transition-all text-white border-none">
-                <Plus className="mr-3 h-5 w-5 text-academic-gold" />
+            <div className="lg:col-span-2 pt-4 border-t border-slate-100 mt-2">
+              <Button className="h-10 w-full sm:w-auto rounded-lg bg-academic-navy px-8 text-sm font-bold tracking-tight hover:-translate-y-0.5 shadow-md transition-all text-white border-none">
+                <Plus className="mr-2 h-4 w-4 text-academic-gold" />
                 Crear Materia
-                <Sparkles className="ml-2 h-4 w-4 text-academic-gold" />
+                <Sparkles className="ml-2 h-3 w-3 text-academic-gold" />
               </Button>
             </div>
           </form>

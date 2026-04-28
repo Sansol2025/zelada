@@ -63,28 +63,28 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <div className="flex flex-col gap-4">
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500 to-orange-400 p-6 text-white shadow-md sm:p-8">
+      <div className="flex flex-col gap-3">
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500 to-orange-400 p-4 text-white shadow-md sm:p-5">
           {/* Decoraciones */}
           <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-white opacity-20 blur-2xl"></div>
           <div className="relative z-10 max-w-2xl">
-            <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl flex items-center gap-3">
-              <Puzzle className="h-8 w-8" /> Taller de Magia
+            <h1 className="font-display text-xl font-bold tracking-tight sm:text-2xl flex items-center gap-2">
+              <Puzzle className="h-6 w-6" /> Taller de Magia
             </h1>
-            <p className="mt-2 text-sm font-medium text-amber-50 sm:text-base">
+            <p className="mt-1 text-xs font-medium text-amber-50 sm:text-sm">
               Crea una nueva actividad interactiva autoguiada para tus estudiantes. Ellos solo necesitarán usar el ratón.
             </p>
           </div>
         </div>
 
-        <form action={createActivityAction} className="grid gap-4">
-          <div className="grid gap-4 lg:grid-cols-2">
+        <form action={createActivityAction} className="grid gap-3">
+          <div className="grid gap-3 lg:grid-cols-2">
             
             {/* COLUMNA 1: LO BÁSICO */}
-            <Card className="border border-slate-200 shadow-sm rounded-xl p-6">
-              <div className="mb-4 flex items-center gap-2 border-b border-slate-100 pb-3 text-slate-900">
-                <Target className="h-5 w-5 text-amber-500" />
-                <CardTitle className="text-lg font-bold">1. Datos principales</CardTitle>
+            <Card className="border border-slate-200 shadow-sm rounded-xl p-4">
+              <div className="mb-3 flex items-center gap-2 border-b border-slate-100 pb-3 text-slate-900">
+                <Target className="h-4 w-4 text-amber-500" />
+                <CardTitle className="text-base font-bold">1. Datos principales</CardTitle>
               </div>
               
               <div className="space-y-4">
@@ -103,12 +103,12 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
             </Card>
 
             {/* COLUMNA 2: ACCESIBILIDAD Y MEDIOS */}
-            <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-slate-50/50 overflow-hidden relative">
+            <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-slate-50/50 overflow-hidden relative">
               <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-slate-100/50 opacity-50"></div>
               
-              <div className="mb-4 relative z-10 flex items-center gap-2 border-b border-slate-200 pb-3 text-slate-900">
-                <Volume2 className="h-5 w-5 text-amber-600" />
-                <CardTitle className="text-lg font-bold">2. Accesibilidad y Elementos</CardTitle>
+              <div className="mb-3 relative z-10 flex items-center gap-2 border-b border-slate-200 pb-3 text-slate-900">
+                <Volume2 className="h-4 w-4 text-amber-600" />
+                <CardTitle className="text-base font-bold">2. Accesibilidad y Elementos</CardTitle>
               </div>
 
               <div className="space-y-4 relative z-10">
@@ -138,16 +138,16 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
           </div>
 
           {/* CONFIGURACIÓN AVANZADA LOGICA JUEGO (REEMPLAZADA) */}
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-6">
-            <div className="mb-4 border-b border-slate-100 pb-3">
-              <CardTitle className="text-lg font-bold text-slate-900">3. Arquitectura del Juego</CardTitle>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-4">
+            <div className="mb-3 border-b border-slate-100 pb-3">
+              <CardTitle className="text-base font-bold text-academic-navy">3. Arquitectura del Juego</CardTitle>
             </div>
             
             <ActivityBuilderClient />
 
-            <div className="mt-6 flex justify-end">
-              <Button type="submit" className="h-10 rounded-lg bg-amber-500 px-6 text-sm font-bold tracking-wide hover:bg-amber-400 shadow-md transition-all hover:-translate-y-0.5 text-white">
-                <Sparkles className="mr-2 h-4 w-4" />
+            <div className="mt-4 flex justify-end">
+              <Button type="submit" className="h-10 rounded-lg bg-academic-navy px-6 text-sm font-bold tracking-wide hover:bg-academic-navy/90 shadow-md transition-all hover:-translate-y-0.5 text-white">
+                <Sparkles className="mr-2 h-4 w-4 text-academic-gold" />
                 Crear Actividad
               </Button>
             </div>

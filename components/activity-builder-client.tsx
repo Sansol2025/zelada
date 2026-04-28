@@ -207,20 +207,20 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
   const jsonOutput = JSON.stringify(finalSettings);
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-[2.5rem] border-4 border-brand-100 bg-brand-50/50 p-8 shadow-inner">
-        <label className="mb-6 flex items-center gap-3 text-lg font-black text-brand-950">
-          <HelpCircle className="h-6 w-6 text-brand-500" />
+    <div className="space-y-4">
+      <div className="rounded-xl border-2 border-slate-100 bg-slate-50/50 p-4 shadow-sm">
+        <label className="mb-3 flex items-center gap-2 text-sm font-bold text-academic-navy">
+          <HelpCircle className="h-4 w-4 text-academic-gold" />
           ¿Qué dinámica usará el alumno?
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {Object.entries(ACTIVITY_TYPE_LABELS).map(([key, label]) => (
             <label 
               key={key} 
               className={cn(
-                "group relative flex cursor-pointer flex-col items-start justify-center rounded-2xl border-4 p-4 transition-all duration-300",
+                "group relative flex cursor-pointer flex-col items-start justify-center rounded-lg border-2 p-3 transition-all duration-200",
                 activityType === key 
-                  ? "border-brand-500 bg-white shadow-xl -translate-y-1" 
+                  ? "border-academic-gold bg-white shadow-md -translate-y-0.5" 
                   : "border-transparent bg-white/40 hover:bg-white/80"
               )}
             >
@@ -233,14 +233,14 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                 className="sr-only" 
               />
               <span className={cn(
-                "text-sm font-black transition-colors",
-                activityType === key ? "text-brand-950" : "text-brand-700/60 group-hover:text-brand-700"
+                "text-xs font-bold transition-colors",
+                activityType === key ? "text-academic-navy" : "text-slate-500 group-hover:text-slate-700"
               )}>
                 {label}
               </span>
               {activityType === key && (
-                <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-white shadow-sm animate-in zoom-in-50">
-                   <Check className="h-3 w-3" />
+                <div className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-academic-gold text-white shadow-sm">
+                   <Check className="h-2.5 w-2.5" />
                 </div>
               )}
             </label>
@@ -250,77 +250,77 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
 
       <input type="hidden" name="settings_json" value={jsonOutput} />
 
-      <div className="rounded-[2.5rem] border-2 border-slate-100 bg-white p-8 shadow-card overflow-hidden">
-        <div className="mb-8 border-b border-brand-50 pb-6 flex items-center justify-between">
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm overflow-hidden">
+        <div className="mb-4 border-b border-slate-100 pb-4 flex items-center justify-between">
            <div>
-             <h3 className="text-2xl font-black text-brand-950 tracking-tight">Tablero de Configuración</h3>
-             <p className="text-slate-500 font-medium text-sm mt-1">Personaliza el comportamiento de la dinámica seleccionada.</p>
+             <h3 className="text-lg font-bold text-academic-navy tracking-tight">Tablero de Configuración</h3>
+             <p className="text-slate-400 font-medium text-xs mt-0.5">Personaliza el comportamiento de la dinámica seleccionada.</p>
            </div>
-           <div className="h-12 w-12 rounded-2xl bg-brand-50 flex items-center justify-center">
-              <Target className="h-6 w-6 text-brand-500" />
+           <div className="h-10 w-10 rounded-lg bg-slate-50 flex items-center justify-center">
+              <Target className="h-5 w-5 text-academic-gold" />
            </div>
         </div>
         
         {(["multiple_choice_visual", "image_select", "sequence", "drag_drop"].includes(activityType)) && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-               <p className="text-sm font-bold text-brand-700 uppercase tracking-widest">
+               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   {activityType === "sequence" ? "Pasos de la secuencia" : "Opciones disponibles"}
                </p>
-               <Badge className="bg-brand-100 text-brand-700 hover:bg-brand-100 border-none px-3 font-bold">
+               <Badge className="bg-slate-100 text-slate-600 hover:bg-slate-100 border-none px-2 py-0.5 font-bold text-[9px]">
                   {options.length} {options.length === 1 ? 'elemento' : 'elementos'}
                </Badge>
             </div>
             
-            <div className="grid gap-4">
+            <div className="grid gap-2">
               {options.map((opt, index) => (
                 <div 
                   key={opt.id} 
                   className={cn(
-                    "relative flex flex-col sm:flex-row items-center gap-6 rounded-[2rem] border-4 p-6 transition-all",
+                    "relative flex flex-col sm:flex-row items-center gap-4 rounded-xl border-2 p-4 transition-all",
                     opt.isCorrect && activityType !== 'sequence' 
-                      ? "border-emerald-200 bg-emerald-50/50" 
-                      : "border-slate-50 bg-slate-50/30"
+                      ? "border-emerald-100 bg-emerald-50/30" 
+                      : "border-slate-50 bg-slate-50/20"
                   )}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] bg-white text-lg font-black shadow-sm ring-4 ring-slate-100">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold shadow-sm ring-2 ring-slate-100">
                     {activityType === "sequence" ? index + 1 : (
-                      opt.isCorrect && activityType !== "sequence" ? <Check className="h-6 w-6 text-emerald-500" /> : index + 1
+                      opt.isCorrect && activityType !== "sequence" ? <Check className="h-5 w-5 text-emerald-500" /> : index + 1
                     )}
                   </div>
 
-                  <div className="flex-1 w-full space-y-4">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <div className="flex-1 w-full space-y-2">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                       <div className="flex-1">
-                        <label className="mb-2 block text-xs font-bold text-slate-400 uppercase tracking-wider">Texto de la carta</label>
+                        <label className="mb-1 block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Texto de la carta</label>
                         <input 
                           value={opt.label} 
                           onChange={(e) => updateOption(opt.id, 'label', e.target.value)}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-bold text-slate-800 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-50" 
+                          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 shadow-sm focus:border-academic-navy focus:outline-none transition-all" 
                           placeholder={activityType === 'image_select' ? "Nombre de la imagen" : `Ej: Opción ${index + 1}`}
                         />
                       </div>
                       
                       {(activityType === 'multiple_choice_visual' || activityType === 'image_select' || activityType === 'drag_drop') && (
                         <div className="flex flex-col items-center">
-                            <label className="mb-2 block text-xs font-bold text-slate-400 uppercase tracking-wider">
-                               {activityType === 'drag_drop' ? "¿Es arrastrado?" : "¿Es correcta?"}
+                            <label className="mb-1 block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                               {activityType === 'drag_drop' ? "Arrastrable" : "¿Correcta?"}
                             </label>
                             <button
                               type="button"
                               onClick={() => updateOption(opt.id, 'isCorrect', !opt.isCorrect)}
                               className={cn(
-                                "flex h-12 w-12 items-center justify-center rounded-xl transition-all shadow-sm",
-                                opt.isCorrect ? "bg-emerald-500 text-white scale-110" : "bg-white text-slate-300 hover:text-emerald-400"
+                                "flex h-10 w-10 items-center justify-center rounded-lg transition-all shadow-sm",
+                                opt.isCorrect ? "bg-emerald-500 text-white scale-105" : "bg-white text-slate-300 hover:text-emerald-400"
                               )}
                             >
-                              <Check className="h-6 w-6" />
+                              <Check className="h-5 w-5" />
                             </button>
                         </div>
                       )}
                     </div>
                     
-                    <div className="rounded-xl bg-white/50 p-4 border border-dashed border-slate-200">
+                    <div className="rounded-lg bg-white/50 p-2 border border-dashed border-slate-200">
                       <FileUploader 
                         name={`img_${opt.id}`} 
                         accept="image/*" 
@@ -368,9 +368,9 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
               type="button" 
               variant="ghost" 
               onClick={addOption} 
-              className="mt-6 border-4 border-dashed border-brand-100 bg-brand-50/30 text-brand-600 hover:bg-brand-50 hover:border-brand-200 rounded-2xl h-16 w-full font-black text-lg transition-all"
+              className="mt-4 border-2 border-dashed border-slate-200 bg-slate-50/50 text-slate-500 hover:bg-slate-100 rounded-xl h-10 w-full font-bold text-sm transition-all"
             >
-              <Plus className="mr-2 h-6 w-6" /> Añadir Carta Visual
+              <Plus className="mr-2 h-4 w-4" /> Añadir Carta Visual
             </Button>
           </div>
         )}
@@ -383,35 +383,35 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                </div>
                <p className="text-lg font-bold text-slate-700">La consigna escrita arriba es:</p>
             </div>
-            <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
               <label 
                 className={cn(
-                  "flex cursor-pointer flex-col items-center justify-center gap-4 rounded-[2.5rem] border-4 p-8 transition-all duration-500 shadow-sm",
+                  "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 p-6 transition-all duration-200 shadow-sm",
                   isStatementTrue 
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-800 scale-105 shadow-xl" 
+                    ? "border-emerald-400 bg-emerald-50 text-emerald-800 -translate-y-0.5" 
                     : "border-slate-50 bg-slate-50/50 text-slate-400 opacity-60 hover:opacity-100"
                 )}
               >
                 <input type="radio" checked={isStatementTrue} onChange={() => setIsStatementTrue(true)} className="sr-only" />
-                <div className={cn("flex h-16 w-16 items-center justify-center rounded-3xl transition-colors", isStatementTrue ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-400")}>
-                    <Check className="h-10 w-10" />
+                <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", isStatementTrue ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-400")}>
+                    <Check className="h-8 w-8" />
                 </div>
-                <span className="text-2xl font-black uppercase tracking-tighter">¡Verdad!</span>
+                <span className="text-xl font-bold uppercase tracking-tight">¡Verdad!</span>
               </label>
               
               <label 
                 className={cn(
-                  "flex cursor-pointer flex-col items-center justify-center gap-4 rounded-[2.5rem] border-4 p-8 transition-all duration-500 shadow-sm",
+                  "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 p-6 transition-all duration-200 shadow-sm",
                   !isStatementTrue 
-                    ? "border-rose-500 bg-rose-50 text-rose-800 scale-105 shadow-xl" 
+                    ? "border-rose-400 bg-rose-50 text-rose-800 -translate-y-0.5" 
                     : "border-slate-50 bg-slate-50/50 text-slate-400 opacity-60 hover:opacity-100"
                 )}
               >
                 <input type="radio" checked={!isStatementTrue} onChange={() => setIsStatementTrue(false)} className="sr-only" />
-                <div className={cn("flex h-16 w-16 items-center justify-center rounded-3xl transition-colors", !isStatementTrue ? "bg-rose-500 text-white" : "bg-slate-200 text-slate-400")}>
-                    <X className="h-10 w-10" />
+                <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", !isStatementTrue ? "bg-rose-500 text-white" : "bg-slate-200 text-slate-400")}>
+                    <X className="h-8 w-8" />
                 </div>
-                <span className="text-2xl font-black uppercase tracking-tighter">Falso</span>
+                <span className="text-xl font-bold uppercase tracking-tight">Falso</span>
               </label>
             </div>
           </div>
