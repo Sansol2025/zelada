@@ -173,12 +173,15 @@ a {
 
   .print-page {
     display: flex !important;
+    flex-direction: column;
     width: 210mm;
     height: 297mm;
-    padding: 20mm;
+    padding: 15mm;
     background: white;
     position: relative;
     z-index: 9999;
+    box-sizing: border-box;
+    page-break-after: always;
   }
 }
 

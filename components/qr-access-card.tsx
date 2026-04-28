@@ -79,30 +79,30 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
 
       {/* VISTA DE IMPRESIÓN (A4) */}
       <div className="print-only print-page font-sans text-academic-navy">
-        <div className="flex flex-col items-center justify-center h-full border-[10px] border-double border-academic-gold/20 p-10 text-center">
-          <Image src="/logo.png" alt="Logo Escuela" width={120} height={120} className="mb-6 h-30 w-30 object-contain" />
+        <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
+          <Image src="/logo.png" alt="Logo Escuela" width={100} height={100} className="mb-4 h-24 w-24 object-contain" />
           
-          <h1 className="text-4xl font-black mb-2 uppercase tracking-tighter text-academic-navy">
+          <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy">
             {SCHOOL_NAME.split("–")[0]}
           </h1>
-          <p className="text-xl font-bold text-academic-gold mb-10 uppercase tracking-widest">
+          <p className="text-lg font-bold text-academic-gold mb-8 uppercase tracking-widest">
             {APP_NAME}
           </p>
 
-          <div className="bg-white p-8 rounded-3xl border-[3px] border-academic-navy/10 shadow-xl mb-12">
-            <Image src={qrDataUrl} alt="Código QR" width={400} height={400} className="w-[300px] h-[300px]" />
+          <div className="bg-white p-6 rounded-2xl border-[2px] border-academic-navy/10 shadow-lg mb-8">
+            <Image src={qrDataUrl} alt="Código QR" width={300} height={300} className="w-[240px] h-[240px]" />
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-5xl font-black text-academic-navy uppercase tracking-tighter">
+          <div className="space-y-3">
+            <h2 className="text-4xl font-black text-academic-navy uppercase tracking-tighter">
               {studentName}
             </h2>
-            <p className="text-xl font-medium text-slate-500 max-w-md mx-auto italic">
-              Escanea el código con la cámara de tu tablet o celular para ingresar directamente a tu aventura.
+            <p className="text-lg font-medium text-slate-500 max-w-sm mx-auto italic leading-tight">
+              Escanea el código para ingresar directamente a tu aventura.
             </p>
           </div>
 
-          <div className="mt-auto pt-20 border-t border-slate-100 w-full flex justify-between items-end">
+          <div className="mt-auto pt-10 border-t border-slate-100 w-full flex justify-between items-end">
             <div className="text-left">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Plataforma Educativa</p>
               <p className="text-sm font-bold text-slate-400">zelada.vercel.app</p>
