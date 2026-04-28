@@ -1,4 +1,5 @@
 "use client";
+import { createPortal } from "react-dom";
 import { APP_NAME, SCHOOL_NAME } from "@/lib/constants";
 
 import Image from "next/image";
@@ -84,13 +85,13 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
         </div>
       </Card>
 
-      {/* VISTA DE IMPRESIÓN (A4) - Solo visible si isPrinting es true */}
-      {isPrinting && (
-        <div className="print-only print-page font-sans text-academic-navy">
+      {/* VISTA DE IMPRESIÓN (A4) - Renderizada en el body para evitar problemas de layout */}
+      {isPrinting && typeof document !== "undefined" && createPortal(
+        <div className="print-page font-sans text-academic-navy">
           <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
             <Image src="/logo.png" alt="Logo Escuela" width={100} height={100} className="mb-4 h-24 w-24 object-contain" />
             
-            <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy">
+            <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy leading-tight">
               {SCHOOL_NAME.split("–")[0]}
             </h1>
             <p className="text-lg font-bold text-academic-gold mb-8 uppercase tracking-widest">
@@ -121,7 +122,8 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
