@@ -39,7 +39,11 @@ export default async function TeacherAccessLinksPage() {
   );
 
   const uniqueGrades = Array.from(new Set(students.map(s => s.grade).filter(Boolean))) as string[];
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  
+  // Detect base URL for production/preview
+  const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_SITE_URL || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
   
   const gradeQRs = await Promise.all(
     uniqueGrades.map(async (grade) => {
