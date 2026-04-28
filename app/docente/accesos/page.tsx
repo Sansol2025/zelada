@@ -40,8 +40,11 @@ export default async function TeacherAccessLinksPage() {
 
   const uniqueGrades = Array.from(new Set(students.map(s => s.grade).filter(Boolean))) as string[];
   
-  // Usar siempre la URL pública configurada para evitar bloqueos de autenticación de Vercel (Preview mode)
-  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL || "http://localhost:3000";
+  // Usar siempre la URL pública configurada o el dominio público de producción
+  // Esto evita caer en las URLs *.vercel.app de los preview deployments que piden login a Vercel
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null) || 
+                "https://zelada.vercel.app";
   
   // Asegurar que baseUrl tenga el protocolo correcto si viene de VERCEL_URL (que no lo trae)
   if (!baseUrl.startsWith("http")) {

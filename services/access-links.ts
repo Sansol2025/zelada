@@ -7,7 +7,9 @@ export function generateAccessToken() {
 }
 
 export function buildAccessUrl(token: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null) || 
+                  "https://zelada.vercel.app";
   return `${baseUrl.replace(/\/$/, "")}/ingreso/${token}`;
 }
 
