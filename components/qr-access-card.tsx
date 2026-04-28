@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { APP_NAME, SCHOOL_NAME } from "@/lib/constants";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Copy, Link2, Printer } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,19 @@ type QRAccessCardProps = {
 export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: QRAccessCardProps) {
   const [copied, setCopied] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [logoLoaded, setLogoLoaded] = useState(false);
+
+  // Disparar la impresión solo cuando el portal esté listo y la imagen cargada
+  useEffect(() => {
+    if (isPrinting && logoLoaded) {
+      const timer = setTimeout(() => {
+        window.print();
+        setIsPrinting(false);
+        setLogoLoaded(false);
+      }, 150); // Pequeño delay extra para asegurar renderizado
+      return () => clearTimeout(timer);
+    }
+  }, [isPrinting, logoLoaded]);
 
   return (
     <>
@@ -64,14 +75,7 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
               variant="ghost" 
               size="sm" 
               className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-academic-navy hover:bg-academic-ivory"
-              onClick={() => {
-                setIsPrinting(true);
-                // Dar tiempo a que el portal se monte
-                setTimeout(() => {
-                  window.print();
-                  setIsPrinting(false);
-                }, 500); // Aumentar timeout por el peso del logo (3.7MB)
-              }}
+              onClick={() => setIsPrinting(true)}
             >
               <Printer className="h-3 w-3" />
               IMPRIMIR
@@ -92,14 +96,12 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
       {isPrinting && typeof document !== "undefined" && createPortal(
         <div className="print-page font-sans text-academic-navy">
           <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
-            {/* Logo de la escuela */}
-            <div className="mb-4 h-24 w-24 relative">
-              <Image 
+            {/* Logo de la escuela - Usamos img estándar para asegurar carga en impresión */}
+            <div className="mb-4">
+              <img 
                 src="/logo.png" 
                 alt="Logo Escuela" 
-                fill
-                priority
-                className="object-contain"
+                className="h-24 w-auto object-contain mx-auto"
                 onLoad={() => setLogoLoaded(true)}
               />
             </div>
