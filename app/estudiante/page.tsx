@@ -54,31 +54,31 @@ export default async function StudentHomePage() {
       currentPath="/estudiante"
     >
       <section className="grid gap-6 md:grid-cols-3">
-        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
-          <div className="flex items-center gap-3 text-academic-gold mb-4">
-            <Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Avance General</span>
+        <Card className="p-5 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-2 text-academic-gold mb-2">
+            <Sparkles className="h-4 w-4 transition-transform group-hover:rotate-12" />
+            <span className="text-[10px] font-black uppercase tracking-[0.1em] opacity-70">Avance General</span>
           </div>
-          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{percent(globalProgress.averageProgress)}</p>
-          <CardText className="mt-2 font-medium text-academic-slate">Promedio total de tus materias activas.</CardText>
+          <p className="font-display text-2xl md:text-3xl font-black text-academic-navy tracking-tight">{percent(globalProgress.averageProgress)}</p>
+          <CardText className="mt-1 text-xs font-medium text-academic-slate">Promedio total de tus materias activas.</CardText>
         </Card>
 
-        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
-          <div className="flex items-center gap-3 text-academic-gold mb-4">
-            <BookOpenCheck className="h-5 w-5 transition-transform group-hover:scale-110" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Recorridos</span>
+        <Card className="p-5 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-2 text-academic-gold mb-2">
+            <BookOpenCheck className="h-4 w-4 transition-transform group-hover:scale-110" />
+            <span className="text-[10px] font-black uppercase tracking-[0.1em] opacity-70">Recorridos</span>
           </div>
-          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{globalProgress.totalSubjects}</p>
-          <CardText className="mt-2 font-medium text-academic-slate">Materias asignadas para este ciclo.</CardText>
+          <p className="font-display text-2xl md:text-3xl font-black text-academic-navy tracking-tight">{globalProgress.totalSubjects}</p>
+          <CardText className="mt-1 text-xs font-medium text-academic-slate">Materias asignadas para este ciclo.</CardText>
         </Card>
 
-        <Card className="p-8 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
-          <div className="flex items-center gap-3 text-academic-gold mb-4">
-            <GraduationCap className="h-5 w-5 transition-transform group-hover:-translate-y-1" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-70">Completadas</span>
+        <Card className="p-5 shadow-card border-academic-gold/5 bg-white transition-all hover:shadow-premium group">
+          <div className="flex items-center gap-2 text-academic-gold mb-2">
+            <GraduationCap className="h-4 w-4 transition-transform group-hover:-translate-y-1" />
+            <span className="text-[10px] font-black uppercase tracking-[0.1em] opacity-70">Completadas</span>
           </div>
-          <p className="font-display text-4xl font-black text-academic-navy tracking-tight">{globalProgress.completedSubjects}</p>
-          <CardText className="mt-2 font-medium text-academic-slate">Proyectos que ya fueron finalizados.</CardText>
+          <p className="font-display text-2xl md:text-3xl font-black text-academic-navy tracking-tight">{globalProgress.completedSubjects}</p>
+          <CardText className="mt-1 text-xs font-medium text-academic-slate">Proyectos que ya fueron finalizados.</CardText>
         </Card>
       </section>
 

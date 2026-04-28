@@ -35,7 +35,5 @@ export const familyNavItems: NavItem[] = [
 
 export const studentNavItems: NavItem[] = [
   { label: "Inicio", href: "/estudiante", icon: Home },
-  { label: "Progreso", href: "/estudiante/progreso", icon: BarChart2 },
-  { label: "Logros", href: "/estudiante/logros", icon: Trophy },
   { label: "Perfil", href: "/estudiante/perfil", icon: UserCircle }
 ];
