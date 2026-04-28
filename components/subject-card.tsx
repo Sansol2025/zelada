@@ -30,55 +30,55 @@ export function SubjectCard({
   const content = (
     <div 
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-white transition-all duration-300 shadow-sm border-4",
-        "hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02]",
+        "group relative flex flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 shadow-sm border-2",
+        "hover:-translate-y-1 hover:shadow-lg hover:scale-[1.01]",
         isCompleted ? "border-emerald-200" : "border-brand-100/80"
       )}
     >
       {/* Fondo de color interactivo superior */}
       <div 
-        className="absolute inset-x-0 top-0 h-32 opacity-10 transition-opacity duration-300 group-hover:opacity-20"
+        className="absolute inset-x-0 top-0 h-24 opacity-10 transition-opacity duration-300 group-hover:opacity-20"
         style={{ backgroundColor: color }}
       />
       <div 
-        className="absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-20 blur-2xl"
+        className="absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-20 blur-xl"
         style={{ backgroundColor: color }}
       />
       
-      <div className="relative flex flex-col p-6 sm:p-8 z-10 flex-1">
+      <div className="relative flex flex-col p-4 sm:p-6 z-10 flex-1">
         
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
-            <h3 className="font-display text-3xl font-black text-slate-800 tracking-tight mb-2 group-hover:text-brand-950 transition-colors">
+            <h3 className="font-display text-xl sm:text-2xl font-black text-slate-800 tracking-tight mb-1 group-hover:text-brand-950 transition-colors">
               {title}
             </h3>
             {description ? (
-              <p className="text-lg font-medium text-slate-500 line-clamp-2 leading-tight">
+              <p className="text-sm font-medium text-slate-500 line-clamp-2 leading-tight">
                 {description}
               </p>
             ) : null}
           </div>
           
           <div 
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.5rem] shadow-lg shadow-black/5 rotate-3 group-hover:rotate-12 transition-transform duration-500 overflow-hidden"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-md shadow-black/5 rotate-3 group-hover:rotate-12 transition-transform duration-500 overflow-hidden"
             style={{ backgroundColor: color }}
           >
             {icon && icon.startsWith("http") ? (
-              <Image src={icon} alt={title} width={64} height={64} className="h-full w-full object-cover" />
+              <Image src={icon} alt={title} width={48} height={48} className="h-full w-full object-cover" />
             ) : isCompleted ? (
-              <Star className="h-8 w-8 text-white fill-white" />
+              <Star className="h-6 w-6 text-white fill-white" />
             ) : (
-              <BookOpen className="h-8 w-8 text-white" />
+              <BookOpen className="h-6 w-6 text-white" />
             )}
           </div>
         </div>
 
-        <div className="mt-auto pt-8">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-black uppercase tracking-widest text-slate-400">
-              {isCompleted ? "¡Aventura Completada!" : "Progreso de aventura"}
+        <div className="mt-auto pt-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              {isCompleted ? "¡Completada!" : "Progreso"}
             </span>
-            <span className="text-lg font-black" style={{ color: isCompleted ? '#10b981' : color }}>
+            <span className="text-sm font-black" style={{ color: isCompleted ? '#10b981' : color }}>
               {percent(progressPercent)}
             </span>
           </div>
@@ -98,8 +98,8 @@ export function SubjectCard({
         </div>
 
         {isCompleted && (
-          <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-emerald-50 py-2 text-emerald-700 font-bold border border-emerald-100">
-            <Sparkles className="h-4 w-4" /> Eres un campeón
+          <div className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-emerald-50 py-1.5 text-xs text-emerald-700 font-bold border border-emerald-100">
+            <Sparkles className="h-3 w-3" /> Eres un campeón
           </div>
         )}
       </div>
@@ -108,7 +108,7 @@ export function SubjectCard({
 
   if (!href) return content;
   return (
-    <Link href={href} className="block outline-none focus-visible:ring-4 rounded-[2.5rem] focus-visible:ring-brand-400 font-sans">
+    <Link href={href} className="block outline-none focus-visible:ring-2 rounded-2xl focus-visible:ring-brand-400 font-sans">
       {content}
     </Link>
   );
