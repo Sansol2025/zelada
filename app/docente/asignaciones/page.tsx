@@ -50,7 +50,8 @@ export default async function TeacherAssignmentsPage() {
       navItems={teacherNavItems}
       currentPath="/docente/asignaciones"
     >
-      <div className="flex flex-col gap-8 animate-in">
+    >
+      <div className="flex flex-col gap-4 animate-in">
 
         <PageHeader
           icon={<Users className="h-4 w-4" />}
@@ -59,19 +60,19 @@ export default async function TeacherAssignmentsPage() {
           description="Vincula los recorridos pedagógicos con tus estudiantes para habilitar su acceso a las actividades."
         />
 
-        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
-          <div className="mb-8 flex items-center gap-4 border-b border-academic-gold/5 pb-6 text-academic-navy">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
-              <Link2 className="h-6 w-6" />
+        <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-white">
+          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
+              <Link2 className="h-5 w-5" />
             </div>
-            <CardTitle className="text-2xl font-black tracking-tight">Vincular Nueva Aventura</CardTitle>
+            <CardTitle className="text-lg font-bold tracking-tight">Vincular Nueva Aventura</CardTitle>
           </div>
-          <form action={assignAction} className="grid md:grid-cols-[1fr,1fr,auto] items-end gap-6">
-            <div className="space-y-3">
-              <label htmlFor="student_id" className="text-xs font-black uppercase tracking-widest text-academic-gold">Estudiante</label>
+          <form action={assignAction} className="grid md:grid-cols-[1fr,1fr,auto] items-end gap-4">
+            <div className="space-y-2">
+              <label htmlFor="student_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Estudiante</label>
               <select 
                 id="student_id"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm" 
                 name="student_id" 
                 required
               >
@@ -83,11 +84,11 @@ export default async function TeacherAssignmentsPage() {
                 ))}
               </select>
             </div>
-            <div className="space-y-3">
-              <label htmlFor="subject_id" className="text-xs font-black uppercase tracking-widest text-academic-gold">Materia</label>
+            <div className="space-y-2">
+              <label htmlFor="subject_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Materia</label>
               <select 
                 id="subject_id"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm" 
                 name="subject_id" 
                 required
               >
@@ -99,15 +100,15 @@ export default async function TeacherAssignmentsPage() {
                 ))}
               </select>
             </div>
-            <Button className="h-16 rounded-2xl bg-academic-navy px-10 font-black text-white hover:scale-105 active:scale-95 transition-all shadow-xl shadow-academic-navy/30 w-full md:w-auto border-none">
-              <Plus className="mr-2 h-6 w-6 text-academic-gold" />
+            <Button className="h-10 rounded-xl bg-academic-navy px-8 font-bold text-white hover:-translate-y-0.5 transition-all shadow-md w-full md:w-auto border-none text-sm">
+              <Plus className="mr-2 h-4 w-4 text-academic-gold" />
               Asignar
             </Button>
           </form>
         </Card>
 
         {assignments.length === 0 ? (
-          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center">
+          <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-12 text-center">
             <EmptyState
               title="Aún no hay asignaciones"
               description="Empieza a vincular niños con materias en la caja de arriba para que puedan empezar a jugar."
@@ -116,35 +117,35 @@ export default async function TeacherAssignmentsPage() {
         ) : (
           <section className="grid gap-6 md:grid-cols-2">
             {assignments.map((assignment) => (
-              <Card key={assignment.assignment_id} className="group overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-1 rounded-[2.5rem] p-0 flex flex-col sm:flex-row bg-white">
-                <div className="flex w-full sm:w-32 shrink-0 items-center justify-center bg-academic-ivory/30 p-6 border-b sm:border-b-0 sm:border-r border-academic-gold/5 text-academic-gold">
-                  <Users className="h-12 w-12 opacity-30 group-hover:scale-110 transition-transform" />
+              <Card key={assignment.assignment_id} className="group overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 rounded-xl p-0 flex flex-col sm:flex-row bg-white">
+                <div className="flex w-full sm:w-24 shrink-0 items-center justify-center bg-slate-50 p-4 border-b sm:border-b-0 sm:border-r border-slate-100 text-slate-400">
+                  <Users className="h-8 w-8 opacity-40" />
                 </div>
-                <div className="flex flex-1 flex-col justify-between p-8">
-                  <div className="flex items-start justify-between gap-4 mb-6">
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
-                      <CardTitle className="text-2xl font-black text-academic-navy mb-1 tracking-tight">{assignment.student_name}</CardTitle>
-                      <CardText className="text-[10px] font-black uppercase tracking-[0.2em] text-academic-gold opacity-80">
+                      <CardTitle className="text-xl font-bold text-academic-navy mb-1 tracking-tight">{assignment.student_name}</CardTitle>
+                      <CardText className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         {assignment.grade} {assignment.section}
                       </CardText>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 bg-academic-ivory/50 p-4 rounded-2xl border border-academic-gold/5">
-                    <BookOpen className="h-5 w-5 text-academic-gold" />
-                    <span className="font-black text-academic-navy text-sm uppercase tracking-tight">
+                  <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <BookOpen className="h-4 w-4 text-academic-gold" />
+                    <span className="font-bold text-academic-navy text-xs uppercase tracking-tight">
                       {assignment.subject_title}
                     </span>
                   </div>
 
-                  <div className="mt-8 flex items-center justify-between border-t border-academic-gold/5 pt-6">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-academic-slate/40">
+                  <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
                       Desde: {assignment.assigned_at ? new Date(assignment.assigned_at).toLocaleDateString() : "Fecha pendiente"}
                     </span>
                     <form action={unassignAction}>
                       <input name="assignment_id" type="hidden" value={assignment.assignment_id} />
-                      <Button className="h-10 px-5 rounded-xl text-rose-600/60 bg-rose-50 hover:bg-rose-100 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest transition-all" size="sm" variant="ghost">
-                        <Trash2 className="mr-2 h-4 w-4" /> Quitar
+                      <Button className="h-8 px-3 rounded-lg text-rose-400/80 bg-rose-50 hover:bg-rose-100 hover:text-rose-600 font-bold text-[9px] uppercase tracking-wider transition-all" size="sm" variant="ghost">
+                        <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Quitar
                       </Button>
                     </form>
                   </div>

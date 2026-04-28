@@ -35,7 +35,8 @@ export default async function TeacherProfilePage() {
       navItems={teacherNavItems}
       currentPath="/docente/perfil"
     >
-      <div className="flex flex-col gap-8 animate-in">
+    >
+      <div className="flex flex-col gap-4 animate-in">
         
         <PageHeader
           icon={<UserRound className="h-4 w-4" />}
@@ -44,45 +45,45 @@ export default async function TeacherProfilePage() {
           description="Administra tu información institucional y personaliza tu presencia en la plataforma."
         />
 
-        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
-          <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
-              <Layout className="h-6 w-6" />
+        <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-white">
+          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
+              <Layout className="h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-black uppercase tracking-tight">Datos Institucionales</CardTitle>
-              <CardText className="text-sm font-bold text-academic-gold uppercase tracking-[0.1em] mt-1">
+              <CardTitle className="text-lg font-bold uppercase tracking-tight">Datos Institucionales</CardTitle>
+              <CardText className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
                 Rol: {current.role === 'teacher' ? 'Docente' : current.role === 'admin' ? 'Administrador' : current.role}
               </CardText>
             </div>
           </div>
 
-          <form action={updateProfileAction} className="grid gap-10 md:grid-cols-2">
-            <div className="space-y-3">
-              <label htmlFor="full_name" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Nombre Completo</label>
+          <form action={updateProfileAction} className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <label htmlFor="full_name" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Nombre Completo</label>
               <input
                 id="full_name"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm"
                 defaultValue={current.fullName || ""}
                 name="full_name"
                 placeholder="Ej: Profe Juan Pérez"
               />
             </div>
-            <div className="space-y-3">
-              <label htmlFor="avatar_url" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Imagen de Perfil (URL)</label>
+            <div className="space-y-2">
+              <label htmlFor="avatar_url" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Imagen de Perfil (URL)</label>
               <input
                 id="avatar_url"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm"
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm"
                 name="avatar_url"
                 placeholder="https://..."
               />
             </div>
             
-            <div className="md:col-span-2 pt-6">
-              <Button className="h-20 w-full md:w-auto rounded-[2rem] bg-academic-navy px-16 text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
-                <Save className="mr-4 h-8 w-8 text-academic-gold" />
+            <div className="md:col-span-2 pt-4">
+              <Button className="h-12 w-full md:w-auto rounded-xl bg-academic-navy px-10 text-base font-bold tracking-tight hover:-translate-y-0.5 shadow-md transition-all text-white border-none">
+                <Save className="mr-3 h-5 w-5 text-academic-gold" />
                 Actualizar Identidad
-                <Sparkles className="ml-2 h-5 w-5 text-academic-gold" />
+                <Sparkles className="ml-2 h-4 w-4 text-academic-gold" />
               </Button>
             </div>
           </form>

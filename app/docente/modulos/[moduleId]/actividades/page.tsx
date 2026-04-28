@@ -54,8 +54,8 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
           description="Diseña experiencias de aprendizaje autoguiadas. Los estudiantes avanzarán resolviendo desafíos visuales y auditivos."
           actions={
             <Link href={`/docente/modulos/${moduleId}/actividades/nueva` as Route}>
-              <Button className="h-12 rounded-xl bg-academic-gold px-6 font-black text-academic-navy hover:bg-academic-gold/90 shadow-lg transition-all hover:scale-105 border-none">
-                <Wand2 className="mr-2 h-5 w-5" />
+              <Button className="h-10 rounded-lg bg-academic-gold px-5 font-bold text-academic-navy hover:bg-academic-gold/90 shadow-md transition-all hover:-translate-y-0.5 border-none">
+                <Wand2 className="mr-2 h-4 w-4" />
                 Nuevo Juego
               </Button>
             </Link>
@@ -76,36 +76,36 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
               <div className="rounded-full bg-academic-gold/10 px-4 py-1 text-xs font-black uppercase tracking-widest text-academic-gold">{activities.length} juegos</div>
             </div>
             {activities.map((activity, index) => (
-              <Card key={activity.id} className="group overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-1 rounded-[2.5rem] p-0 flex flex-col md:flex-row bg-white">
+              <Card key={activity.id} className="group overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 rounded-xl p-0 flex flex-col md:flex-row bg-white">
                 
                 {/* Lado izquierdo VISUAL */}
-                <div className="flex w-full md:w-56 shrink-0 flex-col items-center justify-center bg-academic-ivory/30 p-8 border-b md:border-b-0 md:border-r border-academic-gold/5">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-academic-navy text-academic-gold mb-4 shadow-lg group-hover:rotate-6 transition-transform">
-                    <span className="font-display text-3xl font-black">{index + 1}</span>
+                <div className="flex w-full md:w-40 shrink-0 flex-col items-center justify-center bg-slate-50/50 p-6 border-b md:border-b-0 md:border-r border-slate-100">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-academic-navy text-academic-gold mb-2 shadow-md transition-transform group-hover:rotate-6">
+                    <span className="font-display text-xl font-bold">{index + 1}</span>
                   </div>
-                  <span className="rounded-full bg-white px-4 py-1.5 font-black text-academic-navy text-[10px] shadow-sm border border-academic-gold/10 text-center uppercase tracking-[0.15em]">
+                  <span className="rounded-full bg-white px-3 py-1 font-bold text-academic-navy text-[9px] shadow-sm border border-slate-100 text-center uppercase tracking-wider">
                     {activity.type.replace(/_/g, " ")}
                   </span>
                 </div>
 
                 {/* Contenido principal */}
-                <div className="flex flex-1 flex-col justify-between p-8 lg:p-10">
+                <div className="flex flex-1 flex-col justify-between p-5 lg:p-6">
                   <div>
-                    <CardTitle className="text-3xl font-black text-academic-navy mb-3 tracking-tight">{activity.title}</CardTitle>
-                    <CardText className="text-lg text-academic-slate font-medium leading-relaxed italic opacity-80">&quot;{activity.prompt}&quot;</CardText>
+                    <CardTitle className="text-xl font-bold text-academic-navy mb-1 tracking-tight">{activity.title}</CardTitle>
+                    <CardText className="text-sm text-slate-500 font-medium leading-relaxed italic">&quot;{activity.prompt}&quot;</CardText>
                     
                     {activity.audio_url && (
-                      <div className="mt-6 flex items-center gap-2 text-academic-forest bg-academic-forest/5 px-4 py-2 rounded-xl inline-flex text-xs font-black uppercase tracking-widest border border-academic-forest/10">
-                        <Volume2 className="h-4 w-4" /> Audio Configurado
+                      <div className="mt-3 flex items-center gap-1.5 text-academic-forest bg-green-50 px-3 py-1 rounded-md inline-flex text-[10px] font-bold uppercase tracking-wider border border-green-100">
+                        <Volume2 className="h-3.5 w-3.5" /> Audio Configurado
                       </div>
                     )}
                   </div>
                   
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-6 border-t border-academic-gold/5 pt-6">
-                    <div className="flex gap-3">
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                    <div className="flex gap-2">
                       <Link href={`/docente/actividades/${activity.id}/editar` as Route}>
-                        <Button size="sm" variant="outline" className="h-12 rounded-xl px-6 font-black bg-academic-ivory text-academic-navy border-academic-gold/10 hover:border-academic-gold hover:bg-white transition-all text-sm uppercase tracking-widest">
-                          <Pencil className="mr-2 h-4 w-4" />
+                        <Button size="sm" variant="outline" className="h-9 rounded-md px-4 font-bold bg-white text-academic-navy border-slate-200 hover:border-academic-navy transition-all text-xs uppercase tracking-wider">
+                          <Pencil className="mr-2 h-3.5 w-3.5" />
                           Editar
                         </Button>
                       </Link>
@@ -113,8 +113,8 @@ export default async function ModuleActivitiesPage({ params }: ModuleActivitiesP
                     
                     <form action={deleteActivityAction}>
                       <input name="activity_id" type="hidden" value={activity.id} />
-                      <Button size="sm" variant="ghost" className="h-12 rounded-xl font-black text-rose-600/60 hover:bg-rose-50 hover:text-rose-600 transition-all text-sm uppercase tracking-widest px-6">
-                        <Trash2 className="mr-2 h-4 w-4" /> Eliminar
+                      <Button size="sm" variant="ghost" className="h-9 rounded-md font-bold text-rose-500/70 hover:bg-rose-50 hover:text-rose-600 transition-all text-xs uppercase tracking-wider px-4">
+                        <Trash2 className="mr-2 h-3.5 w-3.5" /> Eliminar
                       </Button>
                     </form>
                   </div>

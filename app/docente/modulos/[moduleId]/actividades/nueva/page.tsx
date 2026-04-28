@@ -63,39 +63,39 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <div className="flex flex-col gap-6">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-500 to-orange-400 p-8 text-white shadow-xl sm:p-12">
+      <div className="flex flex-col gap-4">
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500 to-orange-400 p-6 text-white shadow-md sm:p-8">
           {/* Decoraciones */}
-          <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white opacity-20 blur-3xl"></div>
+          <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-white opacity-20 blur-2xl"></div>
           <div className="relative z-10 max-w-2xl">
-            <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl flex items-center gap-4">
-              <Puzzle className="h-12 w-12" /> Taller de Magia
+            <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl flex items-center gap-3">
+              <Puzzle className="h-8 w-8" /> Taller de Magia
             </h1>
-            <p className="mt-4 text-lg font-medium text-amber-50 sm:text-xl">
+            <p className="mt-2 text-sm font-medium text-amber-50 sm:text-base">
               Crea una nueva actividad interactiva autoguiada para tus estudiantes. Ellos solo necesitarán usar el ratón.
             </p>
           </div>
         </div>
 
-        <form action={createActivityAction} className="grid gap-6">
-          <div className="grid gap-6 lg:grid-cols-2">
+        <form action={createActivityAction} className="grid gap-4">
+          <div className="grid gap-4 lg:grid-cols-2">
             
             {/* COLUMNA 1: LO BÁSICO */}
-            <Card className="border-none shadow-card rounded-[2rem] p-8">
-              <div className="mb-6 flex items-center gap-3 border-b border-brand-50 pb-4 text-brand-900">
-                <Target className="h-6 w-6 text-brand-500" />
-                <CardTitle className="text-xl font-bold">1. Datos principales</CardTitle>
+            <Card className="border border-slate-200 shadow-sm rounded-xl p-6">
+              <div className="mb-4 flex items-center gap-2 border-b border-slate-100 pb-3 text-slate-900">
+                <Target className="h-5 w-5 text-amber-500" />
+                <CardTitle className="text-lg font-bold">1. Datos principales</CardTitle>
               </div>
               
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-brand-900">Nombre de la actividad</label>
-                  <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 text-lg font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" name="title" placeholder="Ej: Encuentra la vocal oculta" required />
+                  <label className="mb-1 block text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre de la actividad</label>
+                  <input className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold focus:border-amber-500 focus:bg-white focus:outline-none" name="title" placeholder="Ej: Encuentra la vocal oculta" required />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-brand-900">¿Qué debe hacer el alumno? (Consigna visual)</label>
-                  <input className="h-14 w-full rounded-2xl border border-brand-200 bg-soft-sky px-5 font-semibold focus:border-brand-500 focus:bg-white focus:outline-none" name="prompt" placeholder="Ej: Haz clic en el animal más grande" required />
+                  <label className="mb-1 block text-xs font-bold text-slate-500 uppercase tracking-wider">¿Qué debe hacer el alumno? (Consigna visual)</label>
+                  <input className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold focus:border-amber-500 focus:bg-white focus:outline-none" name="prompt" placeholder="Ej: Haz clic en el animal más grande" required />
                 </div>
                 
                 <input type="hidden" name="position" value={activities.length + 1} />
@@ -103,17 +103,17 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
             </Card>
 
             {/* COLUMNA 2: ACCESIBILIDAD Y MEDIOS */}
-            <Card className="border-none shadow-card rounded-[2rem] p-8 bg-brand-50 overflow-hidden relative">
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-brand-100 opacity-50"></div>
+            <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-slate-50/50 overflow-hidden relative">
+              <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-slate-100/50 opacity-50"></div>
               
-              <div className="mb-6 relative z-10 flex items-center gap-3 border-b border-brand-200 pb-4 text-brand-900">
-                <Volume2 className="h-6 w-6 text-brand-600" />
-                <CardTitle className="text-xl font-bold">2. Accesibilidad y Elementos</CardTitle>
+              <div className="mb-4 relative z-10 flex items-center gap-2 border-b border-slate-200 pb-3 text-slate-900">
+                <Volume2 className="h-5 w-5 text-amber-600" />
+                <CardTitle className="text-lg font-bold">2. Accesibilidad y Elementos</CardTitle>
               </div>
 
-              <div className="space-y-5 relative z-10">
-                <div className="rounded-2xl bg-white p-5 shadow-sm border border-brand-100">
-                  <p className="mb-3 text-xs text-brand-700 font-medium">Fundamental para niños que no pueden leer. Sube aquí tu archivo de voz.</p>
+              <div className="space-y-4 relative z-10">
+                <div className="rounded-lg bg-white p-4 shadow-sm border border-slate-200">
+                  <p className="mb-2 text-[10px] text-slate-500 font-medium">Fundamental para niños que no pueden leer. Sube aquí tu archivo de voz.</p>
                   <FileUploader 
                     name="audio_url" 
                     accept="audio/*" 
@@ -130,25 +130,25 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
                 </div>
                 
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-brand-900">Instrucciones de apoyo visual</label>
-                  <textarea className="min-h-24 w-full resize-none rounded-xl border border-brand-200 bg-white p-4 text-sm focus:border-brand-500 focus:outline-none" name="instructions" placeholder="Información extra para el alumno (si apllica)..." />
+                  <label className="mb-1 block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Instrucciones de apoyo visual</label>
+                  <textarea className="min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-white p-3 text-sm focus:border-amber-500 focus:outline-none" name="instructions" placeholder="Información extra para el alumno (si apllica)..." />
                 </div>
               </div>
             </Card>
           </div>
 
           {/* CONFIGURACIÓN AVANZADA LOGICA JUEGO (REEMPLAZADA) */}
-          <Card className="border-none shadow-card rounded-[2rem] p-8">
-            <div className="mb-6 border-b border-brand-50 pb-4">
-              <CardTitle className="text-xl font-bold text-brand-900">3. Arquitectura del Juego</CardTitle>
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-6">
+            <div className="mb-4 border-b border-slate-100 pb-3">
+              <CardTitle className="text-lg font-bold text-slate-900">3. Arquitectura del Juego</CardTitle>
             </div>
             
             <ActivityBuilderClient />
 
-            <div className="mt-8 flex justify-end">
-              <Button type="submit" className="h-14 rounded-2xl bg-amber-500 px-10 text-lg font-bold tracking-wide hover:bg-amber-400 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 text-white">
-                <Sparkles className="mr-2 h-6 w-6" />
-                Crear Actividad Interactiva
+            <div className="mt-6 flex justify-end">
+              <Button type="submit" className="h-10 rounded-lg bg-amber-500 px-6 text-sm font-bold tracking-wide hover:bg-amber-400 shadow-md transition-all hover:-translate-y-0.5 text-white">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Crear Actividad
               </Button>
             </div>
           </Card>

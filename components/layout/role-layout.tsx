@@ -69,10 +69,12 @@ export function RoleLayout({ title, description, navItems, children, currentPath
         </aside>
 
         <main className="space-y-4">
-          <section className="rounded-2xl border border-brand-100 bg-white p-6 shadow-card">
-            <h1 className="font-display text-3xl font-bold text-brand-950">{title}</h1>
-            <p className="mt-2 text-sm text-brand-700">{description}</p>
-          </section>
+          {title && title.trim() !== "" && (
+            <section className="rounded-2xl border border-brand-100 bg-white p-6 shadow-card">
+              <h1 className="font-display text-3xl font-bold text-brand-950">{title}</h1>
+              <p className="mt-2 text-sm text-brand-700">{description}</p>
+            </section>
+          )}
           {children}
         </main>
       </div>

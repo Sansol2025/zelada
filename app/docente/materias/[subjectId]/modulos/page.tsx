@@ -63,7 +63,7 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
       navItems={teacherNavItems}
       currentPath="/docente/materias"
     >
-      <div className="flex flex-col gap-8 animate-in">
+      <div className="flex flex-col gap-4 animate-in">
 
         <PageHeader
           icon={<Map className="h-4 w-4" />}
@@ -72,66 +72,66 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
           description="Organiza la aventura paso a paso. Agrega módulos como 'Niveles' secuenciales que tus estudiantes deberán conquistar para progresar."
         />
 
-        <div className="grid gap-8 lg:grid-cols-[1fr,400px]">
+        <div className="grid gap-6 lg:grid-cols-[1fr,360px]">
           
           {/* LEFT: MODULES LIST */}
           <section className="space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="font-display text-2xl font-black text-academic-navy tracking-tight uppercase flex items-center gap-3">
-                <LayoutGrid className="h-6 w-6 text-academic-gold" />
+              <h2 className="font-display text-lg font-bold text-academic-navy tracking-tight uppercase flex items-center gap-2">
+                <LayoutGrid className="h-5 w-5 text-academic-gold" />
                 Niveles en curso
               </h2>
-              <span className="rounded-full bg-academic-gold/10 px-4 py-1 text-[10px] font-black text-academic-navy uppercase tracking-widest border border-academic-gold/10">
+              <span className="rounded-full bg-academic-gold/10 px-3 py-0.5 text-[9px] font-bold text-academic-navy uppercase tracking-wider border border-academic-gold/10">
                 {modules.length} Capítulos
               </span>
             </div>
 
             {!modules.length ? (
-              <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center flex flex-col items-center justify-center">
-                <Layers className="h-16 w-16 text-academic-gold/20 mb-6" />
-                <h3 className="font-display text-2xl font-black text-academic-navy/40 uppercase tracking-tight">Sin niveles asignados</h3>
-                <p className="mt-4 text-academic-slate font-medium text-lg italic opacity-60">Empieza a construir el recorrido desde el panel de creación.</p>
+              <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 text-center flex flex-col items-center justify-center">
+                <Layers className="h-12 w-12 text-slate-300 mb-4" />
+                <h3 className="font-display text-xl font-bold text-slate-400 uppercase tracking-tight">Sin niveles asignados</h3>
+                <p className="mt-2 text-slate-500 font-medium text-sm italic">Empieza a construir el recorrido desde el panel de creación.</p>
               </div>
             ) : (
               <div className="grid gap-6">
                 {modules.map((module) => (
-                  <Card key={module.id} className="group overflow-hidden border border-academic-gold/5 shadow-premium transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl rounded-[2.5rem] p-0 flex flex-col sm:flex-row bg-white relative">
+                  <Card key={module.id} className="group overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md rounded-xl p-0 flex flex-col sm:flex-row bg-white relative">
                     {/* Visual sequence marker */}
-                    <div className="w-4 sm:w-6 shrink-0 bg-academic-gold/20 group-hover:bg-academic-gold transition-colors"></div>
+                    <div className="w-3 sm:w-4 shrink-0 bg-slate-100 group-hover:bg-academic-gold transition-colors"></div>
 
-                    <div className="flex flex-1 flex-col justify-between p-8">
-                      <div className="flex items-start justify-between gap-6">
+                    <div className="flex flex-1 flex-col justify-between p-6">
+                      <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="rounded-full bg-academic-navy px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-sm">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="rounded-full bg-academic-navy px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
                               Nivel {module.position}
                             </span>
                             {module.is_locked_by_default && (
-                              <span className="rounded-full bg-academic-ivory px-3 py-1 text-[10px] font-black uppercase tracking-widest text-academic-gold border border-academic-gold/10">
-                                <Sparkles className="h-3 w-3 mr-1 inline-block" /> Secuencial
+                              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-academic-gold border border-slate-200">
+                                <Sparkles className="h-2.5 w-2.5 mr-1 inline-block" /> Secuencial
                               </span>
                             )}
                           </div>
-                          <CardTitle className="text-2xl font-black text-academic-navy tracking-tight group-hover:text-academic-gold transition-colors">{module.title}</CardTitle>
-                          <CardText className="text-academic-slate font-medium mt-3 leading-relaxed opacity-80">{module.description || "Un nuevo enigma pedagógico por descubrir."}</CardText>
+                          <CardTitle className="text-xl font-bold text-academic-navy tracking-tight group-hover:text-academic-gold transition-colors">{module.title}</CardTitle>
+                          <CardText className="text-xs text-slate-500 font-medium mt-2 leading-relaxed">{module.description || "Un nuevo enigma pedagógico por descubrir."}</CardText>
                         </div>
                       </div>
 
-                      <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-academic-gold/5 pt-6">
+                      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4">
                         <Link href={`/docente/modulos/${module.id}/actividades` as Route} className="flex-1 sm:flex-none">
-                          <Button size="sm" className="h-12 w-full sm:px-8 rounded-xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 bg-academic-navy text-white shadow-lg shadow-academic-navy/20 border-none">
-                            <Sparkles className="mr-2 h-4 w-4 text-academic-gold" /> Configurar Juegos
+                          <Button size="sm" className="h-10 w-full sm:px-6 rounded-lg font-bold uppercase tracking-wider transition-all hover:-translate-y-0.5 bg-academic-navy text-white shadow-md border-none text-[11px]">
+                            <Sparkles className="mr-2 h-3.5 w-3.5 text-academic-gold" /> Configurar Juegos
                           </Button>
                         </Link>
                         <Link href={`/docente/modulos/${module.id}/editar` as Route}>
-                          <Button size="sm" variant="ghost" className="h-12 rounded-xl px-6 font-black uppercase tracking-widest text-academic-navy/60 hover:bg-academic-ivory hover:text-academic-navy transition-all border border-transparent hover:border-academic-gold/10">
-                            <Pencil className="mr-2 h-4 w-4" /> Editar
+                          <Button size="sm" variant="ghost" className="h-10 rounded-lg px-4 font-bold uppercase tracking-wider text-slate-400 hover:bg-slate-50 hover:text-academic-navy transition-all border border-transparent hover:border-slate-200 text-[11px]">
+                            <Pencil className="mr-2 h-3.5 w-3.5" /> Editar
                           </Button>
                         </Link>
                         <form action={deleteModuleAction}>
                           <input name="module_id" type="hidden" value={module.id} />
-                          <Button size="sm" variant="ghost" className="h-12 rounded-xl px-6 font-black uppercase tracking-widest text-rose-300 hover:bg-rose-50 hover:text-rose-600 transition-all" type="submit">
-                            <Trash2 className="mr-2 h-4 w-4" /> Eliminar
+                          <Button size="sm" variant="ghost" className="h-10 rounded-lg px-4 font-bold uppercase tracking-wider text-rose-300 hover:bg-rose-50 hover:text-rose-600 transition-all text-[11px]" type="submit">
+                            <Trash2 className="mr-2 h-3.5 w-3.5" /> Eliminar
                           </Button>
                         </form>
                       </div>
@@ -145,33 +145,33 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
           {/* RIGHT: CREATOR */}
           <aside>
             <div className="sticky top-10">
-              <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white relative overflow-hidden">
-                <div className="absolute right-0 top-0 h-40 w-40 rounded-bl-full bg-academic-gold/5 border-l border-b border-academic-gold/10"></div>
+              <Card className="border border-slate-200 shadow-sm rounded-2xl p-6 bg-white relative overflow-hidden">
+                <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-slate-50 border-l border-b border-slate-100"></div>
                 
-                <div className="mb-10 flex items-center gap-4 border-b border-academic-gold/5 pb-8 text-academic-navy relative z-10">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-navy text-white shadow-lg">
-                    <Plus className="h-6 w-6 text-academic-gold" />
+                <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy relative z-10">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-academic-navy text-white shadow-md">
+                    <Plus className="h-5 w-5 text-academic-gold" />
                   </div>
-                  <CardTitle className="text-2xl font-black uppercase tracking-tight">Expandir Reino</CardTitle>
+                  <CardTitle className="text-lg font-bold uppercase tracking-tight">Expandir Reino</CardTitle>
                 </div>
 
-                <form action={createModuleAction} className="space-y-8 relative z-10">
-                  <div className="space-y-3">
-                    <label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Nombre del Nivel</label>
+                <form action={createModuleAction} className="space-y-6 relative z-10">
+                  <div className="space-y-2">
+                    <label htmlFor="title" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Nombre del Nivel</label>
                     <input 
                       id="title"
-                      className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 text-lg font-black text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                      className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm" 
                       name="title" 
                       placeholder="Ej: Los números locos" 
                       required 
                     />
                   </div>
                   
-                  <div className="space-y-3">
-                    <label htmlFor="position" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Orden / Posición</label>
+                  <div className="space-y-2">
+                    <label htmlFor="position" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Orden / Posición</label>
                     <input 
                       id="position"
-                      className="h-14 w-full rounded-xl border border-academic-gold/10 bg-academic-ivory/30 px-6 text-sm font-bold text-academic-navy focus:border-academic-gold focus:outline-none" 
+                      className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:outline-none" 
                       defaultValue={String(modules.length + 1)} 
                       min={1} 
                       name="position" 
@@ -179,24 +179,24 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
                     />
                   </div>
 
-                  <div className="space-y-3">
-                    <label htmlFor="description" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">¿Qué aprenderán hoy?</label>
+                  <div className="space-y-2">
+                    <label htmlFor="description" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">¿Qué aprenderán hoy?</label>
                     <textarea 
                       id="description"
-                      className="min-h-24 w-full resize-none rounded-2xl border border-academic-gold/10 bg-academic-ivory/30 p-5 text-sm font-medium text-academic-slate focus:border-academic-gold focus:bg-white focus:outline-none transition-all" 
+                      className="min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-600 focus:border-academic-navy focus:bg-white focus:outline-none transition-all" 
                       name="description" 
                       placeholder="Define la misión pedagógica..." 
                     />
                   </div>
 
-                  <div className="space-y-3 p-5 rounded-2xl bg-rose-50/30 border border-rose-100">
-                    <div className="flex items-center gap-2 mb-3 text-rose-800">
-                      <Video className="h-4 w-4" />
-                      <label htmlFor="intro_video_url" className="text-[10px] font-black uppercase tracking-widest">Introducción Motivacional</label>
+                  <div className="space-y-2 p-4 rounded-lg bg-rose-50/50 border border-rose-100">
+                    <div className="flex items-center gap-2 mb-2 text-rose-800">
+                      <Video className="h-3.5 w-3.5" />
+                      <label htmlFor="intro_video_url" className="text-[9px] font-bold uppercase tracking-wider">Introducción Motivacional</label>
                     </div>
                     <input 
                       id="intro_video_url"
-                      className="h-12 w-full rounded-xl border border-rose-100 bg-white px-4 text-xs font-bold focus:border-rose-300 focus:outline-none" 
+                      className="h-9 w-full rounded-md border border-rose-100 bg-white px-3 text-[11px] font-semibold focus:border-rose-300 focus:outline-none" 
                       name="intro_video_url" 
                       placeholder="URL de YouTube" 
                     />
@@ -210,8 +210,8 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
                     </div>
                   </div>
 
-                  <div className="pt-8 mt-4 border-t border-academic-gold/5">
-                    <Button className="h-20 w-full rounded-2xl bg-academic-navy text-xl font-black tracking-tight hover:scale-105 active:scale-95 shadow-2xl shadow-academic-navy/30 transition-all text-white border-none">
+                  <div className="pt-4 mt-2 border-t border-slate-100">
+                    <Button className="h-12 w-full rounded-xl bg-academic-navy text-base font-bold tracking-tight hover:-translate-y-0.5 shadow-md transition-all text-white border-none">
                       Añadir Nivel
                     </Button>
                   </div>

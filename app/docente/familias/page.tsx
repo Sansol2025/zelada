@@ -50,7 +50,8 @@ export default async function TeacherFamiliesPage() {
       navItems={teacherNavItems}
       currentPath="/docente/familias"
     >
-      <div className="flex flex-col gap-8 animate-in">
+    >
+      <div className="flex flex-col gap-4 animate-in">
         
         <PageHeader
           icon={<HeartHandshake className="h-4 w-4" />}
@@ -60,20 +61,20 @@ export default async function TeacherFamiliesPage() {
         />
 
         {/* CONNECTION FORM */}
-        <Card className="border border-academic-gold/5 shadow-premium rounded-[3rem] p-10 bg-white">
-          <div className="mb-8 flex items-center gap-4 border-b border-academic-gold/5 pb-6 text-academic-navy">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold shadow-sm border border-academic-gold/10">
-              <Link2 className="h-6 w-6" />
+        <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-white">
+          <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4 text-academic-navy">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
+              <Link2 className="h-5 w-5" />
             </div>
-            <CardTitle className="text-2xl font-black uppercase tracking-tight">Establecer Nuevo Vínculo</CardTitle>
+            <CardTitle className="text-lg font-bold uppercase tracking-tight">Establecer Nuevo Vínculo</CardTitle>
           </div>
 
-          <form action={linkFamilyAction} className="grid md:grid-cols-[1fr,1fr,auto] items-end gap-6">
-            <div className="space-y-3">
-              <label htmlFor="family_id" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Responsable Familiar</label>
+          <form action={linkFamilyAction} className="grid md:grid-cols-[1fr,1fr,auto] items-end gap-4">
+            <div className="space-y-2">
+              <label htmlFor="family_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Responsable Familiar</label>
               <select 
                 id="family_id"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm" 
                 name="family_id" 
                 required
               >
@@ -85,11 +86,11 @@ export default async function TeacherFamiliesPage() {
                 ))}
               </select>
             </div>
-            <div className="space-y-3">
-              <label htmlFor="student_id" className="text-[10px] font-black uppercase tracking-widest text-academic-gold ml-2">Estudiante</label>
+            <div className="space-y-2">
+              <label htmlFor="student_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Estudiante</label>
               <select 
                 id="student_id"
-                className="h-16 w-full rounded-2xl border border-academic-gold/10 bg-academic-ivory/50 px-6 font-bold text-academic-navy focus:border-academic-gold focus:bg-white focus:outline-none transition-all shadow-sm" 
+                className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:bg-white focus:outline-none transition-all shadow-sm" 
                 name="student_id" 
                 required
               >
@@ -101,8 +102,8 @@ export default async function TeacherFamiliesPage() {
                 ))}
               </select>
             </div>
-            <Button className="h-16 rounded-2xl bg-academic-navy px-12 font-black text-white hover:scale-105 active:scale-95 transition-all shadow-xl shadow-academic-navy/20 border-none">
-              <PlusIcon className="mr-2 h-6 w-6 text-academic-gold" />
+            <Button className="h-10 rounded-xl bg-academic-navy px-10 font-bold text-white hover:-translate-y-0.5 transition-all shadow-md w-full md:w-auto border-none text-sm">
+              <PlusIcon className="mr-2 h-4 w-4 text-academic-gold" />
               Vincular
             </Button>
           </form>
@@ -110,48 +111,48 @@ export default async function TeacherFamiliesPage() {
 
         {/* LINKS GRID */}
         {links.length === 0 ? (
-          <div className="rounded-[3rem] border-2 border-dashed border-academic-gold/10 bg-academic-ivory/30 p-20 text-center">
+          <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-12 text-center">
             <EmptyState
               title="Sin vínculos detectados"
               description="Empieza a conectar familias con estudiantes para habilitar los reportes de progreso."
             />
           </div>
         ) : (
-          <section className="grid gap-8 md:grid-cols-2">
+          <section className="grid gap-4 md:grid-cols-2">
             {links.map((link) => {
               const student = students.find((row) => row.id === link.student_id);
               return (
-                <Card key={link.relation_id} className="group overflow-hidden border border-academic-gold/5 shadow-sm transition-all duration-500 hover:shadow-premium hover:-translate-y-1 rounded-[2.5rem] bg-white p-8">
-                  <div className="flex items-start justify-between gap-6 mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-academic-ivory text-academic-gold border border-academic-gold/10">
-                        <Users className="h-6 w-6" />
+                <Card key={link.relation_id} className="group overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 rounded-xl bg-white p-5">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold border border-slate-200">
+                        <Users className="h-5 w-5" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl font-black text-academic-navy tracking-tight">{link.family_name}</CardTitle>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-academic-gold opacity-80">{link.relation_type}</span>
+                        <CardTitle className="text-lg font-bold text-academic-navy tracking-tight">{link.family_name}</CardTitle>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-academic-gold opacity-80">{link.relation_type}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-academic-ivory/50 p-6 rounded-2xl border border-academic-gold/5 mb-8">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-academic-slate/40 mb-2">Representa al estudiante:</p>
-                    <p className="font-black text-academic-navy text-lg">
+                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 mb-6">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Representa al estudiante:</p>
+                    <p className="font-bold text-academic-navy text-base">
                       {student?.full_name || "Desconocido"}
                     </p>
-                    <p className="text-sm font-medium text-academic-gold italic mt-1">
+                    <p className="text-xs font-medium text-academic-gold italic mt-0.5">
                       {student?.grade || "-"} {student?.section || "-"}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-academic-gold/5 pt-6 mt-auto">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-academic-forest/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-academic-forest">
-                      <Sparkles className="h-3 w-3" /> Vínculo Activo
+                  <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-auto">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-academic-forest/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-academic-forest">
+                      <Sparkles className="h-2.5 w-2.5" /> Vínculo Activo
                     </span>
                     <form action={unlinkFamilyAction}>
                       <input name="relation_id" type="hidden" value={link.relation_id} />
-                      <Button className="h-10 px-6 rounded-xl text-rose-600/60 bg-rose-50 hover:bg-rose-100 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest transition-all" size="sm" variant="ghost" type="submit">
-                        <Trash2 className="mr-2 h-4 w-4" /> Desvincular
+                      <Button className="h-8 px-4 rounded-lg text-rose-400/80 bg-rose-50 hover:bg-rose-100 hover:text-rose-600 font-bold text-[9px] uppercase tracking-wider transition-all" size="sm" variant="ghost" type="submit">
+                        <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Desvincular
                       </Button>
                     </form>
                   </div>
