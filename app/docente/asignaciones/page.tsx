@@ -50,7 +50,6 @@ export default async function TeacherAssignmentsPage() {
       navItems={teacherNavItems}
       currentPath="/docente/asignaciones"
     >
-    >
       <div className="flex flex-col gap-4 animate-in">
 
         <PageHeader

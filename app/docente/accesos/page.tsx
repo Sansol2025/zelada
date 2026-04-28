@@ -86,7 +86,6 @@ export default async function TeacherAccessLinksPage() {
       navItems={teacherNavItems}
       currentPath="/docente/accesos"
     >
-    >
       <div className="flex flex-col gap-4 animate-in">
 
         <PageHeader

@@ -45,7 +45,6 @@ export default async function TeacherTrackingPage() {
       navItems={teacherNavItems}
       currentPath="/docente/seguimiento"
     >
-    >
       <div className="flex flex-col gap-4 animate-in">
 
         {/* HEADER PREMIUM */}

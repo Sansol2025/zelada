@@ -96,7 +96,6 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
       navItems={teacherNavItems}
       currentPath="/docente/alumnos"
     >
-    >
       <div className="flex flex-col gap-4 animate-in">
         
         {/* MESSAGES */}
