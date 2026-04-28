@@ -101,7 +101,7 @@ export default async function TeacherAccessLinksPage() {
 
         <div className="grid gap-4 md:grid-cols-2">
           
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-white relative overflow-hidden flex flex-col justify-center min-h-[160px] no-print">
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-white relative overflow-hidden flex flex-col justify-center min-h-[160px]">
             <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-slate-50 border-l border-b border-slate-100"></div>
             <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3 text-academic-navy relative z-10">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
@@ -119,7 +119,7 @@ export default async function TeacherAccessLinksPage() {
             </div>
           </Card>
 
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-slate-50 relative overflow-hidden no-print">
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-slate-50 relative overflow-hidden">
             <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-slate-100 border-l border-b border-slate-200"></div>
             <div className="mb-4 flex items-center gap-3 border-b border-slate-200 pb-3 text-academic-navy relative z-10">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-academic-navy text-white shadow-md">
@@ -159,7 +159,7 @@ export default async function TeacherAccessLinksPage() {
           </Card>
         </div>
 
-        <section className="mt-8 no-print">
+        <section className="mt-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-display text-xl font-bold tracking-tight text-academic-navy uppercase">Códigos QR por Grado</h2>
             <div className="h-px flex-1 mx-6 bg-slate-100 hidden md:block"></div>
@@ -187,7 +187,7 @@ export default async function TeacherAccessLinksPage() {
           )}
         </section>
 
-        <section className="mt-10 border-t border-slate-100 pt-8 no-print">
+        <section className="mt-10 border-t border-slate-100 pt-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-display text-xl font-bold tracking-tight text-academic-navy uppercase">Llaves Individuales Activas</h2>
             <div className="h-px flex-1 mx-6 bg-slate-100 hidden md:block"></div>

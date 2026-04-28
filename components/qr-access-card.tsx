@@ -17,6 +17,7 @@ type QRAccessCardProps = {
 
 export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: QRAccessCardProps) {
   const [copied, setCopied] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   return (
     <>
@@ -60,7 +61,13 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
               variant="ghost" 
               size="sm" 
               className="h-7 gap-1 px-2 text-[9px] font-bold uppercase tracking-tight text-academic-navy hover:bg-academic-ivory"
-              onClick={() => window.print()}
+              onClick={() => {
+                setIsPrinting(true);
+                setTimeout(() => {
+                  window.print();
+                  setIsPrinting(false);
+                }, 100);
+              }}
             >
               <Printer className="h-3 w-3" />
               IMPRIMIR
@@ -77,43 +84,45 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
         </div>
       </Card>
 
-      {/* VISTA DE IMPRESIÓN (A4) */}
-      <div className="print-only print-page font-sans text-academic-navy">
-        <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
-          <Image src="/logo.png" alt="Logo Escuela" width={100} height={100} className="mb-4 h-24 w-24 object-contain" />
-          
-          <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy">
-            {SCHOOL_NAME.split("–")[0]}
-          </h1>
-          <p className="text-lg font-bold text-academic-gold mb-8 uppercase tracking-widest">
-            {APP_NAME}
-          </p>
-
-          <div className="bg-white p-6 rounded-2xl border-[2px] border-academic-navy/10 shadow-lg mb-8">
-            <Image src={qrDataUrl} alt="Código QR" width={300} height={300} className="w-[240px] h-[240px]" />
-          </div>
-
-          <div className="space-y-3">
-            <h2 className="text-4xl font-black text-academic-navy uppercase tracking-tighter">
-              {studentName}
-            </h2>
-            <p className="text-lg font-medium text-slate-500 max-w-sm mx-auto italic leading-tight">
-              Escanea el código para ingresar directamente a tu aventura.
+      {/* VISTA DE IMPRESIÓN (A4) - Solo visible si isPrinting es true */}
+      {isPrinting && (
+        <div className="print-only print-page font-sans text-academic-navy">
+          <div className="flex flex-col items-center justify-center h-full border-[6px] border-double border-academic-gold/20 p-8 text-center box-border">
+            <Image src="/logo.png" alt="Logo Escuela" width={100} height={100} className="mb-4 h-24 w-24 object-contain" />
+            
+            <h1 className="text-3xl font-black mb-1 uppercase tracking-tighter text-academic-navy">
+              {SCHOOL_NAME.split("–")[0]}
+            </h1>
+            <p className="text-lg font-bold text-academic-gold mb-8 uppercase tracking-widest">
+              {APP_NAME}
             </p>
-          </div>
 
-          <div className="mt-auto pt-10 border-t border-slate-100 w-full flex justify-between items-end">
-            <div className="text-left">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Plataforma Educativa</p>
-              <p className="text-sm font-bold text-slate-400">zelada.vercel.app</p>
+            <div className="bg-white p-6 rounded-2xl border-[2px] border-academic-navy/10 shadow-lg mb-8">
+              <Image src={qrDataUrl} alt="Código QR" width={300} height={300} className="w-[240px] h-[240px]" />
             </div>
-            <div className="text-right">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Fecha de Impresión</p>
-              <p className="text-sm font-bold text-slate-400">{new Date().toLocaleDateString()}</p>
+
+            <div className="space-y-3">
+              <h2 className="text-4xl font-black text-academic-navy uppercase tracking-tighter">
+                {studentName}
+              </h2>
+              <p className="text-lg font-medium text-slate-500 max-w-sm mx-auto italic leading-tight">
+                Escanea el código para ingresar directamente a tu aventura.
+              </p>
+            </div>
+
+            <div className="mt-auto pt-10 border-t border-slate-100 w-full flex justify-between items-end">
+              <div className="text-left">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Plataforma Educativa</p>
+                <p className="text-sm font-bold text-slate-400">zelada.vercel.app</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Fecha de Impresión</p>
+                <p className="text-sm font-bold text-slate-400">{new Date().toLocaleDateString()}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
