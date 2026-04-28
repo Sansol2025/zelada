@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 
 type SubjectPathModule = {
   id: string;
@@ -14,7 +14,7 @@ type SubjectPathModule = {
 };
 
 export async function getStudentAssignedSubjects(studentId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data, error } = await supabase
     .from("student_subjects")
@@ -43,7 +43,7 @@ export async function getStudentAssignedSubjects(studentId: string) {
 }
 
 export async function getSubjectLearningPath(subjectId: string, studentId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
 
   const { data: modules, error: modulesError } = await supabase
     .from("modules")
@@ -105,7 +105,7 @@ export async function getSubjectLearningPath(subjectId: string, studentId: strin
 }
 
 export async function getStudentModuleActivities(moduleId: string, studentId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data: activities, error } = await supabase
     .from("activities")
     .select(
@@ -144,7 +144,7 @@ export async function getStudentModuleActivities(moduleId: string, studentId: st
 }
 
 export async function getStudentGlobalProgress(studentId: string) {
-  const supabase = await createClient();
+  const supabase = await createServiceClient();
   const { data, error } = await supabase
     .from("student_subject_progress")
     .select("progress_percent, status")
