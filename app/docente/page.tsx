@@ -99,26 +99,26 @@ export default async function TeacherDashboardPage() {
       <div className="flex flex-col gap-10 pb-12">
         
         {/* WELCOME BANNER COMPACT */}
-        <div className="animate-in relative overflow-hidden rounded-[2.5rem] bg-academic-navy p-8 text-white shadow-premium md:p-10">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-academic-gold opacity-10 blur-3xl"></div>
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="animate-in relative overflow-hidden rounded-2xl bg-academic-navy p-6 md:p-8 text-white shadow-md">
+          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-academic-gold opacity-10 blur-2xl"></div>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="max-w-xl">
-              <div className="flex items-center gap-2 text-academic-gold mb-3">
+              <div className="flex items-center gap-2 text-academic-gold mb-2">
                 <School className="h-4 w-4" />
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Portal Institucional</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider opacity-90">Portal Institucional</span>
               </div>
-              <h1 className="font-display text-3xl font-black tracking-tight sm:text-4xl">
-                ¡Buen día, Docente! 🏫
+              <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                ¡Buen día, Docente!
               </h1>
-              <p className="mt-4 text-base font-medium text-white/70 leading-relaxed">
+              <p className="mt-2 text-sm font-medium text-white/80 leading-relaxed">
                 Transformamos el aprendizaje en una experiencia sin barreras. Monitorea el progreso y gestiona tus materias.
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/docente/materias/nueva">
-                <Button className="h-12 rounded-xl bg-academic-gold px-6 font-black text-academic-navy hover:bg-academic-gold/90 shadow-lg transition-all hover:scale-105 border-none">
-                  <PlusCircle className="mr-2 h-5 w-5" /> Nueva Materia
+                <Button className="h-10 rounded-lg bg-academic-gold px-5 font-bold text-academic-navy hover:bg-academic-gold/90 shadow-sm transition-all hover:-translate-y-0.5 border-none">
+                  <PlusCircle className="mr-2 h-4 w-4" /> Nueva Materia
                 </Button>
               </Link>
             </div>
@@ -126,21 +126,21 @@ export default async function TeacherDashboardPage() {
         </div>
 
         {/* METRICS GRID */}
-        <section className="animate-in grid gap-6 sm:grid-cols-2 lg:grid-cols-4" style={{ animationDelay: "0.1s" }}>
+        <section className="animate-in grid gap-4 sm:grid-cols-2 lg:grid-cols-4" style={{ animationDelay: "0.1s" }}>
           {stats.map((stat) => (
             <Card 
               key={stat.title} 
-              className="group cursor-default overflow-hidden border-academic-gold/5 shadow-card transition-all duration-300 hover:-translate-y-2 hover:shadow-premium rounded-[2rem] p-6 bg-white"
+              className="group cursor-default overflow-hidden border border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md rounded-xl p-5 bg-white"
             >
-              <div className="flex items-center gap-5">
-                <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.25rem] ${stat.bgClass} transition-colors duration-300 group-hover:bg-academic-navy group-hover:text-white`}>
-                  <stat.icon className={`h-8 w-8 ${stat.colorClass} transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:text-white`} />
+              <div className="flex items-center gap-4">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${stat.bgClass} transition-colors duration-300 group-hover:bg-academic-navy group-hover:text-white`}>
+                  <stat.icon className={`h-6 w-6 ${stat.colorClass} transition-transform duration-300 group-hover:scale-110 group-hover:text-white`} />
                 </div>
                 <div>
-                  <CardText className="text-xs font-black uppercase tracking-widest text-academic-slate">
+                  <CardText className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                     {stat.title}
                   </CardText>
-                  <p className="mt-1 font-display text-4xl font-black text-academic-navy">
+                  <p className="font-display text-2xl font-bold text-academic-navy leading-none mt-1">
                     {stat.value}
                   </p>
                 </div>
@@ -152,68 +152,68 @@ export default async function TeacherDashboardPage() {
         <div className="grid gap-8 lg:grid-cols-3">
           
           {/* PROGRESS ANALYSIS */}
-          <Card className="animate-in col-span-1 border-academic-gold/5 bg-white shadow-premium rounded-[2.5rem] lg:col-span-2 p-8" style={{ animationDelay: "0.2s" }}>
-            <div className="mb-10 flex items-center justify-between">
-              <div className="flex items-center gap-4 text-academic-navy">
-                <div className="p-3 bg-academic-ivory rounded-2xl">
-                  <BarChart3 className="h-6 w-6 text-academic-gold" />
+          <Card className="animate-in col-span-1 border border-slate-200 bg-white shadow-sm rounded-2xl lg:col-span-2 p-6" style={{ animationDelay: "0.2s" }}>
+            <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-3 text-academic-navy">
+                <div className="p-2.5 bg-slate-50 border border-slate-100 rounded-lg">
+                  <BarChart3 className="h-5 w-5 text-academic-navy" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-black">Panorama de avance</CardTitle>
-                  <p className="text-sm font-medium text-academic-slate">Resumen operativo de tu aula</p>
+                  <CardTitle className="text-lg font-bold">Panorama de avance</CardTitle>
+                  <p className="text-xs font-medium text-slate-500">Resumen operativo de tu aula</p>
                 </div>
               </div>
-              <Badge className="rounded-2xl px-5 py-2 text-sm font-black bg-academic-navy text-white shadow-lg" variant="default">
+              <Badge className="rounded-lg px-3 py-1.5 text-xs font-semibold bg-academic-navy text-white shadow-sm" variant="default">
                 Media: {percent(metrics.progressAverage)}
               </Badge>
             </div>
             
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="group flex flex-col justify-center rounded-[2rem] bg-academic-ivory p-8 transition-all hover:shadow-lg hover:scale-[1.02]">
-                <p className="text-xs font-black uppercase tracking-widest text-academic-gold">Alumnos en Pausa</p>
-                <div className="mt-4 flex items-baseline gap-3">
-                  <p className="text-6xl font-black text-academic-navy">{metrics.blockedStudents}</p>
-                  <span className="text-sm font-bold text-academic-slate">requieren guía</span>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="group flex flex-col justify-center rounded-xl bg-slate-50 border border-slate-100 p-6 transition-all hover:border-academic-gold/50">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Alumnos en Pausa</p>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <p className="text-4xl font-bold text-academic-navy">{metrics.blockedStudents}</p>
+                  <span className="text-xs font-medium text-slate-500">requieren guía</span>
                 </div>
               </div>
               
-              <div className="group flex flex-col justify-center rounded-[2rem] bg-soft-mint p-8 transition-all hover:shadow-lg hover:scale-[1.02]">
-                <p className="text-xs font-black uppercase tracking-widest text-academic-forest">Completados</p>
-                <div className="mt-4 flex items-baseline gap-3">
-                  <p className="text-6xl font-black text-academic-forest">{metrics.completedStudents}</p>
-                  <span className="text-sm font-bold text-academic-slate">objetivos logrados</span>
+              <div className="group flex flex-col justify-center rounded-xl bg-slate-50 border border-slate-100 p-6 transition-all hover:border-academic-forest/50">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Completados</p>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <p className="text-4xl font-bold text-academic-forest">{metrics.completedStudents}</p>
+                  <span className="text-xs font-medium text-slate-500">objetivos logrados</span>
                 </div>
               </div>
             </div>
           </Card>
 
           {/* ACTION CENTER */}
-          <Card className="animate-in col-span-1 flex flex-col justify-between border-academic-gold/5 bg-academic-navy shadow-premium rounded-[2.5rem] p-8 text-white" style={{ animationDelay: "0.3s" }}>
+          <Card className="animate-in col-span-1 flex flex-col justify-between border border-slate-200 bg-white shadow-sm rounded-2xl p-6" style={{ animationDelay: "0.3s" }}>
             <div>
-              <div className="mb-6 h-12 w-12 rounded-2xl bg-academic-gold flex items-center justify-center">
-                <QrCode className="h-6 w-6 text-academic-navy" />
+              <div className="mb-4 h-10 w-10 rounded-lg bg-academic-navy/5 flex items-center justify-center border border-academic-navy/10">
+                <QrCode className="h-5 w-5 text-academic-navy" />
               </div>
-              <CardTitle className="mb-4 text-2xl font-black">Panel de accesos</CardTitle>
-              <CardText className="text-lg font-medium text-white/60 leading-relaxed">
-                Genera credenciales mágicas para que tus estudiantes puedan jugar y aprender.
+              <CardTitle className="mb-2 text-lg font-bold text-academic-navy">Panel de accesos</CardTitle>
+              <CardText className="text-xs font-medium text-slate-500 leading-relaxed">
+                Genera credenciales para que tus estudiantes puedan jugar y aprender.
               </CardText>
             </div>
             
-            <div className="mt-8 flex flex-col gap-4">
+            <div className="mt-6 flex flex-col gap-3">
               <Link href="/docente/accesos" className="w-full">
-                <Button className="h-16 w-full justify-between rounded-2xl bg-academic-gold px-6 font-black text-academic-navy hover:bg-academic-gold/90 transition-transform active:scale-95 shadow-xl">
-                  <span className="flex items-center gap-3">
-                    <QrCode className="h-6 w-6" /> Gestionar QRs
+                <Button className="h-10 w-full justify-between rounded-lg bg-academic-navy px-4 font-semibold text-white hover:bg-academic-navy/90 transition-colors shadow-sm">
+                  <span className="flex items-center gap-2 text-sm">
+                    <QrCode className="h-4 w-4" /> Gestionar QRs
                   </span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4 opacity-70" />
                 </Button>
               </Link>
               <Link href="/docente/seguimiento" className="w-full">
-                <Button className="h-16 w-full justify-between rounded-2xl bg-white/10 px-6 font-bold text-white hover:bg-white/20 border border-white/10 backdrop-blur-sm transition-all">
-                  <span className="flex items-center gap-3">
-                    <Activity className="h-6 w-6 text-academic-gold" /> Analítica avanzada
+                <Button className="h-10 w-full justify-between rounded-lg bg-white px-4 font-semibold text-academic-navy border border-slate-200 hover:bg-slate-50 transition-colors">
+                  <span className="flex items-center gap-2 text-sm">
+                    <Activity className="h-4 w-4 text-academic-navy/70" /> Analítica avanzada
                   </span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4 opacity-50" />
                 </Button>
               </Link>
             </div>
@@ -221,28 +221,28 @@ export default async function TeacherDashboardPage() {
         </div>
 
         {/* STUDENTS TABLE SECTION */}
-        <section className="animate-in mt-6" style={{ animationDelay: "0.4s" }}>
-          <div className="mb-8 ml-2 flex items-center justify-between">
+        <section className="animate-in mt-2" style={{ animationDelay: "0.4s" }}>
+          <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
-              <h2 className="font-display text-4xl font-black tracking-tight text-academic-navy">Progreso Reciente</h2>
-              <p className="mt-2 text-lg font-medium text-academic-slate">Estado dinámico de tus alumnos en tiempo real.</p>
+              <h2 className="font-display text-xl font-bold tracking-tight text-academic-navy">Progreso Reciente</h2>
+              <p className="mt-1 text-xs font-medium text-slate-500">Estado dinámico de tus alumnos en tiempo real.</p>
             </div>
             <Link href="/docente/seguimiento">
-              <Button variant="ghost" className="text-academic-navy font-black hover:bg-academic-ivory">
-                Ver todos <ArrowRight className="ml-2 h-5 w-5" />
+              <Button variant="outline" size="sm" className="h-8 text-xs font-semibold rounded-md">
+                Ver todos <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Button>
             </Link>
           </div>
           
           {metrics.subjectsCount === 0 ? (
-            <div className="rounded-[3rem] border-4 border-dashed border-academic-ivory bg-academic-ivory/20 p-16 text-center">
+            <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-10 text-center">
               <EmptyState
                 title="Aún no hay materias creadas"
                 description="Comienza creando tu primera materia para ver el progreso de tus alumnos aquí."
               />
             </div>
           ) : (
-            <div className="overflow-hidden rounded-[2.5rem] border border-academic-gold/5 bg-white shadow-premium">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               <StudentProgressTable rows={studentRows} />
             </div>
           )}
