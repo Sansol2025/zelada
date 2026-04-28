@@ -19,6 +19,7 @@ type QRAccessCardProps = {
 export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: QRAccessCardProps) {
   const [copied, setCopied] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [logoLoaded, setLogoLoaded] = useState(false);
 
   return (
