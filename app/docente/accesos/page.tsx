@@ -97,38 +97,38 @@ export default async function TeacherAccessLinksPage() {
 
         <div className="grid gap-4 md:grid-cols-2">
           
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-white relative overflow-hidden flex flex-col justify-center min-h-[200px]">
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-white relative overflow-hidden flex flex-col justify-center min-h-[160px]">
             <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-slate-50 border-l border-b border-slate-100"></div>
             <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3 text-academic-navy relative z-10">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
-                <QrCode className="h-5 w-5" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-50 text-academic-gold shadow-sm border border-slate-100">
+                <QrCode className="h-4 w-4" />
               </div>
-              <CardTitle className="text-lg font-bold tracking-tight">QRs por Grado</CardTitle>
+              <CardTitle className="text-base font-bold tracking-tight uppercase">QRs por Grado</CardTitle>
             </div>
-            <p className="text-slate-500 font-medium leading-relaxed mb-4 relative z-10 text-sm">
+            <p className="text-slate-500 font-medium leading-relaxed mb-4 relative z-10 text-[11px]">
               Optimiza el tiempo en el aula. Hemos generado un <span className="font-bold text-academic-navy uppercase tracking-tight">QR General</span> por cada nivel.
             </p>
             <div className="relative z-10 mt-auto">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-400 border border-slate-100">
-                <Sparkles className="h-2.5 w-2.5" /> Generación Automática
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-3 py-0.5 text-[8px] font-bold uppercase tracking-wider text-slate-400 border border-slate-100">
+                <Sparkles className="h-2 w-2" /> Generación Automática
               </span>
             </div>
           </Card>
 
-          <Card className="border border-slate-200 shadow-sm rounded-xl p-6 bg-slate-50 relative overflow-hidden">
+          <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-slate-50 relative overflow-hidden">
             <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-slate-100 border-l border-b border-slate-200"></div>
             <div className="mb-4 flex items-center gap-3 border-b border-slate-200 pb-3 text-academic-navy relative z-10">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-academic-navy text-white shadow-md">
-                <Wand2 className="h-5 w-5 text-academic-gold" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-academic-navy text-white shadow-md">
+                <Wand2 className="h-4 w-4 text-academic-gold" />
               </div>
-              <CardTitle className="text-lg font-bold tracking-tight">Generar Enlace Directo</CardTitle>
+              <CardTitle className="text-base font-bold tracking-tight uppercase">Generar Enlace</CardTitle>
             </div>
-            <form action={createMagicLinkAction} className="space-y-4 relative z-10">
-              <div className="space-y-2">
-                <label htmlFor="student_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">¿Para quién es el enlace?</label>
+            <form action={createMagicLinkAction} className="space-y-3 relative z-10">
+              <div className="space-y-1">
+                <label htmlFor="student_id" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">¿Para quién?</label>
                 <select 
                   id="student_id"
-                  className="h-10 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-academic-navy focus:border-academic-navy focus:outline-none transition-all shadow-sm" 
+                  className="h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-academic-navy focus:border-academic-navy focus:outline-none transition-all shadow-sm" 
                   name="student_id" 
                   required
                 >
@@ -140,16 +140,16 @@ export default async function TeacherAccessLinksPage() {
                   ))}
                 </select>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="expires_in_days" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Validez del Enlace (días)</label>
+              <div className="space-y-1">
+                <label htmlFor="expires_in_days" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">Validez (días)</label>
                 <input
                   id="expires_in_days"
-                  className="h-10 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-bold text-academic-navy focus:border-academic-navy focus:outline-none transition-all shadow-sm"
+                  className="h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-academic-navy focus:border-academic-navy focus:outline-none transition-all shadow-sm"
                   defaultValue={7} min={1} max={365} name="expires_in_days" type="number"
                 />
               </div>
-              <Button type="submit" className="h-10 w-full rounded-xl bg-academic-navy text-sm font-bold tracking-tight transition-all hover:-translate-y-0.5 shadow-md border-none text-white mt-2">
-                <KeyRound className="mr-2 h-4 w-4 text-academic-gold" /> Crear Nueva Llave
+              <Button type="submit" className="h-9 w-full rounded-lg bg-academic-navy text-xs font-bold tracking-tight transition-all hover:-translate-y-0.5 shadow-md border-none text-white mt-1">
+                <KeyRound className="mr-2 h-3.5 w-3.5 text-academic-gold" /> Crear Llave
               </Button>
             </form>
           </Card>

@@ -18,51 +18,57 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
   const [copied, setCopied] = useState(false);
 
   return (
-    <Card className="grid gap-4 lg:grid-cols-[170px,1fr]">
-      <div className="mx-auto rounded-2xl border border-brand-100 bg-white p-2">
-        <Image src={qrDataUrl} alt={`QR de acceso para ${studentName}`} width={150} height={150} />
+    <Card className="grid gap-4 sm:grid-cols-[130px,1fr] p-4 md:p-4 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
+      <div className="mx-auto flex h-[130px] w-[130px] items-center justify-center rounded-lg border border-slate-100 bg-white p-2 shadow-inner">
+        <Image src={qrDataUrl} alt={`QR de acceso para ${studentName}`} width={120} height={120} className="h-full w-full object-contain" />
       </div>
-      <div className="space-y-3">
+      <div className="flex flex-col justify-between space-y-2">
         <div>
-          <CardTitle className="text-lg">{studentName}</CardTitle>
-          <CardText>
-            Ingreso rápido por QR o enlace único para abrir en celular, tablet o PC.
+          <CardTitle className="text-base font-bold text-academic-navy leading-tight mb-1">{studentName}</CardTitle>
+          <CardText className="text-[10px] leading-tight text-slate-500 font-medium">
+            Ingreso rápido por QR o enlace único para abrir en cualquier dispositivo.
           </CardText>
         </div>
-        <div className="rounded-xl border border-brand-100 bg-brand-50 p-3 text-xs text-brand-700">{accessUrl}</div>
-        <div className="flex flex-wrap gap-2">
+        
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-2 text-[10px] font-mono text-slate-400 truncate">
+          {accessUrl}
+        </div>
+        
+        <div className="flex flex-wrap gap-2 pt-1">
           <Button
             type="button"
             variant="secondary"
             size="sm"
-            className="gap-2"
+            className="h-8 gap-1.5 px-3 text-[10px] font-bold uppercase tracking-wider bg-academic-gold/10 text-academic-gold hover:bg-academic-gold hover:text-white transition-all border-none"
             onClick={async () => {
               await navigator.clipboard.writeText(accessUrl);
               setCopied(true);
               setTimeout(() => setCopied(false), 1200);
             }}
           >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            Copiar enlace
+            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+            {copied ? "Copiado" : "Copiar"}
           </Button>
+          
           <Button 
             type="button" 
             variant="ghost" 
             size="sm" 
-            className="gap-2 text-academic-navy hover:bg-academic-ivory"
+            className="h-8 gap-1.5 px-3 text-[10px] font-bold uppercase tracking-wider text-academic-navy hover:bg-academic-ivory transition-all"
             onClick={() => window.print()}
           >
-            <Printer className="h-4 w-4" />
+            <Printer className="h-3.5 w-3.5" />
             Imprimir
           </Button>
+          
           <a className="inline-flex" href={accessUrl} target="_blank" rel="noreferrer">
-            <Button type="button" variant="ghost" size="sm" className="gap-2">
-              <Link2 className="h-4 w-4" />
-              Abrir enlace
+            <Button type="button" variant="ghost" size="sm" className="h-8 gap-1.5 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-academic-navy transition-all">
+              <Link2 className="h-3.5 w-3.5" />
+              Abrir
             </Button>
           </a>
         </div>
-        {expiresAt ? <p className="text-xs text-brand-600">Expira: {new Date(expiresAt).toLocaleString()}</p> : null}
+        {expiresAt ? <p className="text-[9px] font-bold text-rose-400 uppercase tracking-widest pt-1">Expira: {new Date(expiresAt).toLocaleDateString()}</p> : null}
       </div>
     </Card>
   );
