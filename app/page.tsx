@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Route } from "next";
 import { ArrowRight, BookOpen, CheckCircle2, Eye, HeartHandshake, School, Sparkles } from "lucide-react";
 
@@ -49,9 +50,18 @@ export default function LandingPage() {
     <main className="min-h-screen">
       <div className="animate-in mx-auto max-w-7xl px-4 py-4 md:py-6">
         <header className="flex flex-wrap items-center justify-between gap-4 rounded-[2.5rem] border border-academic-gold/10 bg-white/70 px-5 py-3 shadow-sm backdrop-blur-xl transition-all duration-500 hover:bg-white/90">
-          <div>
-            <p className="font-display text-3xl font-extrabold tracking-tight text-academic-navy">{APP_NAME}</p>
-            <p className="text-sm font-medium text-academic-gold/80">{APP_SUBTITLE}</p>
+          <div className="flex items-center gap-4">
+            <Image 
+              src="/logo1.png" 
+              alt="Logo Escuela" 
+              width={48} 
+              height={48} 
+              className="rounded-xl shadow-sm"
+            />
+            <div>
+              <p className="font-display text-xl font-extrabold tracking-tight text-academic-navy">{APP_NAME}</p>
+              <p className="text-[10px] font-medium text-academic-gold/80">{APP_SUBTITLE}</p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/acceso/login">
@@ -173,8 +183,13 @@ export default function LandingPage() {
         <footer className="mt-16 flex flex-col items-center gap-8 overflow-hidden rounded-[2.5rem] border border-academic-navy/5 bg-academic-navy p-8 lg:p-10 text-white text-center md:text-left">
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-10">
             <div className="flex items-center gap-6">
-              <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-academic-gold text-academic-navy shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
-                <School className="h-8 w-8" />
+              <div className="relative h-16 w-16 overflow-hidden rounded-[1.5rem] bg-white p-2 shadow-lg rotate-3 group-hover:rotate-0 transition-transform flex items-center justify-center">
+                <Image 
+                  src="/logo1.png" 
+                  alt="Logo Escuela" 
+                  fill
+                  className="object-contain p-2"
+                />
               </div>
               <div>
                 <p className="font-display text-3xl font-black tracking-tight">{SCHOOL_NAME}</p>
