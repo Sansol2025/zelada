@@ -1,9 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
-import { ArrowRight, BookOpen, CheckCircle2, Eye, HeartHandshake, School, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Eye, HeartHandshake, School, Sparkles } from "lucide-react";
 
-import { AccessibilityPanel } from "@/components/accessibility-panel";
 import { BigActionButton } from "@/components/big-action-button";
 import { Button } from "@/components/ui/button";
 import { APP_NAME, APP_SUBTITLE, SCHOOL_NAME } from "@/lib/constants";
@@ -86,57 +85,26 @@ export default function LandingPage() {
               Un entorno digital diseñado para que cada estudiante avance a su ritmo, desapareciendo las dificultades técnicas y priorizando el aprendizaje continuo.
             </p>
 
-            <div className="flex flex-wrap items-center gap-6 py-4">
-              <div className="flex items-center -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-12 w-12 rounded-full border-4 border-white bg-academic-ivory flex items-center justify-center text-academic-navy font-bold text-xs ring-1 ring-academic-gold/20 shadow-sm overflow-hidden relative">
-                    <Image 
-                      src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i + 10}`} 
-                      alt="Student" 
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <p className="text-xl font-black text-academic-navy tracking-tight">+500 Estudiantes</p>
-                <p className="text-sm font-bold text-academic-gold uppercase tracking-widest">Aprendiendo hoy</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 border-l-4 border-academic-gold bg-academic-gold/5 py-4 pl-6 pr-8 rounded-r-2xl">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-academic-gold">Institución de Referencia</p>
                 <p className="font-display text-lg font-bold text-academic-navy tracking-tight">{SCHOOL_NAME}</p>
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="max-w-md">
               <Link href="/acceso/login" className="group">
                 <BigActionButton 
                   icon={<ArrowRight className="h-6 w-6" />} 
-                  subtitle="Comenzar mi recorrido"
                   className="bg-academic-navy transition-all duration-300 group-hover:shadow-premium group-hover:scale-105"
                 >
                   Plataforma
                 </BigActionButton>
               </Link>
-              <Link href="/acceso/login" className="group">
-                <BigActionButton
-                  variant="secondary"
-                  icon={<ShieldCheck className="h-6 w-6" />}
-                  subtitle="Ingreso para Docentes y Familias"
-                  className="bg-academic-gold transition-all duration-300 group-hover:shadow-premium group-hover:scale-105"
-                >
-                  Acceso Seguro
-                </BigActionButton>
-              </Link>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6">
-            <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-10 text-white shadow-2xl transition-all hover:shadow-premium">
+          <div className="flex flex-col gap-6 justify-center">
+            <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-10 text-white shadow-2xl transition-all hover:shadow-premium h-full flex flex-col justify-center">
               <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-academic-gold/20 blur-3xl transition-all group-hover:bg-academic-gold/40"></div>
               <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
               <div className="relative z-10">
@@ -150,9 +118,6 @@ export default function LandingPage() {
                   Nuestra arquitectura permite un aprendizaje fluido y predecible, donde el contenido se adapta al progreso real, evitando la frustración y premiando el esfuerzo.
                 </p>
               </div>
-            </div>
-            <div className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-white to-soft-sky p-1 shadow-sm">
-              <AccessibilityPanel />
             </div>
           </div>
         </section>
