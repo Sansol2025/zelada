@@ -47,8 +47,8 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <main className="min-h-screen">
-      <div className="animate-in mx-auto max-w-7xl px-4 py-8 md:py-12">
-        <header className="flex flex-wrap items-center justify-between gap-4 rounded-[2.5rem] border border-academic-gold/10 bg-white/70 px-6 py-4 shadow-sm backdrop-blur-xl transition-all duration-500 hover:bg-white/90">
+      <div className="animate-in mx-auto max-w-7xl px-4 py-4 md:py-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 rounded-[2.5rem] border border-academic-gold/10 bg-white/70 px-5 py-3 shadow-sm backdrop-blur-xl transition-all duration-500 hover:bg-white/90">
           <div>
             <p className="font-display text-3xl font-extrabold tracking-tight text-academic-navy">{APP_NAME}</p>
             <p className="text-sm font-medium text-academic-gold/80">{APP_SUBTITLE}</p>
@@ -67,14 +67,14 @@ export default function LandingPage() {
           </div>
         </header>
 
-        <section className="mt-12 grid gap-10 rounded-[3rem] border border-academic-gold/5 bg-gradient-to-br from-white/80 to-academic-ivory/30 p-8 shadow-card ring-1 ring-black/5 backdrop-blur-sm lg:grid-cols-[1.1fr,0.9fr] lg:p-12">
-          <div className="space-y-8">
+        <section className="mt-8 grid gap-6 rounded-[2.5rem] border border-academic-gold/5 bg-gradient-to-br from-white/80 to-academic-ivory/30 p-6 shadow-card ring-1 ring-black/5 backdrop-blur-sm lg:grid-cols-[1.1fr,0.9fr] lg:p-8">
+          <div className="space-y-4">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-academic-gold/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-[#a8863a]">
                 <Sparkles className="h-4 w-4" />
                 Innovación Pedagógica Inclusiva
               </span>
-              <h1 className="mt-6 font-display text-4xl font-black leading-[1.05] tracking-tight text-academic-navy md:text-6xl lg:text-7xl xl:text-[clamp(3.5rem,8vw,5.5rem)]">
+              <h1 className="mt-4 font-display text-3xl font-black leading-[1.05] tracking-tight text-academic-navy md:text-5xl lg:text-6xl xl:text-[clamp(3rem,6vw,4.5rem)]">
                 Educación sin <br />
                 <span className="text-academic-gold">barreras.</span>
               </h1>
@@ -104,15 +104,15 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col gap-6 justify-center">
-            <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-10 text-white shadow-2xl transition-all hover:shadow-premium h-full flex flex-col justify-center">
+            <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-6 text-white shadow-2xl transition-all hover:shadow-premium h-full flex flex-col justify-center">
               <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-academic-gold/20 blur-3xl transition-all group-hover:bg-academic-gold/40"></div>
               <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md">
-                    <CheckCircle2 className="h-6 w-6 text-academic-gold" />
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md">
+                    <CheckCircle2 className="h-5 w-5 text-academic-gold" />
                   </div>
-                  <p className="font-display text-2xl font-black tracking-tight">Metodología Secuencial</p>
+                  <p className="font-display text-xl font-black tracking-tight">Metodología Secuencial</p>
                 </div>
                 <p className="text-white/70 text-lg font-medium leading-relaxed">
                   Nuestra arquitectura permite un aprendizaje fluido y predecible, donde el contenido se adapta al progreso real, evitando la frustración y premiando el esfuerzo.
@@ -122,39 +122,39 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="mt-20 grid gap-8 md:grid-cols-3">
+        <section className="mt-12 grid gap-6 md:grid-cols-3">
           {pillars.map((pillar, index) => (
             <article
               key={pillar.title}
-              className={`animate-up stagger-${index + 1} group flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-academic-gold/5 bg-white shadow-card transition-all duration-500 hover:shadow-premium hover:-translate-y-2 ${pillar.topBorder}`}
+              className={`animate-up stagger-${index + 1} group flex flex-col justify-between overflow-hidden rounded-[2rem] border border-academic-gold/5 bg-white shadow-card transition-all duration-500 hover:shadow-premium hover:-translate-y-1 ${pillar.topBorder}`}
             >
-              <div className="p-10">
-                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-[1.25rem] transition-all duration-300 ${pillar.iconClass}`}>
-                  <pillar.Icon className="h-7 w-7" />
+              <div className="p-6">
+                <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-[1rem] transition-all duration-300 ${pillar.iconClass}`}>
+                  <pillar.Icon className="h-6 w-6" />
                 </div>
-                <h2 className="font-display text-3xl font-black tracking-tight text-academic-navy">{pillar.title}</h2>
-                <p className="mt-4 text-lg font-medium leading-relaxed text-academic-slate">{pillar.description}</p>
+                <h2 className="font-display text-2xl font-black tracking-tight text-academic-navy">{pillar.title}</h2>
+                <p className="mt-3 text-base font-medium leading-relaxed text-academic-slate">{pillar.description}</p>
               </div>
             </article>
           ))}
         </section>
 
-        <section className="mt-24 rounded-[3.5rem] border border-academic-gold/5 bg-white p-10 shadow-premium md:p-16 lg:p-20 relative overflow-hidden">
+        <section className="mt-16 rounded-[2.5rem] border border-academic-gold/5 bg-white p-8 shadow-premium md:p-10 lg:p-12 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-5">
-             <School className="h-64 w-64" />
+             <School className="h-48 w-48" />
           </div>
           
-          <div className="relative z-10 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-3 text-academic-gold mb-4">
-                <HeartHandshake className="h-6 w-6" />
-                <span className="text-sm font-black uppercase tracking-widest">Nuestro Compromiso</span>
+          <div className="relative z-10 mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-3 text-academic-gold mb-3">
+                <HeartHandshake className="h-5 w-5" />
+                <span className="text-xs font-black uppercase tracking-widest">Nuestro Compromiso</span>
               </div>
-              <h3 className="font-display text-4xl font-black text-academic-navy leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">Acompañamiento pedagógico integral</h3>
+              <h3 className="font-display text-3xl font-black text-academic-navy leading-[1.1] tracking-tight md:text-4xl lg:text-5xl">Acompañamiento pedagógico integral</h3>
             </div>
             <Link href="/proyecto" className="shrink-0">
-              <Button variant="outline" className="h-16 rounded-2xl border-academic-gold/20 bg-academic-ivory text-academic-navy px-8 font-black shadow-sm transition-all hover:bg-academic-gold hover:text-white hover:border-academic-gold" size="lg">
-                El Proyecto <ArrowRight className="ml-3 h-5 w-5" />
+              <Button variant="outline" className="h-14 rounded-xl border-academic-gold/20 bg-academic-ivory text-academic-navy px-6 font-black shadow-sm transition-all hover:bg-academic-gold hover:text-white hover:border-academic-gold" size="lg">
+                El Proyecto <ArrowRight className="ml-3 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -170,7 +170,7 @@ export default function LandingPage() {
           </ul>
         </section>
 
-        <footer className="mt-24 flex flex-col items-center gap-12 overflow-hidden rounded-[3rem] border border-academic-navy/5 bg-academic-navy p-12 lg:p-16 text-white text-center md:text-left">
+        <footer className="mt-16 flex flex-col items-center gap-8 overflow-hidden rounded-[2.5rem] border border-academic-navy/5 bg-academic-navy p-8 lg:p-10 text-white text-center md:text-left">
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-10">
             <div className="flex items-center gap-6">
               <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-academic-gold text-academic-navy shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
