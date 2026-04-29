@@ -117,14 +117,12 @@ export default function LandingPage() {
             <div className="relative group overflow-hidden rounded-[2.5rem] bg-academic-navy p-6 text-white shadow-2xl transition-all hover:shadow-premium h-full flex flex-col justify-center">
               <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-academic-gold/20 blur-3xl transition-all group-hover:bg-academic-gold/40"></div>
               <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm">
-                    <Image src="/logo1.png" alt="Logo" fill className="object-contain p-1" />
-                  </div>
-                  <p className="font-display text-xl font-black tracking-tight">Metodología Secuencial</p>
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-white p-3 shadow-xl ring-4 ring-white/10">
+                  <Image src="/logo1.png" alt="Logo" fill className="object-contain p-1.5" />
                 </div>
-                <p className="text-white/70 text-lg font-medium leading-relaxed">
+                <h3 className="font-display text-2xl font-black tracking-tight mb-4">Metodología Secuencial</h3>
+                <p className="text-white/70 text-base font-medium leading-relaxed max-w-xs">
                   Nuestra arquitectura permite un aprendizaje fluido y predecible, donde el contenido se adapta al progreso real, evitando la frustración y premiando el esfuerzo.
                 </p>
               </div>
