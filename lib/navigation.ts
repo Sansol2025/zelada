@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
+  BarChart2,
   BookOpen,
   ClipboardList,
   Home,
