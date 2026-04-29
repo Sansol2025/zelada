@@ -85,6 +85,7 @@ export default function LandingPage() {
               Un entorno digital diseñado para que cada estudiante avance a su ritmo, desapareciendo las dificultades técnicas y priorizando el aprendizaje continuo.
             </p>
 
+            <div className="flex items-center gap-4 border-l-4 border-academic-gold bg-academic-gold/5 py-4 pl-6 pr-8 rounded-r-2xl">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-academic-gold">Institución de Referencia</p>
                 <p className="font-display text-lg font-bold text-academic-navy tracking-tight">{SCHOOL_NAME}</p>
