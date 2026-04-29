@@ -119,8 +119,8 @@ export default function LandingPage() {
               <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md">
-                    <CheckCircle2 className="h-5 w-5 text-academic-gold" />
+                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm">
+                    <Image src="/logo1.png" alt="Logo" fill className="object-contain p-1" />
                   </div>
                   <p className="font-display text-xl font-black tracking-tight">Metodología Secuencial</p>
                 </div>
