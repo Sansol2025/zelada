@@ -1,13 +1,11 @@
 import type { Route } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
-  BarChart2,
   BookOpen,
   ClipboardList,
   Home,
   LayoutDashboard,
   QrCode,
-  Trophy,
   UserCircle,
   Users,
 } from "lucide-react";
