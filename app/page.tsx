@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Route } from "next";
 import { ArrowRight, BookOpen, CheckCircle2, Eye, HeartHandshake, School, Sparkles } from "lucide-react";
 
