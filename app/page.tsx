@@ -118,8 +118,8 @@ export default function LandingPage() {
               <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-academic-gold/20 blur-3xl transition-all group-hover:bg-academic-gold/40"></div>
               <div className="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-sky-500/10 blur-2xl"></div>
               <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-white p-3 shadow-xl ring-4 ring-white/10">
-                  <Image src="/logo1.png" alt="Logo" fill className="object-contain p-1.5" />
+                <div className="relative mb-6 flex h-32 w-32 items-center justify-center rounded-[2rem] bg-white p-4 shadow-2xl ring-8 ring-white/5 transition-transform group-hover:scale-110 duration-500">
+                  <Image src="/logo1.png" alt="Logo" fill className="object-contain p-2" />
                 </div>
                 <h3 className="font-display text-2xl font-black tracking-tight mb-4">Metodología Secuencial</h3>
                 <p className="text-white/70 text-base font-medium leading-relaxed max-w-xs">
