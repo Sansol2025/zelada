@@ -16,22 +16,36 @@ type SubjectPathModule = {
 export async function getStudentAssignedSubjects(studentId: string) {
   const supabase = await createServiceClient();
 
-  const { data, error } = await supabase
+  // 1. Obtenemos las asignaciones y los detalles de las materias
+  const { data: assignments, error: assignmentsError } = await supabase
     .from("student_subjects")
-    .select(
-      "subject_id, subjects ( id, title, description, color, icon, is_active ), student_subject_progress ( progress_percent, status, completed_modules, total_modules )"
-    )
+    .select("subject_id, subjects ( id, title, description, color, icon, is_active )")
     .eq("student_id", studentId);
 
-  if (error) throw error;
+  if (assignmentsError) throw assignmentsError;
+  if (!assignments || assignments.length === 0) return [];
 
-  return (data ?? []).map((item) => {
-    const progressRow = Array.isArray(item.student_subject_progress)
-      ? item.student_subject_progress[0]
-      : item.student_subject_progress;
+  // 2. Obtenemos el progreso para estas materias
+  const subjectIds = assignments.map((a) => a.subject_id);
+  const { data: progressRows, error: progressError } = await supabase
+    .from("student_subject_progress")
+    .select("subject_id, progress_percent, status, completed_modules, total_modules")
+    .eq("student_id", studentId)
+    .in("subject_id", subjectIds);
+
+  if (progressError) throw progressError;
+
+  const progressMap = new Map(
+    (progressRows ?? []).map((row) => [row.subject_id, row])
+  );
+
+  // 3. Combinamos los datos
+  return assignments.map((item) => {
+    const subject = Array.isArray(item.subjects) ? item.subjects[0] : item.subjects;
+    const progressRow = progressMap.get(item.subject_id);
 
     return {
-      subject: Array.isArray(item.subjects) ? item.subjects[0] : item.subjects,
+      subject,
       progress: progressRow ?? {
         progress_percent: 0,
         status: "pending",
