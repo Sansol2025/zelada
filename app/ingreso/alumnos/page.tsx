@@ -11,7 +11,7 @@ type IngresoAlumnosPageProps = {
   }>;
 };
 
-const logoSrc = "/logo.png";
+const logoSrc = "/logo1.png";
 
 function readQueryValue(value?: string | string[]) {
   const raw = Array.isArray(value) ? value[0] : value;

@@ -99,7 +99,7 @@ export function QRAccessCard({ studentName, accessUrl, qrDataUrl, expiresAt }: Q
             {/* Logo de la escuela - Usamos img estándar para asegurar carga en impresión */}
             <div className="mb-4">
               <img 
-                src="/logo.png" 
+                src="/logo1.png" 
                 alt="Logo Escuela" 
                 className="h-24 w-auto object-contain mx-auto"
                 onLoad={() => setLogoLoaded(true)}

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Portal de ingreso seguro para estudiantes, docentes y familias."
 };
 
-const logoSrc = "/logo.png";
+const logoSrc = "/logo1.png";
 
 interface AccesoPageProps {
   searchParams: Promise<{ error?: string; success?: string; mode?: string }>;

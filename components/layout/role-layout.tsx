@@ -23,7 +23,7 @@ export function RoleLayout({ title, description, navItems, children, currentPath
           <Link href="/" className="mb-6 block">
             <div className="flex items-center gap-3">
               <Image
-                src="/logo.png"
+                src="/logo1.png"
                 alt="Logo Escuela Zelada Dávila"
                 width={44}
                 height={44}
