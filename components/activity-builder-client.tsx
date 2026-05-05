@@ -34,6 +34,7 @@ type ClassifyItem = {
   id: string;
   label: string;
   imageUrl?: string;
+  audioUrl?: string;
   correctColumn: "A" | "B";
 };
 
@@ -41,8 +42,10 @@ type MatchPair = {
   id: string;
   left: string;
   leftImageUrl?: string;
+  leftAudioUrl?: string;
   right: string;
   rightImageUrl?: string;
+  rightAudioUrl?: string;
 };
 
 
@@ -93,6 +96,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
         id: String(o.id || `ci-${idx}`),
         label: String(o.label || ""),
         imageUrl: o.imageUrl ? String(o.imageUrl) : undefined,
+        audioUrl: o.audioUrl ? String(o.audioUrl) : undefined,
         correctColumn: (o.correctColumn === "B" ? "B" : "A") as "A" | "B"
       }));
     }
@@ -111,8 +115,10 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
         id: String(p.id || `mp-${idx}`),
         left: String(p.left || ""),
         leftImageUrl: p.leftImageUrl ? String(p.leftImageUrl) : undefined,
+        leftAudioUrl: p.leftAudioUrl ? String(p.leftAudioUrl) : undefined,
         right: String(p.right || ""),
         rightImageUrl: p.rightImageUrl ? String(p.rightImageUrl) : undefined,
+        rightAudioUrl: p.rightAudioUrl ? String(p.rightAudioUrl) : undefined,
       }));
     }
     return [
