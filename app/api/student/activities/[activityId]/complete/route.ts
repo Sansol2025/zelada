@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { completeStudentActivity } from "@/features/student/actions";
 import { ACCESS_TOKEN_COOKIE } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 const payloadSchema = z.object({
   score: z.coerce.number().min(0).max(100).optional(),
@@ -42,7 +42,8 @@ async function resolveStudentId(): Promise<string | null> {
   const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
   if (!token) return null;
 
-  const { data: accessLink } = await supabase
+  const serviceClient = createServiceClient();
+  const { data: accessLink } = await serviceClient
     .from("access_links")
     .select("student_id, is_active, expires_at")
     .eq("token", token)
