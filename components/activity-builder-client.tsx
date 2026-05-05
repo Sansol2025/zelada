@@ -493,40 +493,75 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
             <div className="space-y-3">
               <p className="text-sm font-black text-brand-700 uppercase tracking-widest">Ítems para clasificar</p>
               {classifyItems.map((item) => (
-                <div key={item.id} className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-4">
-                  <input
-                    value={item.label}
-                    onChange={(e) => updateClassifyItem(item.id, "label", e.target.value)}
-                    className="flex-1 min-w-[140px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-brand-400 focus:outline-none"
-                    placeholder="Nombre del ítem"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => updateClassifyItem(item.id, "correctColumn", "A")}
-                      className={cn(
-                        "rounded-xl px-4 py-2 text-sm font-black transition-all",
-                        item.correctColumn === "A" ? "bg-sky-500 text-white shadow-md" : "bg-white border-2 border-sky-200 text-sky-700 hover:bg-sky-50"
-                      )}
-                    >
-                      → {columnALabel || "A"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => updateClassifyItem(item.id, "correctColumn", "B")}
-                      className={cn(
-                        "rounded-xl px-4 py-2 text-sm font-black transition-all",
-                        item.correctColumn === "B" ? "bg-rose-500 text-white shadow-md" : "bg-white border-2 border-rose-200 text-rose-700 hover:bg-rose-50"
-                      )}
-                    >
-                      → {columnBLabel || "B"}
-                    </button>
+                <div key={item.id} className="flex flex-col gap-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-6 shadow-sm">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="mb-1 block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nombre del ítem</label>
+                      <input
+                        value={item.label}
+                        onChange={(e) => updateClassifyItem(item.id, "label", e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 font-bold text-slate-800 focus:border-brand-400 focus:outline-none shadow-sm"
+                        placeholder="Ej: Manzana"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="mb-1 block text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Columna Correcta</label>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => updateClassifyItem(item.id, "correctColumn", "A")}
+                          className={cn(
+                            "rounded-xl px-5 py-2.5 text-xs font-black transition-all shadow-sm",
+                            item.correctColumn === "A" ? "bg-sky-500 text-white scale-105" : "bg-white border-2 border-sky-100 text-sky-700 hover:bg-sky-50"
+                          )}
+                        >
+                          → {columnALabel || "Col A"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateClassifyItem(item.id, "correctColumn", "B")}
+                          className={cn(
+                            "rounded-xl px-5 py-2.5 text-xs font-black transition-all shadow-sm",
+                            item.correctColumn === "B" ? "bg-rose-500 text-white scale-105" : "bg-white border-2 border-rose-100 text-rose-700 hover:bg-rose-50"
+                          )}
+                        >
+                          → {columnBLabel || "Col B"}
+                        </button>
+                      </div>
+                    </div>
+                    {classifyItems.length > 2 && (
+                      <button 
+                        type="button" 
+                        onClick={() => removeClassifyItem(item.id)} 
+                        className="mt-5 h-10 w-10 flex items-center justify-center rounded-xl bg-rose-50 text-rose-300 hover:text-rose-500 transition-all border border-rose-100"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
-                  {classifyItems.length > 2 && (
-                    <button type="button" onClick={() => removeClassifyItem(item.id)} className="h-9 w-9 flex items-center justify-center rounded-xl bg-rose-50 text-rose-400 hover:text-rose-600 transition-all">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="rounded-xl bg-white/60 p-3 border border-dashed border-slate-200">
+                      <FileUploader 
+                        name={`img_classify_${item.id}`} 
+                        accept="image/*" 
+                        label="Imagen de Apoyo"
+                        initialUrl={item.imageUrl}
+                        onUploadSuccess={(url) => updateClassifyItem(item.id, 'imageUrl', url)}
+                        onClear={() => updateClassifyItem(item.id, 'imageUrl', '')}
+                      />
+                    </div>
+                    <div className="rounded-xl bg-white/60 p-3 border border-dashed border-slate-200">
+                      <FileUploader 
+                        name={`audio_classify_${item.id}`} 
+                        accept="audio/*" 
+                        label="Audio del Ítem"
+                        initialUrl={item.audioUrl}
+                        onUploadSuccess={(url) => updateClassifyItem(item.id, 'audioUrl', url)}
+                        onClear={() => updateClassifyItem(item.id, 'audioUrl', '')}
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -542,28 +577,77 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
           <div className="space-y-4">
             <p className="text-sm font-black text-brand-700 uppercase tracking-widest">Pares a unir</p>
             {matchPairs.map((pair, index) => (
-              <div key={pair.id} className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-sm font-black text-violet-700 shadow-sm">
-                  {index + 1}
+              <div key={pair.id} className="flex flex-col gap-6 rounded-[2.5rem] border-4 border-slate-100 bg-white p-8 shadow-sm">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-academic-navy text-xl font-black text-white shadow-md">
+                      {index + 1}
+                    </div>
+                    <span className="text-sm font-black text-academic-navy uppercase tracking-widest italic opacity-40">Pareja Pedagógica</span>
+                  </div>
+                  {matchPairs.length > 2 && (
+                    <button 
+                      type="button" 
+                      onClick={() => removeMatchPair(pair.id)} 
+                      className="h-10 w-10 flex items-center justify-center rounded-xl bg-rose-50 text-rose-300 hover:text-rose-500 transition-all border border-rose-100"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
-                <input
-                  value={pair.left}
-                  onChange={(e) => updateMatchPair(pair.id, "left", e.target.value)}
-                  className="flex-1 min-w-[120px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-violet-400 focus:outline-none"
-                  placeholder="Lado izquierdo"
-                />
-                <div className="text-slate-300 font-black text-xl">↔</div>
-                <input
-                  value={pair.right}
-                  onChange={(e) => updateMatchPair(pair.id, "right", e.target.value)}
-                  className="flex-1 min-w-[120px] rounded-xl border border-slate-200 bg-white px-3 py-2 font-bold text-slate-800 focus:border-violet-400 focus:outline-none"
-                  placeholder="Lado derecho"
-                />
-                {matchPairs.length > 2 && (
-                  <button type="button" onClick={() => removeMatchPair(pair.id)} className="h-9 w-9 flex items-center justify-center rounded-xl bg-rose-50 text-rose-400 hover:text-rose-600 transition-all">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative">
+                  {/* Visual Connector Line */}
+                  <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-1 w-12 bg-slate-100 items-center justify-center rounded-full z-0">
+                    <div className="h-4 w-4 rounded-full bg-academic-gold shadow-sm" />
+                  </div>
+
+                  {/* LEFT SIDE */}
+                  <div className="space-y-4 z-10">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Elemento Izquierdo</label>
+                      <input
+                        value={pair.left}
+                        onChange={(e) => updateMatchPair(pair.id, "left", e.target.value)}
+                        className="w-full rounded-2xl border-2 border-slate-100 bg-slate-50 px-5 py-4 text-lg font-black text-slate-800 focus:border-brand-500 focus:bg-white focus:outline-none transition-all shadow-inner"
+                        placeholder="Ej: El Sol"
+                      />
+                    </div>
+                    <div className="rounded-2xl bg-slate-50/50 p-4 border border-dashed border-slate-200">
+                      <FileUploader 
+                        name={`img_left_${pair.id}`} 
+                        accept="image/*" 
+                        label="Imagen Lado A"
+                        initialUrl={pair.leftImageUrl}
+                        onUploadSuccess={(url) => updateMatchPair(pair.id, 'leftImageUrl', url)}
+                        onClear={() => updateMatchPair(pair.id, 'leftImageUrl', '')}
+                      />
+                    </div>
+                  </div>
+
+                  {/* RIGHT SIDE */}
+                  <div className="space-y-4 z-10">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Elemento Derecho (Par)</label>
+                      <input
+                        value={pair.right}
+                        onChange={(e) => updateMatchPair(pair.id, "right", e.target.value)}
+                        className="w-full rounded-2xl border-2 border-slate-100 bg-slate-50 px-5 py-4 text-lg font-black text-slate-800 focus:border-brand-500 focus:bg-white focus:outline-none transition-all shadow-inner"
+                        placeholder="Ej: Color Amarillo"
+                      />
+                    </div>
+                    <div className="rounded-2xl bg-slate-50/50 p-4 border border-dashed border-slate-200">
+                      <FileUploader 
+                        name={`img_right_${pair.id}`} 
+                        accept="image/*" 
+                        label="Imagen Lado B"
+                        initialUrl={pair.rightImageUrl}
+                        onUploadSuccess={(url) => updateMatchPair(pair.id, 'rightImageUrl', url)}
+                        onClear={() => updateMatchPair(pair.id, 'rightImageUrl', '')}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
             <Button type="button" variant="ghost" onClick={addMatchPair}
