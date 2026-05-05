@@ -2,7 +2,22 @@
 
 import NextImage from "next/image";
 import { useMemo, useState, useEffect } from "react";
-import { CheckCircle2, MoveRight, Sparkles, WandSparkles, X, ChevronUp, ChevronDown, Trophy, Star, Lightbulb, Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { 
+  CheckCircle2, 
+  MoveRight, 
+  Sparkles, 
+  WandSparkles, 
+  X, 
+  ChevronUp, 
+  ChevronDown, 
+  Trophy, 
+  Star, 
+  Lightbulb, 
+  Mic,
+  Loader2
+} from "lucide-react";
+import confetti from "canvas-confetti";
 
 import { AccessibleAudioButton } from "@/components/accessible-audio-button";
 import { Button } from "@/components/ui/button";
@@ -21,6 +36,7 @@ type ActivityRendererProps = {
     settings_json?: Record<string, unknown> | null;
   };
   studentId?: string;
+  initialResponse?: Record<string, unknown> | null;
   onCompleted?: () => void;
 };
 
@@ -28,6 +44,7 @@ type OptionItem = {
   id: string;
   label: string;
   imageUrl?: string;
+  audioUrl?: string;
   isCorrect?: boolean;
   order?: number;
 };
@@ -65,6 +82,7 @@ function parseOptions(settings: Record<string, unknown> | null | undefined): Opt
           id: String(value.id ?? `o-${idx}`),
           label: String(value.label ?? `Opción ${idx + 1}`),
           imageUrl: value.imageUrl ? String(value.imageUrl) : undefined,
+          audioUrl: value.audioUrl ? String(value.audioUrl) : undefined,
           isCorrect: Boolean(value.isCorrect),
           order: value.order ? Number(value.order) : idx + 1
         };
@@ -74,14 +92,31 @@ function parseOptions(settings: Record<string, unknown> | null | undefined): Opt
     .filter(Boolean) as OptionItem[];
 }
 
-export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityRendererProps) {
+export function ActivityRenderer({ activity, studentId, initialResponse, onCompleted }: ActivityRendererProps) {
+  const router = useRouter();
   const startedAt = useMemo(() => Date.now(), []);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [multiSelected, setMultiSelected] = useState<string[]>([]);
-  const [textAnswer, setTextAnswer] = useState("");
+  
+  // Initialize states from initialResponse if available
+  const [selected, setSelected] = useState<string | null>(() => {
+    if (initialResponse?.selected) return String(initialResponse.selected);
+    return null;
+  });
+  const [multiSelected, setMultiSelected] = useState<string[]>(() => {
+    if (Array.isArray(initialResponse?.selectedIds)) return initialResponse.selectedIds.map(String);
+    return [];
+  });
+  const [textAnswer, setTextAnswer] = useState(() => {
+    if (initialResponse?.textAnswer) return String(initialResponse.textAnswer);
+    return "";
+  });
+
   const [options, setOptions] = useState<OptionItem[]>(() => parseOptions(activity.settings_json));
   const [pending, setPending] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(() => {
+    // If we have an initial response with isCorrect=true, we might consider it completed
+    return initialResponse?.isCorrect === true;
+  });
+  const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
 
   // classify_two_columns
@@ -119,7 +154,10 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
     return Array.isArray(raw) ? shuffle(raw.map(String)) : [];
   }, [activity.settings_json]);
   const wbCorrect = String(activity.settings_json?.correct ?? "");
-  const [wbSelected, setWbSelected] = useState<string | null>(null);
+  const [wbSelected, setWbSelected] = useState<string | null>(() => {
+    if (initialResponse?.selected) return String(initialResponse.selected);
+    return null;
+  });
 
   // Sync options if settings change
   useEffect(() => {
@@ -134,9 +172,10 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
     }
 
     setPending(true);
+    setError(null);
     try {
       const timeSpent = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
-      await fetch(`/api/student/activities/${activity.id}/complete`, {
+      const res = await fetch(`/api/student/activities/${activity.id}/complete`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -145,15 +184,38 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
           time_spent_seconds: timeSpent
         })
       });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "No se pudo guardar el progreso");
+      }
+
       setCompleted(true);
       onCompleted?.();
+      router.refresh();
+    } catch (err) {
+      console.error("Error saving progress:", err);
+      setError(err instanceof Error ? err.message : "Error al guardar el progreso");
     } finally {
       setPending(false);
     }
   };
 
+  const playOptionAudio = (id: string) => {
+    const opt = options.find(o => o.id === id);
+    if (opt?.audioUrl) {
+      const audio = new Audio(opt.audioUrl);
+      audio.play().catch(e => console.error("Error playing option audio:", e));
+    }
+  };
+
   const celebrate = () => {
-     // Aquí se podría disparar confeti o sonido de victoria
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#43b8f4", "#facc15", "#f43f5e", "#10b981"]
+    });
   };
 
   const handleValidation = () => {
@@ -219,9 +281,19 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
   };
 
   const toggleMultiSelect = (id: string) => {
+    if (completed) return;
+    if (!multiSelected.includes(id)) {
+      playOptionAudio(id);
+    }
     setMultiSelected(prev => 
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
+  };
+
+  const handleSingleSelect = (id: string) => {
+    if (completed) return;
+    setSelected(id);
+    playOptionAudio(id);
   };
 
   const baseHeader = (
@@ -287,7 +359,7 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
                       ? "border-emerald-500 bg-emerald-50/50 shadow-xl -translate-y-2" 
                       : "border-slate-50 bg-slate-50/30 hover:border-brand-300 hover:bg-white"
                   )}
-                  onClick={() => setSelected(option.id)}
+                  onClick={() => handleSingleSelect(option.id)}
                   type="button"
                 >
                   {option.imageUrl && (
@@ -721,7 +793,8 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
                Object.keys(matchConnections).length === matchPairs.length && matchPairs.length > 0 ||
                ["sequence", "touch_activity", "audio_guided_response"].includes(activity.type))
                 ? "bg-brand-600 hover:bg-brand-500 text-white shadow-brand-500/40 hover:-translate-y-2 hover:scale-105"
-                : "bg-slate-100 text-slate-300 opacity-50 cursor-not-allowed"
+                : "bg-slate-100 text-slate-300 opacity-50 cursor-not-allowed",
+              error && "bg-rose-600 text-white"
             )}
             disabled={(() => {
             if (completed || pending) return true;
@@ -736,13 +809,23 @@ export function ActivityRenderer({ activity, studentId, onCompleted }: ActivityR
           })()}
             onClick={handleValidation}
           >
-            {completed ? (
+            {pending ? (
+              <Loader2 className="h-10 w-10 animate-spin" />
+            ) : completed ? (
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-8 w-8" />
                 ¡Completado!
               </div>
+            ) : error ? (
+              "Reintentar"
             ) : "Comprobar"}
           </Button>
+          
+          {error && (
+            <p className="mt-4 text-center font-bold text-rose-600 animate-bounce">
+              ⚠️ {error}. Por favor intenta de nuevo.
+            </p>
+          )}
           
           {completed && (
              <p className="mt-8 text-xl font-black text-brand-500 tracking-widest uppercase animate-pulse">

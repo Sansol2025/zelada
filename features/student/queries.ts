@@ -135,7 +135,7 @@ export async function getStudentModuleActivities(moduleId: string, studentId: st
   const { data: progressRows } = activityIds.length
     ? await supabase
         .from("student_activity_progress")
-        .select("activity_id, status, score, attempts")
+        .select("activity_id, status, score, attempts, response_json")
         .eq("student_id", studentId)
         .in("activity_id", activityIds)
     : {

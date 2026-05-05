@@ -17,6 +17,8 @@ const ACTIVITY_TYPE_LABELS: Record<string, string> = {
   classify_two_columns: "📂 Clasificar en dos columnas",
   match_pairs: "🔗 Unir pares",
   word_bank: "💬 Completar con banco de palabras",
+  fill_with_support: "✍️ Completar palabra",
+  audio_guided_response: "🎧 Respuesta guiada por audio",
   touch_activity: "👆 Exploración libre"
 };
 
@@ -24,6 +26,7 @@ type OptionItem = {
   id: string;
   label: string;
   imageUrl?: string;
+  audioUrl?: string;
   isCorrect?: boolean;
 };
 
@@ -58,6 +61,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
         id: String(o.id || `opt-${idx}-${Date.now()}`),
         label: String(o.label || ""),
         imageUrl: String(o.imageUrl || ""),
+        audioUrl: String(o.audioUrl || ""),
         isCorrect: Boolean(o.isCorrect)
       }));
     }
@@ -130,7 +134,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
   const addOption = () => {
     setOptions([
       ...options, 
-      { id: `opt-${Date.now()}`, label: ``, isCorrect: false }
+      { id: `opt-${Date.now()}`, label: ``, isCorrect: false, audioUrl: "", imageUrl: "" }
     ]);
   };
 
@@ -172,6 +176,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
     setOptions(options.map(o => {
       if (o.id === id) {
         if (field === 'isCorrect' && value === true && (activityType === 'multiple_choice_visual' || activityType === 'image_select' || activityType === 'true_false')) {
+          // Reset other options for single-choice types
           return { ...o, [field]: value };
         }
         return { ...o, [field]: value };
@@ -304,7 +309,7 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                       {(activityType === 'multiple_choice_visual' || activityType === 'image_select' || activityType === 'drag_drop') && (
                         <div className="flex flex-col items-center">
                             <label className="mb-1 block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                               {activityType === 'drag_drop' ? "Arrastrable" : "¿Correcta?"}
+                               {activityType === 'drag_drop' ? "¿Correcto?" : "¿Correcta?"}
                             </label>
                             <button
                               type="button"
@@ -320,15 +325,27 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                       )}
                     </div>
                     
-                    <div className="rounded-lg bg-white/50 p-2 border border-dashed border-slate-200">
-                      <FileUploader 
-                        name={`img_${opt.id}`} 
-                        accept="image/*" 
-                        label={activityType === "image_select" ? "Cargar Imagen Requerida" : "Imagen de Apoyo (Opcional)"}
-                        initialUrl={opt.imageUrl}
-                        onUploadSuccess={(url) => updateOption(opt.id, 'imageUrl', url)}
-                        onClear={() => updateOption(opt.id, 'imageUrl', '')}
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="rounded-xl bg-white/50 p-3 border border-dashed border-slate-200">
+                        <FileUploader 
+                          name={`img_${opt.id}`} 
+                          accept="image/*" 
+                          label={activityType === "image_select" ? "Imagen Obligatoria" : "Imagen de Apoyo"}
+                          initialUrl={opt.imageUrl}
+                          onUploadSuccess={(url) => updateOption(opt.id, 'imageUrl', url)}
+                          onClear={() => updateOption(opt.id, 'imageUrl', '')}
+                        />
+                      </div>
+                      <div className="rounded-xl bg-white/50 p-3 border border-dashed border-slate-200">
+                        <FileUploader 
+                          name={`audio_${opt.id}`} 
+                          accept="audio/*" 
+                          label="Audio de la Opción"
+                          initialUrl={opt.audioUrl}
+                          onUploadSuccess={(url) => updateOption(opt.id, 'audioUrl', url)}
+                          onClear={() => updateOption(opt.id, 'audioUrl', '')}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -431,14 +448,20 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
           </div>
         )}
 
-        {activityType === "touch_activity" && (
+        {(activityType === "touch_activity" || activityType === "audio_guided_response") && (
           <div className="flex flex-col items-center justify-center gap-6 py-12 text-center">
-             <div className="flex h-24 w-24 items-center justify-center rounded-[2.5rem] bg-brand-50 text-brand-500 shadow-inner">
+             <div className="flex h-24 w-24 items-center justify-center rounded-[2.5rem] bg-brand-50 text-brand-500 shadow-inner ring-4 ring-brand-100">
                 <ImageIcon className="h-12 w-12" />
              </div>
              <div className="max-w-md space-y-2">
-               <h4 className="text-xl font-black text-brand-950">¡Configuración Simplificada!</h4>
-               <p className="text-slate-500 font-medium">El alumno explorará la imagen y escuchará los sonidos. ¡Sube tu imagen principal arriba!</p>
+               <h4 className="text-xl font-black text-brand-950">
+                 {activityType === "audio_guided_response" ? "¡Modo Audio Guiado!" : "¡Exploración Libre!"}
+               </h4>
+               <p className="text-slate-500 font-medium">
+                 {activityType === "audio_guided_response" 
+                   ? "El alumno escuchará el audio principal y deberá interactuar con la imagen para avanzar." 
+                   : "El alumno explorará la imagen libremente. ¡Asegúrate de subir la imagen principal arriba!"}
+               </p>
              </div>
           </div>
         )}

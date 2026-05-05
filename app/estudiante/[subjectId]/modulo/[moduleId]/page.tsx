@@ -130,6 +130,7 @@ export default async function StudentModulePage({ params }: ModulePageProps) {
               <div className="pt-2">
                 <ActivityRenderer
                   studentId={student.studentId}
+                  initialResponse={activity.progress?.response_json as Record<string, unknown> | null}
                   activity={{
                     id: activity.id,
                     type: activity.type,
