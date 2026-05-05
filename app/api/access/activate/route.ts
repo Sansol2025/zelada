@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token");
   if (!token) {
-    return NextResponse.redirect(new URL("/acceso?error=token_invalido", request.url));
+    return NextResponse.redirect(new URL("/ingreso/alumnos?error=token_invalido", request.url));
   }
 
   const supabase = createServiceClient();
@@ -20,11 +20,11 @@ export async function GET(request: Request) {
     .single();
 
   if (!link) {
-    return NextResponse.redirect(new URL("/acceso?error=link_no_encontrado", request.url));
+    return NextResponse.redirect(new URL("/ingreso/alumnos?error=link_no_encontrado", request.url));
   }
 
   if (link.expires_at && new Date(link.expires_at) < new Date()) {
-    return NextResponse.redirect(new URL("/acceso?error=link_expirado", request.url));
+    return NextResponse.redirect(new URL("/ingreso/alumnos?error=link_expirado", request.url));
   }
 
   const cookieStore = await cookies();

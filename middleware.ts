@@ -22,6 +22,14 @@ function redirectToAccess(request: NextRequest, errorMessage?: string) {
   return NextResponse.redirect(destination, { status: 303 });
 }
 
+function redirectToStudentLogin(request: NextRequest, errorMessage?: string) {
+  const destination = new URL("/ingreso/alumnos", request.url);
+  if (errorMessage) {
+    destination.searchParams.set("error", errorMessage);
+  }
+  return NextResponse.redirect(destination);
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isPublicApi = PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -32,6 +40,17 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/_next") ||
     isPublicApi
   ) {
+    return NextResponse.next();
+  }
+
+  const studentToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
+  const isStudentRoute = pathname.startsWith("/estudiante");
+  const isStudentApiRoute = pathname.startsWith("/api/student");
+  const isTeacherRoute = pathname.startsWith("/docente");
+  const isFamilyRoute = pathname.startsWith("/familia");
+
+  // Prioridad Estudiante: Si hay token y es ruta de estudiante, dejar pasar sin chequear Supabase
+  if (studentToken && (isStudentRoute || isStudentApiRoute)) {
     return NextResponse.next();
   }
 
@@ -60,14 +79,10 @@ export async function middleware(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  const studentToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
-  const isStudentRoute = pathname.startsWith("/estudiante");
-  const isStudentApiRoute = pathname.startsWith("/api/student");
-  const isTeacherRoute = pathname.startsWith("/docente");
-  const isFamilyRoute = pathname.startsWith("/familia");
-
   if (!user) {
-    if (studentToken && (isStudentRoute || isStudentApiRoute)) return response;
+    if (isStudentRoute || isStudentApiRoute) {
+      return redirectToStudentLogin(request, "Sesion de estudiante requerida");
+    }
     if (pathname.startsWith("/api")) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     return redirectToAccess(request, "Debes iniciar sesion");
   }
@@ -89,7 +104,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isStudentRoute && role !== "student" && !studentToken) {
-    return redirectToAccess(request, "Tu usuario no tiene permisos de estudiante");
+    return redirectToStudentLogin(request, "Tu usuario no tiene permisos de estudiante");
   }
 
   return response;

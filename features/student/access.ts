@@ -43,7 +43,7 @@ export async function getStudentContextOrRedirect(): Promise<StudentContext> {
 
   const cookieStore = await cookies();
   const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
-  if (!token) redirect("/acceso");
+  if (!token) redirect("/ingreso/alumnos");
 
   // Utilizamos el service client porque el estudiante solo tiene un token (es anónimo para Supabase Auth)
   // y RLS bloquearía la lectura de access_links
@@ -55,16 +55,16 @@ export async function getStudentContextOrRedirect(): Promise<StudentContext> {
     .eq("is_active", true)
     .single();
 
-  if (!accessLink) redirect("/acceso");
+  if (!accessLink) redirect("/ingreso/alumnos");
 
   const expiresAt = accessLink.expires_at ? new Date(accessLink.expires_at) : null;
-  if (expiresAt && expiresAt < new Date()) redirect("/acceso");
+  if (expiresAt && expiresAt < new Date()) redirect("/ingreso/alumnos");
 
   const student = Array.isArray(accessLink.students)
     ? accessLink.students[0]
     : accessLink.students;
 
-  if (!student) redirect("/acceso");
+  if (!student) redirect("/ingreso/alumnos");
 
   const { data: profile } = await serviceSupabase
     .from("profiles")
