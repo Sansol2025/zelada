@@ -10,6 +10,7 @@ import {
 import { notFound } from "next/navigation";
 
 import { ActivityRenderer } from "@/components/activity-renderer";
+export const revalidate = 0;
 import { VideoPlayer } from "@/components/video-player";
 import { EmptyState } from "@/components/empty-state";
 import { LockedModuleCard } from "@/components/locked-module-card";
@@ -130,6 +131,7 @@ export default async function StudentModulePage({ params }: ModulePageProps) {
               <div className="pt-2">
                 <ActivityRenderer
                   studentId={student.studentId}
+                  initialStatus={activity.progress?.status}
                   initialResponse={activity.progress?.response_json as Record<string, unknown> | null}
                   activity={{
                     id: activity.id,

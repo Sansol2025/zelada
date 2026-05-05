@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { getStudentContextOrRedirect } from "@/features/student/access";
 import { getStudentAssignedSubjects, getSubjectLearningPath } from "@/features/student/queries";
 import { percent } from "@/lib/utils";
+export const revalidate = 0;
 
 type SubjectPageProps = {
   params: Promise<{ subjectId: string }>;

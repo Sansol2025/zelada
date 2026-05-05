@@ -36,6 +36,7 @@ type ActivityRendererProps = {
     settings_json?: Record<string, unknown> | null;
   };
   studentId?: string;
+  initialStatus?: string | null;
   initialResponse?: Record<string, unknown> | null;
   onCompleted?: () => void;
 };
@@ -92,7 +93,7 @@ function parseOptions(settings: Record<string, unknown> | null | undefined): Opt
     .filter(Boolean) as OptionItem[];
 }
 
-export function ActivityRenderer({ activity, studentId, initialResponse, onCompleted }: ActivityRendererProps) {
+export function ActivityRenderer({ activity, studentId, initialStatus, initialResponse, onCompleted }: ActivityRendererProps) {
   const router = useRouter();
   const startedAt = useMemo(() => Date.now(), []);
   
@@ -113,8 +114,7 @@ export function ActivityRenderer({ activity, studentId, initialResponse, onCompl
   const [options, setOptions] = useState<OptionItem[]>(() => parseOptions(activity.settings_json));
   const [pending, setPending] = useState(false);
   const [completed, setCompleted] = useState(() => {
-    // If we have an initial response with isCorrect=true, we might consider it completed
-    return initialResponse?.isCorrect === true;
+    return initialStatus === "completed";
   });
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);

@@ -23,5 +23,10 @@ export async function completeStudentActivity(payload: unknown) {
   });
 
   if (error) throw error;
+  
+  // Revalidar las páginas del estudiante para asegurar progreso actualizado
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/estudiante", "layout");
+  
   return data;
 }
