@@ -144,6 +144,7 @@ export async function getStudentModuleActivities(moduleId: string, studentId: st
           status: string;
           score: number | null;
           attempts: number;
+          response_json: any;
         }>
       };
 
