@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { 
   CheckCircle2, 
   MoveRight, 
+  WandSparkles,
   X, 
   ChevronUp, 
   ChevronDown, 
   Trophy, 
   Star, 
+  Lightbulb,
   Loader2
 } from "lucide-react";
 import confetti from "canvas-confetti";
