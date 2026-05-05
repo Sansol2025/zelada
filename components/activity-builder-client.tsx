@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, HelpCircle, Check, X, ImageIcon, Target, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Trash2, HelpCircle, Check, X, Target, ChevronUp, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FileUploader } from "@/components/file-uploader";
