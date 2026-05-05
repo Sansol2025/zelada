@@ -203,11 +203,11 @@ export default async function SubjectModulesPage({ params }: SubjectModulesPageP
                   </div>
 
                   <div className="pt-2">
-                    <div className="relative inline-flex items-center cursor-pointer">
+                    <label className="relative inline-flex items-center cursor-pointer group">
                       <input name="is_locked_by_default" type="checkbox" className="sr-only peer" id="is_locked_toggle" />
-                      <div className="w-12 h-7 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-academic-gold after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
-                      <label htmlFor="is_locked_toggle" className="ml-4 text-[10px] font-black uppercase tracking-widest text-academic-navy cursor-pointer">Bloqueo Inicial</label>
-                    </div>
+                      <div className="w-12 h-7 bg-academic-ivory border-2 border-academic-gold/20 group-hover:border-academic-gold/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-academic-gold after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30 shadow-inner"></div>
+                      <span className="ml-4 text-[10px] font-black uppercase tracking-widest text-academic-navy">Bloqueo Inicial</span>
+                    </label>
                   </div>
 
                   <div className="pt-4 mt-2 border-t border-slate-100">

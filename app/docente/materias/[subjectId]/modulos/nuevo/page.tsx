@@ -116,11 +116,11 @@ export default async function NewModulePage({ params }: NewModulePageProps) {
             </div>
 
             <div className="md:col-span-2 pt-2">
-              <div className="relative inline-flex items-center cursor-pointer">
-                <input name="is_locked_by_default" type="checkbox" className="sr-only peer" id="is_locked_toggle" />
-                <div className="w-10 h-6 bg-academic-ivory border-2 border-academic-gold/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-academic-gold after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
-                <label htmlFor="is_locked_toggle" className="ml-3 text-[10px] font-bold uppercase tracking-widest text-academic-navy cursor-pointer">Bloqueado por Defecto</label>
-              </div>
+              <label className="relative inline-flex items-center cursor-pointer group">
+                <input name="is_locked_by_default" type="checkbox" className="sr-only peer" />
+                <div className="w-10 h-6 bg-academic-ivory border-2 border-academic-gold/20 group-hover:border-academic-gold/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-academic-gold after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-academic-navy peer-checked:border-academic-gold/30"></div>
+                <span className="ml-3 text-[10px] font-bold uppercase tracking-widest text-academic-navy">Bloqueo Inicial</span>
+              </label>
             </div>
 
             <div className="md:col-span-2 pt-6 border-t border-academic-gold/5">
