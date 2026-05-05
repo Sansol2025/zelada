@@ -448,40 +448,63 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
             </div>
           )}
 
-          {/* SEQUENCE */}
+          {/* SEQUENCE (Ordering) */}
           {activity.type === "sequence" && (
-            <div className="space-y-4 max-w-3xl mx-auto">
-              <div className="flex items-center gap-3 text-slate-400 font-bold mb-6 text-xl">
-                 <MoveRight className="h-6 w-6" />
-                 <span>Usa las flechas para ordenar los pasos:</span>
+            <div className="space-y-4 max-w-2xl mx-auto px-2">
+              <div className="flex items-center gap-3 text-slate-400 font-bold mb-6 text-lg sm:text-xl px-2">
+                 <MoveRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                 <span>Ordená los pasos de arriba hacia abajo:</span>
               </div>
-              <div className="grid gap-3">
+              <div className="flex flex-col gap-4">
                 {options.map((opt, index) => (
-                  <div key={opt.id} className="flex items-center gap-6 rounded-[2rem] border-4 border-slate-50 bg-white p-6 shadow-sm transition-all hover:border-brand-200">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-500 text-2xl font-black text-white shadow-md">
+                  <div 
+                    key={opt.id} 
+                    className={cn(
+                      "flex items-center gap-3 sm:gap-6 rounded-[1.5rem] sm:rounded-[2rem] border-4 bg-white p-3 sm:p-5 shadow-sm transition-all relative overflow-hidden",
+                      completed ? "border-slate-100 opacity-80" : "border-slate-50 hover:border-brand-200 hover:shadow-md"
+                    )}
+                  >
+                    {/* Visual Number Badge */}
+                    <div className="flex h-10 w-10 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-brand-950 text-lg sm:text-2xl font-black text-white shadow-md z-10">
                       {index + 1}
                     </div>
-                    {opt.imageUrl && (
-                       <div className="h-20 w-20 overflow-hidden rounded-xl border-2 border-slate-100 bg-slate-50">
-                          <NextImage src={opt.imageUrl} alt={opt.label} width={100} height={100} className="object-cover h-full w-full" />
-                       </div>
-                    )}
-                    <span className="flex-1 text-2xl font-black text-slate-800 tracking-tight">{opt.label}</span>
+
+                    {/* Item Content Area */}
+                    <div className="flex flex-1 items-center gap-3 min-w-0">
+                      {opt.imageUrl && (
+                        <div className="h-14 w-14 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-xl border-2 border-slate-100 bg-slate-50">
+                          <NextImage 
+                            src={opt.imageUrl} 
+                            alt={opt.label} 
+                            width={100} 
+                            height={100} 
+                            className="object-cover h-full w-full" 
+                          />
+                        </div>
+                      )}
+                      <span className="flex-1 text-base sm:text-xl font-black text-slate-800 tracking-tight leading-tight break-words line-clamp-2">
+                        {opt.label}
+                      </span>
+                    </div>
+
+                    {/* Reordering Controls */}
                     {!completed && (
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-1.5 sm:gap-2 z-10">
                         <button 
                           onClick={() => moveOption(index, -1)} 
                           disabled={index === 0}
-                          className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-brand-500 hover:text-white disabled:opacity-30 transition-all font-bold"
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-brand-500 hover:text-white disabled:opacity-30 transition-all font-bold shadow-sm"
+                          aria-label="Subir"
                         >
-                          <ChevronUp strokeWidth={3} />
+                          <ChevronUp className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={3} />
                         </button>
                         <button 
                           onClick={() => moveOption(index, 1)} 
                           disabled={index === options.length - 1}
-                          className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-brand-500 hover:text-white disabled:opacity-30 transition-all font-bold"
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-brand-500 hover:text-white disabled:opacity-30 transition-all font-bold shadow-sm"
+                          aria-label="Bajar"
                         >
-                          <ChevronDown strokeWidth={3} />
+                          <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={3} />
                         </button>
                       </div>
                     )}
