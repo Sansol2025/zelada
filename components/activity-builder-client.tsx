@@ -18,8 +18,6 @@ const ACTIVITY_TYPE_LABELS: Record<string, string> = {
   match_pairs: "🔗 Unir pares",
   word_bank: "💬 Completar con banco de palabras",
   fill_with_support: "✍️ Completar palabra",
-  audio_guided_response: "🎧 Respuesta guiada por audio",
-  touch_activity: "👆 Exploración libre"
 };
 
 type OptionItem = {
@@ -454,23 +452,6 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
           </div>
         )}
 
-        {(activityType === "touch_activity" || activityType === "audio_guided_response") && (
-          <div className="flex flex-col items-center justify-center gap-6 py-12 text-center">
-             <div className="flex h-24 w-24 items-center justify-center rounded-[2.5rem] bg-brand-50 text-brand-500 shadow-inner ring-4 ring-brand-100">
-                <ImageIcon className="h-12 w-12" />
-             </div>
-             <div className="max-w-md space-y-2">
-               <h4 className="text-xl font-black text-brand-950">
-                 {activityType === "audio_guided_response" ? "¡Modo Audio Guiado!" : "¡Exploración Libre!"}
-               </h4>
-               <p className="text-slate-500 font-medium">
-                 {activityType === "audio_guided_response" 
-                   ? "El alumno escuchará el audio principal y deberá interactuar con la imagen para avanzar." 
-                   : "El alumno explorará la imagen libremente. ¡Asegúrate de subir la imagen principal arriba!"}
-               </p>
-             </div>
-          </div>
-        )}
 
         {/* ── CLASIFICAR EN DOS COLUMNAS ── */}
         {activityType === "classify_two_columns" && (

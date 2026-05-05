@@ -772,27 +772,6 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
             );
           })()}
 
-          {/* SENSORIAL / AUDIO GUIDED */}
-          {(activity.type === "touch_activity" || activity.type === "audio_guided_response") && (
-             <div className="flex flex-col items-center justify-center space-y-8 py-12 text-center">
-                <div className={cn(
-                  "flex h-40 w-40 items-center justify-center rounded-[3.5rem] bg-amber-100 text-amber-600 shadow-inner ring-8 ring-amber-50",
-                  activity.type === "audio_guided_response" && "animate-pulse"
-                )}>
-                   {activity.type === "touch_activity" ? <Sparkles className="h-20 w-20" /> : <Mic className="h-20 w-20" />}
-                </div>
-                <div className="max-w-md space-y-4">
-                  <h4 className="text-3xl font-black text-brand-950">¡Interacción Especial!</h4>
-                  <p className="text-xl font-bold text-slate-600 leading-relaxed">
-                    {activity.type === "touch_activity" 
-                      ? "Explora la imagen superior y escucha los sonidos que el docente preparó para ti." 
-                      : "¡Dinos qué piensas! El docente escuchará tu respuesta para darte tu medalla."
-                    }
-                  </p>
-                </div>
-             </div>
-          )}
-
         </div>
 
         {/* FEEDBACK & CONFIRMATION AREA */}
@@ -814,7 +793,7 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
               (selected || multiSelected.length > 0 || textAnswer || wbSelected ||
                Object.keys(classifyAssigned).length === classifyItems.length && classifyItems.length > 0 ||
                Object.keys(matchConnections).length === matchPairs.length && matchPairs.length > 0 ||
-               ["sequence", "touch_activity", "audio_guided_response"].includes(activity.type))
+               activity.type === "sequence")
                 ? "bg-brand-600 hover:bg-brand-500 text-white shadow-brand-500/40 hover:-translate-y-2 hover:scale-105"
                 : "bg-slate-100 text-slate-300 opacity-50 cursor-not-allowed",
               error && "bg-rose-600 text-white"
@@ -828,7 +807,7 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
             if (t === "classify_two_columns") return Object.keys(classifyAssigned).length < classifyItems.length;
             if (t === "match_pairs") return Object.keys(matchConnections).length < matchPairs.length;
             if (t === "word_bank") return !wbSelected;
-            return false; // sequence, touch_activity, audio_guided_response siempre habilitado
+            return false; // sequence siempre habilitado
           })()}
             onClick={handleValidation}
           >
