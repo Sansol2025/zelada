@@ -360,6 +360,7 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
                       <td className="bg-slate-50/50 px-6 py-4 font-bold text-academic-gold border-y border-slate-100 group-hover:bg-slate-100/50">{student.grade}</td>
                       <td className="rounded-r-lg bg-slate-50/50 px-6 py-4 border-y border-r border-slate-100 group-hover:bg-slate-100/50 text-right">
                         <div className="flex justify-end gap-2">
+                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                           <Link href={`/docente/alumnos/${student.id}/editar` as any} className="p-2 text-slate-400 hover:text-academic-navy transition-colors" title="Editar Alumno">
                             <Pencil className="h-4 w-4" />
                           </Link>

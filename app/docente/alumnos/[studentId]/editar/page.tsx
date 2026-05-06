@@ -17,7 +17,7 @@ type EditStudentPageProps = {
 };
 
 export default async function EditStudentPage({ params }: EditStudentPageProps) {
-  const session = await requireRole(["teacher", "admin"]);
+  await requireRole(["teacher", "admin"]);
   const { studentId } = await params;
   
   const students = await getStudentsCatalogForTeacher().catch(() => []);
