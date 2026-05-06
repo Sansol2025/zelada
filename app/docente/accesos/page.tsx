@@ -17,19 +17,19 @@ export default async function TeacherAccessLinksPage() {
   const students = await getTeacherStudents(teacherId);
 
   const uniqueGrades = Array.from(new Set(students.map(s => s.grade).filter(Boolean))) as string[];
-  
+
   // Usar siempre la URL pública configurada o el dominio público de producción
   // Esto evita caer en las URLs *.vercel.app de los preview deployments que piden login a Vercel
-  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null) || 
-                "https://zelada.vercel.app";
-  
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : null) ||
+    "https://zelada.vercel.app";
+
   // Asegurar que baseUrl tenga el protocolo correcto si viene de VERCEL_URL (que no lo trae)
   if (!baseUrl.startsWith("http")) {
     const protocol = baseUrl.includes("localhost") ? "http" : "https";
     baseUrl = `${protocol}://${baseUrl}`;
   }
-  
+
   const gradeQRs = await Promise.all(
     uniqueGrades.map(async (grade) => {
       const accessUrl = `${baseUrl.replace(/\/$/, "")}/ingreso/alumnos?grado=${encodeURIComponent(grade)}`;
@@ -57,7 +57,7 @@ export default async function TeacherAccessLinksPage() {
         />
 
         <div className="grid gap-4">
-          
+
           <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-white relative overflow-hidden flex flex-col justify-center min-h-[160px]">
             <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-slate-50 border-l border-b border-slate-100"></div>
             <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3 text-academic-navy relative z-10">
@@ -84,7 +84,7 @@ export default async function TeacherAccessLinksPage() {
             <h2 className="font-display text-xl font-bold tracking-tight text-academic-navy uppercase">Códigos QR por Grado</h2>
             <div className="h-px flex-1 mx-6 bg-slate-100 hidden md:block"></div>
           </div>
-          
+
           {!gradeQRs.length ? (
             <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-12 text-center">
               <EmptyState

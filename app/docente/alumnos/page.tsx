@@ -63,6 +63,8 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
   async function createStudentAction(formData: FormData) {
     "use server";
     const activeSession = await requireRole(["teacher", "admin"]);
+    let errorMessage: string | null = null;
+
     try {
       await createStudentForTeacher(
         {
@@ -76,8 +78,11 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
         activeSession.userId as string
       );
     } catch (error) {
-      const message = formatActionError(error);
-      redirect(`/docente/alumnos?error=${encodeURIComponent(message)}`);
+      errorMessage = formatActionError(error);
+    }
+
+    if (errorMessage) {
+      redirect(`/docente/alumnos?error=${encodeURIComponent(errorMessage)}`);
     }
 
     revalidatePath("/docente/alumnos");
@@ -93,16 +98,22 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
       redirect("/docente/alumnos?error=Debes%20seleccionar%20un%20archivo%20Excel%20o%20CSV");
     }
 
-    try {
-      const result = await importStudentsFromCsv(file, activeSession.userId as string);
-      revalidatePath("/docente/alumnos");
+    let result: { created: number; updated: number; failed: number } | null = null;
+    let errorMessage: string | null = null;
 
-      const message = `Carga masiva finalizada: ${result.created} creados, ${result.updated} actualizados, ${result.failed} con error.`;
-      redirect(`/docente/alumnos?success=${encodeURIComponent(message)}`);
+    try {
+      result = await importStudentsFromCsv(file, activeSession.userId as string);
     } catch (error) {
-      const message = formatActionError(error);
-      redirect(`/docente/alumnos?error=${encodeURIComponent(message)}`);
+      errorMessage = formatActionError(error);
     }
+
+    if (errorMessage) {
+      redirect(`/docente/alumnos?error=${encodeURIComponent(errorMessage)}`);
+    }
+
+    revalidatePath("/docente/alumnos");
+    const message = `Carga masiva finalizada: ${result!.created} creados, ${result!.updated} actualizados, ${result!.failed} con error.`;
+    redirect(`/docente/alumnos?success=${encodeURIComponent(message)}`);
   }
 
   async function deleteStudentAction(formData: FormData) {
@@ -111,13 +122,19 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
     const studentId = String(formData.get("student_id") ?? "");
     if (!studentId) return;
 
+    let errorMessage: string | null = null;
+
     try {
       await deleteStudentForTeacher(studentId, activeSession.userId as string);
-      revalidatePath("/docente/alumnos");
     } catch (error) {
-      const message = formatActionError(error);
-      redirect(`/docente/alumnos?error=${encodeURIComponent(message)}`);
+      errorMessage = formatActionError(error);
     }
+
+    if (errorMessage) {
+      redirect(`/docente/alumnos?error=${encodeURIComponent(errorMessage)}`);
+    }
+
+    revalidatePath("/docente/alumnos");
   }
 
   return (

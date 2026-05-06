@@ -87,14 +87,14 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
 
         <form action={createActivityAction} className="grid gap-3">
           <div className="grid gap-3 lg:grid-cols-2">
-            
+
             {/* COLUMNA 1: LO BÁSICO */}
             <Card className="border border-slate-200 shadow-sm rounded-xl p-4">
               <div className="mb-3 flex items-center gap-2 border-b border-slate-100 pb-3 text-slate-900">
                 <Target className="h-4 w-4 text-amber-500" />
                 <CardTitle className="text-base font-bold">1. Datos principales</CardTitle>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="mb-1 block text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre de la actividad</label>
@@ -105,7 +105,7 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
                   <label className="mb-1 block text-xs font-bold text-slate-500 uppercase tracking-wider">¿Qué debe hacer el alumno? (Consigna visual)</label>
                   <input className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold focus:border-amber-500 focus:bg-white focus:outline-none" name="prompt" placeholder="Ej: Haz clic en el animal más grande" required />
                 </div>
-                
+
                 <input type="hidden" name="position" value={nextPosition} />
               </div>
             </Card>
@@ -113,7 +113,7 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
             {/* COLUMNA 2: ACCESIBILIDAD Y MEDIOS */}
             <Card className="border border-slate-200 shadow-sm rounded-xl p-4 bg-slate-50/50 overflow-hidden relative">
               <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-slate-100/50 opacity-50"></div>
-              
+
               <div className="mb-3 relative z-10 flex items-center gap-2 border-b border-slate-200 pb-3 text-slate-900">
                 <Volume2 className="h-4 w-4 text-amber-600" />
                 <CardTitle className="text-base font-bold">2. Accesibilidad y Elementos</CardTitle>
@@ -122,21 +122,21 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
               <div className="space-y-4 relative z-10">
                 <div className="rounded-lg bg-white p-4 shadow-sm border border-slate-200">
                   <p className="mb-2 text-[10px] text-slate-500 font-medium">Fundamental para niños que no pueden leer. Sube aquí tu archivo de voz.</p>
-                  <FileUploader 
-                    name="audio_url" 
-                    accept="audio/*" 
+                  <FileUploader
+                    name="audio_url"
+                    accept="audio/*"
                     label="Audio de la consigna (MP3/WAV)"
                   />
                 </div>
 
                 <div>
-                  <FileUploader 
-                    name="image_url" 
-                    accept="image/*" 
+                  <FileUploader
+                    name="image_url"
+                    accept="image/*"
                     label="Imagen o dibujo de ayuda visual (Opcional)"
                   />
                 </div>
-                
+
                 <div>
                   <label className="mb-1 block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Instrucciones de apoyo visual</label>
                   <textarea className="min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-white p-3 text-sm focus:border-amber-500 focus:outline-none" name="instructions" placeholder="Información extra para el alumno (si apllica)..." />
@@ -150,7 +150,7 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
             <div className="mb-3 border-b border-slate-100 pb-3">
               <CardTitle className="text-base font-bold text-academic-navy">3. Arquitectura del Juego</CardTitle>
             </div>
-            
+
             <ActivityBuilderClient />
 
             <div className="mt-4 flex justify-end">
