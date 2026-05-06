@@ -438,14 +438,14 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
           {/* FILL IN THE BLANKS */}
           {activity.type === "fill_with_support" && (
             <div className="flex flex-col items-center justify-center space-y-8 max-w-2xl mx-auto py-6">
-               {activity.settings_json?.fillImageUrl && (
+               {Boolean(activity.settings_json?.fillImageUrl) && (
                   <div className="mb-4 overflow-hidden rounded-[2rem] border-8 border-white shadow-xl">
-                    <NextImage src={String(activity.settings_json.fillImageUrl)} alt="Apoyo visual" width={300} height={300} className="object-cover h-48 w-48 sm:h-64 sm:w-64" />
+                    <NextImage src={String(activity.settings_json?.fillImageUrl)} alt="Apoyo visual" width={300} height={300} className="object-cover h-48 w-48 sm:h-64 sm:w-64" />
                   </div>
                )}
-               {activity.settings_json?.displayWord && (
+               {Boolean(activity.settings_json?.displayWord) && (
                  <div className="text-4xl sm:text-6xl font-black text-indigo-900 tracking-[0.3em] uppercase mb-4 text-center drop-shadow-sm">
-                   {String(activity.settings_json.displayWord)}
+                   {String(activity.settings_json?.displayWord)}
                  </div>
                )}
                <div className="relative w-full max-w-md">
