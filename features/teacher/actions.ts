@@ -783,3 +783,52 @@ export async function unlinkFamilyFromStudent(relationId: string, teacherId: str
 
   if (error) throw error;
 }
+
+export async function deleteStudentForTeacher(studentId: string, teacherId: string) {
+  await assertTeacherCanManageStudents(teacherId);
+  const serviceClient = getServiceClientOrThrow();
+
+  const { data: student, error: studentError } = await serviceClient
+    .from("students")
+    .select("profile_id")
+    .eq("id", studentId)
+    .single();
+
+  if (studentError || !student) throw new Error("Estudiante no encontrado");
+
+  const { error: authError } = await serviceClient.auth.admin.deleteUser(student.profile_id);
+  if (authError) throw authError;
+}
+
+export async function updateStudentForTeacher(studentId: string, input: unknown, teacherId: string) {
+  await assertTeacherCanManageStudents(teacherId);
+  const parsed = studentSchema.parse(input);
+  const normalized = normalizeStudentInput(parsed);
+  const serviceClient = getServiceClientOrThrow();
+
+  const { data: student, error: studentError } = await serviceClient
+    .from("students")
+    .select("profile_id")
+    .eq("id", studentId)
+    .single();
+
+  if (studentError || !student) throw new Error("Estudiante no encontrado");
+
+  const [{ error: profileError }, { error: studentUpdateError }] = await Promise.all([
+    serviceClient
+      .from("profiles")
+      .update({ full_name: normalized.fullName })
+      .eq("id", student.profile_id),
+    serviceClient
+      .from("students")
+      .update({
+        age: normalized.age,
+        grade: normalized.grade,
+        dni: normalized.dni,
+      })
+      .eq("id", studentId)
+  ]);
+
+  if (profileError) throw profileError;
+  if (studentUpdateError) throw studentUpdateError;
+}

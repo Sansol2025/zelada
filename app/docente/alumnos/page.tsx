@@ -1,12 +1,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Download, FileSpreadsheet, Upload, UserPlus, Users, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Download, FileSpreadsheet, Upload, UserPlus, Users, Sparkles, Trash2, Pencil } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { requireRole } from "@/features/auth/session";
-import { createStudentForTeacher, importStudentsFromCsv } from "@/features/teacher/actions";
+import { createStudentForTeacher, importStudentsFromCsv, deleteStudentForTeacher } from "@/features/teacher/actions";
 import { getStudentsCatalogForTeacher } from "@/features/teacher/queries";
 import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
@@ -97,6 +98,21 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
 
       const message = `Carga masiva finalizada: ${result.created} creados, ${result.updated} actualizados, ${result.failed} con error.`;
       redirect(`/docente/alumnos?success=${encodeURIComponent(message)}`);
+    } catch (error) {
+      const message = formatActionError(error);
+      redirect(`/docente/alumnos?error=${encodeURIComponent(message)}`);
+    }
+  }
+
+  async function deleteStudentAction(formData: FormData) {
+    "use server";
+    const activeSession = await requireRole(["teacher", "admin"]);
+    const studentId = String(formData.get("student_id") ?? "");
+    if (!studentId) return;
+
+    try {
+      await deleteStudentForTeacher(studentId, activeSession.userId as string);
+      revalidatePath("/docente/alumnos");
     } catch (error) {
       const message = formatActionError(error);
       redirect(`/docente/alumnos?error=${encodeURIComponent(message)}`);
@@ -332,6 +348,7 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
                     <th className="px-6 pb-2">DNI</th>
                     <th className="px-6 pb-2">Edad</th>
                     <th className="px-6 pb-2">Grado / Sección</th>
+                    <th className="px-6 pb-2 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="text-xs font-medium">
@@ -340,7 +357,20 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
                       <td className="rounded-l-lg bg-slate-50/50 px-6 py-4 font-bold text-academic-navy border-y border-l border-slate-100 group-hover:bg-slate-100/50">{student.full_name}</td>
                       <td className="bg-slate-50/50 px-6 py-4 font-mono text-slate-500 border-y border-slate-100 group-hover:bg-slate-100/50">{student.dni ?? "—"}</td>
                       <td className="bg-slate-50/50 px-6 py-4 text-slate-500 border-y border-slate-100 group-hover:bg-slate-100/50">{student.age ?? "—"} años</td>
-                      <td className="rounded-r-lg bg-slate-50/50 px-6 py-4 font-bold text-academic-gold border-y border-r border-slate-100 group-hover:bg-slate-100/50">{student.grade}</td>
+                      <td className="bg-slate-50/50 px-6 py-4 font-bold text-academic-gold border-y border-slate-100 group-hover:bg-slate-100/50">{student.grade}</td>
+                      <td className="rounded-r-lg bg-slate-50/50 px-6 py-4 border-y border-r border-slate-100 group-hover:bg-slate-100/50 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Link href={`/docente/alumnos/${student.id}/editar` as any} className="p-2 text-slate-400 hover:text-academic-navy transition-colors" title="Editar Alumno">
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                          <form action={deleteStudentAction} onSubmit={(e) => { if(!confirm("¿Estás seguro de eliminar a este alumno?")) e.preventDefault(); }}>
+                            <input type="hidden" name="student_id" value={student.id} />
+                            <button className="p-2 text-slate-400 hover:text-red-500 transition-colors" title="Eliminar Alumno">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </form>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
