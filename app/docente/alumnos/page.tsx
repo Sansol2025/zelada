@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Download, FileSpreadsheet, Upload, UserPlus, Users, Sparkles, Trash2, Pencil } from "lucide-react";
+import { Download, FileSpreadsheet, Upload, UserPlus, Users, Sparkles, Pencil } from "lucide-react";
 
 import { RoleLayout } from "@/components/layout/role-layout";
 import { Button } from "@/components/ui/button";
