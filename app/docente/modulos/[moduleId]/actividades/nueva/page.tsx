@@ -26,6 +26,9 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
 
   if (!moduleData) notFound();
 
+  const maxPosition = activities.reduce((max, act) => Math.max(max, act.position), 0);
+  const nextPosition = maxPosition + 1;
+
   async function createActivityAction(formData: FormData) {
     "use server";
     const activeSession = await requireRole(["teacher", "admin"]);
@@ -37,20 +40,25 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
       settings = {};
     }
 
-    await createActivity(
-      {
-        module_id: moduleId,
-        type: String(formData.get("type") ?? "multiple_choice_visual"),
-        title: String(formData.get("title") ?? ""),
-        prompt: String(formData.get("prompt") ?? ""),
-        instructions: String(formData.get("instructions") ?? ""),
-        audio_url: String(formData.get("audio_url") ?? ""),
-        image_url: String(formData.get("image_url") ?? ""),
-        settings_json: settings,
-        position: Number(formData.get("position") ?? activities.length + 1)
-      },
-      activeSession.userId as string
-    );
+    try {
+      await createActivity(
+        {
+          module_id: moduleId,
+          type: String(formData.get("type") ?? "multiple_choice_visual"),
+          title: String(formData.get("title") ?? ""),
+          prompt: String(formData.get("prompt") ?? ""),
+          instructions: String(formData.get("instructions") ?? ""),
+          audio_url: String(formData.get("audio_url") ?? ""),
+          image_url: String(formData.get("image_url") ?? ""),
+          settings_json: settings,
+          position: Number(formData.get("position") ?? nextPosition)
+        },
+        activeSession.userId as string
+      );
+    } catch (error) {
+      console.error("Error creating activity:", error);
+      throw error;
+    }
 
     revalidatePath(`/docente/modulos/${moduleId}/actividades`);
     redirect(`/docente/modulos/${moduleId}/actividades`);
@@ -98,7 +106,7 @@ export default async function NewActivityPage({ params }: NewActivityPageProps) 
                   <input className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm font-semibold focus:border-amber-500 focus:bg-white focus:outline-none" name="prompt" placeholder="Ej: Haz clic en el animal más grande" required />
                 </div>
                 
-                <input type="hidden" name="position" value={activities.length + 1} />
+                <input type="hidden" name="position" value={nextPosition} />
               </div>
             </Card>
 

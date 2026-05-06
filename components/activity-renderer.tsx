@@ -403,9 +403,13 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
                     : "border-slate-50 bg-slate-50/30 grayscale-[0.8] opacity-60 hover:opacity-100 hover:grayscale-0"
                 )}
               >
-                <div className={cn("flex h-24 w-24 items-center justify-center rounded-[2rem] shadow-lg", selected === "true" ? "bg-emerald-500 text-white" : "bg-white text-slate-300")}>
-                    <CheckCircle2 className="h-14 w-14" />
-                </div>
+                {activity.settings_json?.trueImageUrl ? (
+                   <NextImage src={String(activity.settings_json.trueImageUrl)} alt="Verdad" width={160} height={160} className="h-32 w-32 rounded-3xl object-cover shadow-lg" />
+                ) : (
+                  <div className={cn("flex h-24 w-24 items-center justify-center rounded-[2rem] shadow-lg", selected === "true" ? "bg-emerald-500 text-white" : "bg-white text-slate-300")}>
+                      <CheckCircle2 className="h-14 w-14" />
+                  </div>
+                )}
                 <span className="text-4xl font-black tracking-tighter text-emerald-900 uppercase">¡Verdad!</span>
               </button>
 
@@ -419,9 +423,13 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
                     : "border-slate-50 bg-slate-50/50 grayscale-[0.8] opacity-60 hover:opacity-100 hover:grayscale-0"
                 )}
               >
-                <div className={cn("flex h-24 w-24 items-center justify-center rounded-[2rem] shadow-lg", selected === "false" ? "bg-rose-500 text-white" : "bg-white text-slate-300")}>
-                    <X className="h-14 w-14" />
-                </div>
+                {activity.settings_json?.falseImageUrl ? (
+                   <NextImage src={String(activity.settings_json.falseImageUrl)} alt="Falso" width={160} height={160} className="h-32 w-32 rounded-3xl object-cover shadow-lg" />
+                ) : (
+                  <div className={cn("flex h-24 w-24 items-center justify-center rounded-[2rem] shadow-lg", selected === "false" ? "bg-rose-500 text-white" : "bg-white text-slate-300")}>
+                      <X className="h-14 w-14" />
+                  </div>
+                )}
                 <span className="text-4xl font-black tracking-tighter text-rose-900 uppercase">Falso</span>
               </button>
             </div>
@@ -430,19 +438,31 @@ export function ActivityRenderer({ activity, studentId, initialStatus, initialRe
           {/* FILL IN THE BLANKS */}
           {activity.type === "fill_with_support" && (
             <div className="flex flex-col items-center justify-center space-y-8 max-w-2xl mx-auto py-6">
-               <div className="relative w-full">
+               {activity.settings_json?.fillImageUrl && (
+                  <div className="mb-4 overflow-hidden rounded-[2rem] border-8 border-white shadow-xl">
+                    <NextImage src={String(activity.settings_json.fillImageUrl)} alt="Apoyo visual" width={300} height={300} className="object-cover h-48 w-48 sm:h-64 sm:w-64" />
+                  </div>
+               )}
+               {activity.settings_json?.displayWord && (
+                 <div className="text-4xl sm:text-6xl font-black text-indigo-900 tracking-[0.3em] uppercase mb-4 text-center drop-shadow-sm">
+                   {String(activity.settings_json.displayWord)}
+                 </div>
+               )}
+               <div className="relative w-full max-w-md">
                   <input
                     disabled={completed}
-                    className="h-24 w-full text-center rounded-[2.5rem] border-8 border-indigo-100 bg-indigo-50/30 px-8 text-4xl font-black text-brand-950 placeholder:text-indigo-200 focus:border-indigo-500 focus:bg-white focus:outline-none transition-all shadow-inner"
+                    className="h-20 sm:h-24 w-full text-center rounded-[2.5rem] border-8 border-indigo-100 bg-indigo-50/30 px-8 text-3xl sm:text-5xl font-black text-brand-950 placeholder:text-indigo-200 focus:border-indigo-500 focus:bg-white focus:outline-none transition-all shadow-inner uppercase"
                     onChange={(e) => setTextAnswer(e.target.value)}
                     placeholder="Escribe aquí..."
                     value={textAnswer}
+                    autoComplete="off"
+                    spellCheck="false"
                   />
-                  <div className="absolute -top-4 -left-4 h-12 w-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg">
-                     <WandSparkles className="h-6 w-6" />
+                  <div className="absolute -top-4 -left-4 h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg">
+                     <WandSparkles className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
                </div>
-               <p className="text-xl font-bold text-slate-400">¿Cuál es la palabra correcta?</p>
+               <p className="text-xl sm:text-2xl font-bold text-slate-400">¿Cuál es la palabra correcta?</p>
             </div>
           )}
 

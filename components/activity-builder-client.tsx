@@ -79,10 +79,18 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
     }
     return true;
   });
+  const [trueImageUrl, setTrueImageUrl] = useState(() => String(initialSettings?.trueImageUrl || ""));
+  const [falseImageUrl, setFalseImageUrl] = useState(() => String(initialSettings?.falseImageUrl || ""));
 
   // Fill in blanks
   const [expectedWord, setExpectedWord] = useState(() => {
     return String(initialSettings?.expected || "");
+  });
+  const [displayWord, setDisplayWord] = useState(() => {
+    return String(initialSettings?.displayWord || "");
+  });
+  const [fillImageUrl, setFillImageUrl] = useState(() => {
+    return String(initialSettings?.fillImageUrl || "");
   });
 
   // Classify two columns
@@ -200,9 +208,9 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
       options: options.map((opt, index) => ({ ...opt, order: index + 1 }))
     };
   } else if (activityType === "true_false") {
-    finalSettings = { correct: isStatementTrue ? "true" : "false" };
+    finalSettings = { correct: isStatementTrue ? "true" : "false", trueImageUrl, falseImageUrl };
   } else if (activityType === "fill_with_support") {
-    finalSettings = { expected: expectedWord };
+    finalSettings = { expected: expectedWord, displayWord, fillImageUrl };
   } else if (activityType === "classify_two_columns") {
     finalSettings = { columnA: columnALabel, columnB: columnBLabel, items: classifyItems };
   } else if (activityType === "match_pairs") {
@@ -414,9 +422,13 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                 )}
               >
                 <input type="radio" checked={isStatementTrue} onChange={() => setIsStatementTrue(true)} className="sr-only" />
-                <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", isStatementTrue ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-400")}>
-                    <Check className="h-8 w-8" />
-                </div>
+                {trueImageUrl ? (
+                   <img src={trueImageUrl} alt="Verdad" className="h-16 w-16 rounded-xl object-cover" />
+                ) : (
+                  <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", isStatementTrue ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-400")}>
+                      <Check className="h-8 w-8" />
+                  </div>
+                )}
                 <span className="text-xl font-bold uppercase tracking-tight">¡Verdad!</span>
               </label>
               
@@ -429,25 +441,77 @@ export function ActivityBuilderClient({ initialType = "multiple_choice_visual", 
                 )}
               >
                 <input type="radio" checked={!isStatementTrue} onChange={() => setIsStatementTrue(false)} className="sr-only" />
-                <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", !isStatementTrue ? "bg-rose-500 text-white" : "bg-slate-200 text-slate-400")}>
-                    <X className="h-8 w-8" />
-                </div>
+                {falseImageUrl ? (
+                   <img src={falseImageUrl} alt="Falso" className="h-16 w-16 rounded-xl object-cover" />
+                ) : (
+                  <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl transition-colors", !isStatementTrue ? "bg-rose-500 text-white" : "bg-slate-200 text-slate-400")}>
+                      <X className="h-8 w-8" />
+                  </div>
+                )}
                 <span className="text-xl font-bold uppercase tracking-tight">Falso</span>
               </label>
+              
+              <div className="col-span-2 grid grid-cols-2 gap-4 mt-2">
+                 <div className="rounded-xl bg-white/50 p-3 border border-dashed border-slate-200">
+                    <FileUploader 
+                       name="tf_true_img" 
+                       accept="image/*" 
+                       label="Imagen Verdad"
+                       initialUrl={trueImageUrl}
+                       onUploadSuccess={setTrueImageUrl}
+                       onClear={() => setTrueImageUrl('')}
+                    />
+                 </div>
+                 <div className="rounded-xl bg-white/50 p-3 border border-dashed border-slate-200">
+                    <FileUploader 
+                       name="tf_false_img" 
+                       accept="image/*" 
+                       label="Imagen Falso"
+                       initialUrl={falseImageUrl}
+                       onUploadSuccess={setFalseImageUrl}
+                       onClear={() => setFalseImageUrl('')}
+                    />
+                 </div>
+              </div>
             </div>
           </div>
         )}
 
         {activityType === "fill_with_support" && (
           <div className="space-y-6 max-w-2xl mx-auto py-4">
-             <div className="rounded-[2rem] bg-indigo-50 p-8 border-2 border-indigo-100">
-                <label className="mb-4 block text-sm font-black text-indigo-900 uppercase tracking-widest text-center">Respuesta Correcta Esperada</label>
-                <input 
-                  value={expectedWord}
-                  onChange={(e) => setExpectedWord(e.target.value)}
-                  className="w-full text-center rounded-3xl border-4 border-indigo-200 bg-white px-6 py-6 text-4xl font-black text-indigo-950 focus:border-indigo-500 focus:outline-none shadow-xl transition-all" 
-                  placeholder="Escribe aquí..."
-                />
+             <div className="grid grid-cols-1 gap-6">
+               <div className="rounded-[2rem] bg-indigo-50 p-6 border-2 border-indigo-100">
+                  <label className="mb-4 block text-sm font-black text-indigo-900 uppercase tracking-widest text-center">Palabra para mostrar (Opcional, ej: P_RR_)</label>
+                  <input 
+                    value={displayWord}
+                    onChange={(e) => setDisplayWord(e.target.value)}
+                    className="w-full text-center rounded-2xl border-4 border-indigo-200 bg-white px-6 py-4 text-3xl font-black text-indigo-950 focus:border-indigo-500 focus:outline-none shadow-md transition-all" 
+                    placeholder="Ej: P_RR_"
+                  />
+                  <p className="mt-3 text-center text-xs font-bold text-indigo-400">Sirve para que completen letras (ej. vocales)</p>
+               </div>
+
+               <div className="rounded-[2rem] bg-indigo-50 p-6 border-2 border-indigo-100">
+                  <label className="mb-4 block text-sm font-black text-indigo-900 uppercase tracking-widest text-center">Respuesta Correcta Esperada</label>
+                  <input 
+                    value={expectedWord}
+                    onChange={(e) => setExpectedWord(e.target.value)}
+                    className="w-full text-center rounded-2xl border-4 border-indigo-200 bg-white px-6 py-4 text-3xl font-black text-indigo-950 focus:border-indigo-500 focus:outline-none shadow-md transition-all" 
+                    placeholder="Ej: E O"
+                  />
+                  <p className="mt-3 text-center text-xs font-bold text-indigo-400">Lo que el alumno debe escribir</p>
+               </div>
+
+               <div className="rounded-[2rem] bg-white p-6 border-2 border-indigo-100 border-dashed">
+                  <FileUploader 
+                    name="fill_image" 
+                    accept="image/*" 
+                    label="Imagen de apoyo (Opcional)"
+                    initialUrl={fillImageUrl}
+                    onUploadSuccess={setFillImageUrl}
+                    onClear={() => setFillImageUrl('')}
+                  />
+               </div>
              </div>
           </div>
         )}
