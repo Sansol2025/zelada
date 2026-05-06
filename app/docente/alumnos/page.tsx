@@ -11,6 +11,7 @@ import { createStudentForTeacher, importStudentsFromCsv, deleteStudentForTeacher
 import { getStudentsCatalogForTeacher } from "@/features/teacher/queries";
 import { PageHeader } from "@/components/page-header";
 import { teacherNavItems } from "@/lib/navigation";
+import { DeleteStudentButton } from "@/components/delete-student-button";
 
 type TeacherStudentsPageProps = {
   searchParams?: Promise<{
@@ -364,12 +365,7 @@ export default async function TeacherStudentsPage({ searchParams }: TeacherStude
                           <Link href={`/docente/alumnos/${student.id}/editar` as any} className="p-2 text-slate-400 hover:text-academic-navy transition-colors" title="Editar Alumno">
                             <Pencil className="h-4 w-4" />
                           </Link>
-                          <form action={deleteStudentAction} onSubmit={(e) => { if(!confirm("¿Estás seguro de eliminar a este alumno?")) e.preventDefault(); }}>
-                            <input type="hidden" name="student_id" value={student.id} />
-                            <button className="p-2 text-slate-400 hover:text-red-500 transition-colors" title="Eliminar Alumno">
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </form>
+                          <DeleteStudentButton onDelete={deleteStudentAction} studentId={student.id} />
                         </div>
                       </td>
                     </tr>
